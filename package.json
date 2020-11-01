@@ -1,6 +1,6 @@
 {
   "name": "@coko/client",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Client side common code for coko apps",
   "keywords": [
     "coko",
@@ -15,6 +15,7 @@
   "main": "src",
   "scripts": {
     "cz": "git-cz",
+    "release": "standard-version",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "husky": {
@@ -28,7 +29,8 @@
     }
   },
   "devDependencies": {
-    "@coko/lint": "^1.1.0"
+    "@coko/lint": "^1.1.0",
+    "standard-version": "^9.0.0"
   },
   "dependencies": {
     "@pubsweet/ui-toolkit": "^2.3.2",
