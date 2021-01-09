@@ -1,11 +1,8 @@
 const { eslint } = require('@coko/lint')
 
-/**
- * You can edit the eslint config file here.
- *
- * eg.
- * eslint.rules['no-console'] = ['warn', { allow: ['error', 'warn'] }],
- *
- */
+const allowDevImportPaths =
+  eslint.rules['import/no-extraneous-dependencies'][1].devDependencies
+const pattern = 'dev/**'
+if (!allowDevImportPaths.includes(pattern)) allowDevImportPaths.push(pattern)
 
 module.exports = eslint

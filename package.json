@@ -15,6 +15,7 @@
   "main": "src",
   "scripts": {
     "cz": "git-cz",
+    "devserver": "yarn webpack serve --config ./dev/webpack.config.js",
     "release": "standard-version",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -29,12 +30,32 @@
     }
   },
   "dependencies": {
+    "@pubsweet/client": "^11.0.3",
     "@pubsweet/ui-toolkit": "^2.3.2",
-    "styled-components": "^5.2.1"
+    "prop-types": "^15.7.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0",
+    "styled-components": "^4.4.1"
   },
   "devDependencies": {
+    "@apollo/client": "^3.3.6",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-react": "^7.12.10",
     "@coko/lint": "^1.1.0",
-    "standard-version": "^9.0.0"
+    "babel-loader": "^8.2.2",
+    "css-loader": "^5.0.1",
+    "fontsource-advent-pro": "^4.0.0",
+    "history": "^5.0.0",
+    "html-webpack-plugin": "^4.5.1",
+    "standard-version": "^9.0.0",
+    "style-loader": "^2.0.0",
+    "subscriptions-transport-ws": "^0.9.18",
+    "uuid": "^8.3.2",
+    "webpack": "^5.12.2",
+    "webpack-cli": "^4.3.1",
+    "webpack-dev-server": "^3.11.1"
   },
   "publishConfig": {
     "access": "public"
