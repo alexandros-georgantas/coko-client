@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://gitlab.coko.foundation///compare/v0.0.4...v0.0.5) (2021-01-09)
+
+
+### Features
+
+* **components:** add layout with navigation bar component ([4edfc39](https://gitlab.coko.foundation///commit/4edfc390033ced217f1f29731fbd122f440717fc))
+
 ### [0.0.4](https://gitlab.coko.foundation///compare/v0.0.3...v0.0.4) (2020-11-08)
 
 ### Bug Fixes
