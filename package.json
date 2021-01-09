@@ -12,10 +12,15 @@
   },
   "license": "MIT",
   "author": "Yannis Barlas",
-  "main": "src",
+  "main": "dist",
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "build": "npx babel --delete-dir-on-start src --out-dir dist",
     "cz": "git-cz",
-    "devserver": "yarn webpack serve --config ./dev/webpack.config.js",
+    "devserver": "npx webpack serve --config ./dev/webpack.config.js",
+    "prepare": "yarn run build",
     "release": "standard-version",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -40,10 +45,11 @@
   },
   "devDependencies": {
     "@apollo/client": "^3.3.6",
+    "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
-    "@coko/lint": "^1.1.0",
+    "@coko/lint": "^1.4.0",
     "babel-loader": "^8.2.2",
     "css-loader": "^5.0.1",
     "fontsource-advent-pro": "^4.0.0",
