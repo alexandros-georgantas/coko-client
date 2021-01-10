@@ -1,7 +1,8 @@
-import styled, { createGlobalStyle } from 'styled-components'
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { Route } from 'react-router-dom'
+import styled, { createGlobalStyle, css } from 'styled-components'
+
 import { fadeIn, grid, th } from '@pubsweet/ui-toolkit'
 
 // TO DO -- Remove div > div when you clean up client from pubsweet
@@ -28,32 +29,51 @@ const PageLayout = styled.div`
   height: 100%;
 `
 
+const fadeInPage = css`
+  animation: ${fadeIn} 0.5s;
+`
+
+const padPage = css`
+  padding: ${grid(2)} ${grid(2)} 50px ${grid(2)};
+`
+
 const Page = styled.div`
   flex: auto;
   font-family: ${th('fontInterface')};
   height: 100%;
   overflow-y: auto;
-  padding: ${grid(2)} ${grid(2)} 50px ${grid(2)};
+
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
+  ${props => props.padPages && padPage}
 
   /* stylelint-disable-next-line no-descending-specificity */
   > div {
-    animation: ${fadeIn} 0.5s;
+    ${props => props.fadeInPages && fadeInPage}
   }
 `
 
 // TO DO -- move global style to root when you export that from this client
-const Layout = ({ children, navComponent }) => (
+const Layout = ({ children, fadeInPages, padPages, navComponent }) => (
   <>
     <GlobalStyle />
     <PageLayout>
       <Route component={navComponent} />
-      <Page>{children}</Page>
+      <Page fadeInPages={fadeInPages} padPages={padPages}>
+        {children}
+      </Page>
     </PageLayout>
   </>
 )
 
 Layout.propTypes = {
+  fadeInPages: PropTypes.bool,
+  padPages: PropTypes.bool,
   navComponent: PropTypes.elementType.isRequired,
+}
+
+Layout.defaultProps = {
+  fadeInPages: true,
+  padPages: true,
 }
 
 export default Layout

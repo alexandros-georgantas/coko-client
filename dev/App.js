@@ -155,7 +155,7 @@ const NavigationBar = () => (
 )
 
 const routes = (
-  <PageLayout navComponent={NavigationBar}>
+  <PageLayout fadeInPages navComponent={NavigationBar} padPages>
     <Switch>
       <Route component={First} exact path="/" />
       <Route component={Second} exact path="/second" />

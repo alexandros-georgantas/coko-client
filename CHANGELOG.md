@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.0.6](https://gitlab.coko.foundation///compare/v0.0.5...v0.0.6) (2021-01-09)
 
-
 ### Features
 
-* publish transpiled code ([49a78f3](https://gitlab.coko.foundation///commit/49a78f303c16dcfb4280d7059812d83cc9b438d7))
+- publish transpiled code ([49a78f3](https://gitlab.coko.foundation///commit/49a78f303c16dcfb4280d7059812d83cc9b438d7))
 
 ### [0.0.5](https://gitlab.coko.foundation///compare/v0.0.4...v0.0.5) (2021-01-09)
 
