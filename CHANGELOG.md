@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.0.7](https://gitlab.coko.foundation///compare/v0.0.6...v0.0.7) (2021-01-10)
 
-
 ### Features
 
-* **components:** make page padding and fade in optional ([51f5747](https://gitlab.coko.foundation///commit/51f57477ec0b738ba74d180ab5ce6f0e33f5a41d))
+- **components:** make page padding and fade in optional ([51f5747](https://gitlab.coko.foundation///commit/51f57477ec0b738ba74d180ab5ce6f0e33f5a41d))
 
 ### [0.0.6](https://gitlab.coko.foundation///compare/v0.0.5...v0.0.6) (2021-01-09)
 
