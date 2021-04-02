@@ -19,7 +19,7 @@
   "scripts": {
     "build": "npx babel --delete-dir-on-start src --out-dir dist",
     "cz": "git-cz",
-    "devserver": "npx webpack serve --config ./dev/webpack.config.js",
+    "devserver": "sh ./test-server.sh",
     "prepare": "yarn run build",
     "release": "standard-version",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -34,34 +34,40 @@
       "path": "cz-customizable"
     }
   },
+  "resolutions": {
+    "styled-components": "^5.2.3"
+  },
   "dependencies": {
-    "@pubsweet/client": "^11.0.3",
-    "@pubsweet/ui-toolkit": "^2.3.2",
+    "@pubsweet/client": "^11.0.9",
+    "@pubsweet/ui-toolkit": "^2.3.12",
+    "app-root-path": "^3.0.0",
+    "history": "^5.0.0",
+    "html-webpack-plugin": "^5.3.1",
+    "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0",
-    "styled-components": "^4.4.1"
+    "styled-components": "^5.2.3",
+    "uuid": "^8.3.2",
+    "webpack": "^5.30.0",
+    "webpack-cli": "^4.6.0"
   },
   "devDependencies": {
     "@apollo/client": "^3.3.6",
-    "@babel/cli": "^7.12.10",
-    "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/preset-react": "^7.12.10",
+    "@babel/cli": "^7.13.14",
+    "@babel/core": "^7.13.14",
+    "@babel/preset-env": "^7.13.12",
+    "@babel/preset-react": "^7.13.13",
+    "@coko/client-dev": "0.0.2",
     "@coko/lint": "^1.4.0",
     "babel-loader": "^8.2.2",
-    "css-loader": "^5.0.1",
+    "css-loader": "^5.2.0",
     "fontsource-advent-pro": "^4.0.0",
-    "history": "^5.0.0",
-    "html-webpack-plugin": "^4.5.1",
-    "standard-version": "^9.0.0",
+    "standard-version": "^9.1.1",
     "style-loader": "^2.0.0",
     "subscriptions-transport-ws": "^0.9.18",
-    "uuid": "^8.3.2",
-    "webpack": "^5.12.2",
-    "webpack-cli": "^4.3.1",
-    "webpack-dev-server": "^3.11.1"
+    "webpack-dev-server": "^3.11.2"
   },
   "publishConfig": {
     "access": "public"

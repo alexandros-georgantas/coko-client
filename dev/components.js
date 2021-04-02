@@ -1,23 +1,11 @@
 /* eslint-disable react/prop-types */
 
-/**
- * This file (and folder) are only meant to provide a playground for our
- * client. They will not be provided in the package distribution build.
- */
-
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { Link, Route, Switch } from 'react-router-dom'
-import { createBrowserHistory } from 'history'
 import styled, { css } from 'styled-components'
 import { gql, useQuery } from '@apollo/client'
-import { v4 as uuid } from 'uuid'
+import { Link } from 'react-router-dom'
 
-import 'fontsource-advent-pro'
-
-import { Root } from '@pubsweet/client'
-
-import { PageLayout } from '../src/components'
+import { uuid } from '../src'
 
 const GET_THOSE_RATES = gql`
   query GetRates {
@@ -27,15 +15,6 @@ const GET_THOSE_RATES = gql`
     }
   }
 `
-
-const theme = {
-  colorBackground: 'lavender',
-  colorBorder: 'lightslategray',
-  colorCurrency: 'navy',
-  colorRate: 'crimson',
-  fontInterface: 'Advent Pro',
-  gridUnit: '8px',
-}
 
 const Container = styled.div`
   background: ${props => props.theme.colorBackground};
@@ -154,24 +133,4 @@ const NavigationBar = () => (
   </StyledNavigationBar>
 )
 
-const routes = (
-  <PageLayout fadeInPages navComponent={NavigationBar} padPages>
-    <Switch>
-      <Route component={First} exact path="/" />
-      <Route component={Second} exact path="/second" />
-    </Switch>
-  </PageLayout>
-)
-
-const history = createBrowserHistory()
-const rootEl = document.getElementById('root')
-
-ReactDOM.render(
-  <Root
-    connectToWebSocket={false}
-    history={history}
-    routes={routes}
-    theme={theme}
-  />,
-  rootEl,
-)
+export { First, Second, NavigationBar }
