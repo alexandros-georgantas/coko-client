@@ -3,6 +3,7 @@ const appRootPath = require('app-root-path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const startsWith = require('lodash/startsWith')
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
 const {
   CLIENT_APP_ROOT_PATH,
@@ -57,6 +58,9 @@ module.exports = {
       {
         test: /\.js$|\.jsx$/,
         loader: 'babel-loader',
+        options: {
+          plugins: [require.resolve('react-refresh/babel')],
+        },
       },
       {
         test: /\.css$/i,
@@ -75,6 +79,7 @@ module.exports = {
       title: CLIENT_PAGE_TITLE,
     }),
     new webpack.HotModuleReplacementPlugin(),
+    new ReactRefreshWebpackPlugin(),
     new webpack.EnvironmentPlugin([
       'NODE_ENV',
       'SERVER_PROTOCOL',

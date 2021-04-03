@@ -38,6 +38,7 @@
     "styled-components": "^5.2.3"
   },
   "dependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@pubsweet/client": "^11.0.9",
     "@pubsweet/ui-toolkit": "^2.3.12",
     "app-root-path": "^3.0.0",
@@ -64,6 +65,7 @@
     "babel-loader": "^8.2.2",
     "css-loader": "^5.2.0",
     "fontsource-advent-pro": "^4.0.0",
+    "react-refresh": "^0.10.0",
     "standard-version": "^9.1.1",
     "style-loader": "^2.0.0",
     "subscriptions-transport-ws": "^0.9.18",
