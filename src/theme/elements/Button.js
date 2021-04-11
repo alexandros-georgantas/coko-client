@@ -2,6 +2,7 @@ import { css } from 'styled-components'
 import { darken, th } from '@pubsweet/ui-toolkit'
 
 const borderColor = props => (props.color ? props.color : props.colorPrimary)
+
 const outline = css`
   border: ${th('borderWidth')} ${th('borderStyle')} ${borderColor};
   padding: ${props => (props.size === 'small' ? '0' : props.theme.gridUnit)};
@@ -13,6 +14,7 @@ const outline = css`
     border: ${th('borderWidth')} ${th('borderStyle')} ${borderColor};
   }
 `
+
 const ghost = css`
   padding: ${props => (props.size === 'small' ? '0' : props.theme.gridUnit)};
   text-decoration: none;

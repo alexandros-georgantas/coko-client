@@ -7,7 +7,7 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import 'fontsource-advent-pro'
 
-import { startClient, PageLayout } from '../src'
+import { startClient, PageLayout } from '../../src'
 
 import { First, Second, NavigationBar } from './components'
 
