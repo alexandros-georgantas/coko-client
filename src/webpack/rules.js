@@ -20,7 +20,7 @@ module.exports = [
   // },
   {
     test: /\.js$|\.jsx$/,
-    //   exclude: /(node_modules|bower_components)/,
+    // exclude: /(node_modules|bower_components)/,
     use: {
       loader: 'babel-loader',
       options: {
@@ -33,15 +33,15 @@ module.exports = [
         //         /pubsweet-[^/\\]+\/(?!node_modules)/,
         //         /@pubsweet\/[^/\\]+\/(?!node_modules)/,
         //       ],
-        //       presets: [
-        //         '@babel/preset-env',
-        //         // ['@babel/preset-env', { modules: false }],
-        //         '@babel/preset-react',
-        //       ],
+        presets: [
+          '@babel/preset-env',
+          // ['@babel/preset-env', { modules: false }],
+          '@babel/preset-react',
+        ],
         plugins: [
           'babel-plugin-styled-components',
           require.resolve('react-refresh/babel'),
-          // '@babel/plugin-proposal-class-properties',
+          '@babel/plugin-proposal-class-properties',
           // 'transform-decorators-legacy',
         ],
         //       // env: {

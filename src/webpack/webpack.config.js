@@ -95,14 +95,15 @@ module.exports = {
       title: CLIENT_PAGE_TITLE,
     }),
     // dev
-    new webpack.HotModuleReplacementPlugin(),
+    isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
     // dev
-    new ReactRefreshWebpackPlugin(),
+    isEnvDevelopment && new ReactRefreshWebpackPlugin(),
     // prod
-    new MiniCssExtractPlugin({
-      chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
-      filename: 'static/css/[name].[contenthash:8].css',
-    }),
+    isEnvProduction &&
+      new MiniCssExtractPlugin({
+        chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
+        filename: 'static/css/[name].[contenthash:8].css',
+      }),
     // new webpack.NoEmitOnErrorsPlugin(),
     new webpack.EnvironmentPlugin([
       'NODE_ENV',
@@ -117,7 +118,7 @@ module.exports = {
     new webpack.optimize.AggressiveMergingPlugin(),
     // new webpack.optimize.OccurrenceOrderPlugin(),
     new CompressionPlugin(),
-  ],
+  ].filter(Boolean),
   // resolve: {
   //   alias: {
   //     config: clientConfigPath,
