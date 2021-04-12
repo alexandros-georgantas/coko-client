@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# THIS SCRIPT RUNS THE FAKE APP
+# THIS SCRIPT RUNS THE FAKE APP WITH WEBPACK DEV SERVER
 
 export NODE_ENV='development'
 
@@ -14,7 +14,4 @@ export SERVER_PORT='443'
 
 export WEBPACK_CONFIG_DIR='../client/src/webpack/webpack.config.js'
 
-# yarn coko-client
-
-# sh ./node_modules/.bin/coko-client.sh
-sh ../client/src/scripts/coko-client.sh
+sh ../client/src/scripts/coko-client-dev.sh

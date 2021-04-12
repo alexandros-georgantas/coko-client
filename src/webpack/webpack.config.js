@@ -15,6 +15,7 @@ const rules = require('./rules')
 
 const {
   CLIENT_APP_ROOT_PATH,
+  CLIENT_BUILD_FOLDER_PATH,
   CLIENT_ENTRY_FILE_PATH,
   CLIENT_FAVICON_PATH,
   CLIENT_PAGE_TITLE,
@@ -25,6 +26,7 @@ const {
 
 const knownVariables = [
   'CLIENT_APP_ROOT_PATH',
+  'CLIENT_BUILD_FOLDER_PATH',
   'CLIENT_ENTRY_FILE',
   'CLIENT_FAVICON_PATH',
   'CLIENT_PAGE_TITLE',
@@ -57,6 +59,9 @@ if (CLIENT_APP_ROOT_PATH) {
 const staticFolderPath =
   CLIENT_STATIC_FOLDER_PATH || path.resolve(appPath, '..', 'static')
 
+const buildFolderPath =
+  CLIENT_BUILD_FOLDER_PATH || path.resolve(appPath, '..', '_build')
+
 module.exports = {
   context: appPath,
   // dev
@@ -84,7 +89,7 @@ module.exports = {
       : isEnvDevelopment && 'js/bundle.js',
     // There are also additional JS chunk files if you use code splitting.
     // path: contentBase,
-    path: appPath,
+    path: buildFolderPath,
     // publicPath: isEnvProduction ? '/assets/' : '/',
     publicPath: '/',
   },

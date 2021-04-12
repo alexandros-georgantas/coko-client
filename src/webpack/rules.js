@@ -2,6 +2,12 @@
 
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
+const { NODE_ENV } = process.env
+
+const mode = NODE_ENV === 'production' ? 'production' : 'development'
+const isEnvDevelopment = mode === 'development'
+// const isEnvProduction = mode === 'production'
+
 module.exports = [
   { test: /\.tsx?$/, loader: 'ts-loader' },
   {
@@ -40,10 +46,10 @@ module.exports = [
         ],
         plugins: [
           'babel-plugin-styled-components',
-          require.resolve('react-refresh/babel'),
+          isEnvDevelopment && require.resolve('react-refresh/babel'),
           '@babel/plugin-proposal-class-properties',
           // 'transform-decorators-legacy',
-        ],
+        ].filter(Boolean),
         //       // env: {
         //       //   production: {
         //       //     /* bug requires mangle:false https://github.com/babel/minify/issues/556#issuecomment-339751209 */
