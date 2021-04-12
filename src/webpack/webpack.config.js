@@ -13,6 +13,10 @@ const rules = require('./rules')
 
 // TO DO: install babel-preset-minify?
 
+//
+/* SET UP VARS */
+//
+
 const {
   CLIENT_APP_ROOT_PATH,
   CLIENT_BUILD_FOLDER_PATH,
@@ -62,24 +66,22 @@ const staticFolderPath =
 const buildFolderPath =
   CLIENT_BUILD_FOLDER_PATH || path.resolve(appPath, '..', '_build')
 
-module.exports = {
+//
+/* BASE CONFIG */
+//
+
+const webpackConfig = {
   context: appPath,
+  entry: CLIENT_ENTRY_FILE_PATH || './start.js',
+  name: 'client',
+  mode,
+  target: 'web',
+
   // dev
-  devServer: {
-    contentBase: path.join(__dirname),
-    // disableHostCheck: true,
-    historyApiFallback: true,
-    host: '0.0.0.0',
-    port: CLIENT_PORT,
-    hot: true,
-    publicPath: '/',
-  },
   // should be dev only?
   devtool: 'cheap-module-source-map',
-  entry: CLIENT_ENTRY_FILE_PATH || './start.js',
-  mode,
+
   module: { rules },
-  name: 'Client application',
   output: {
     chunkFilename: isEnvProduction
       ? 'js/[name].[hash:8].chunk.js'
@@ -93,23 +95,32 @@ module.exports = {
     // publicPath: isEnvProduction ? '/assets/' : '/',
     publicPath: '/',
   },
+
+  //
+  /* PLUGINS */
+  //
+
   plugins: [
+    // Use the index.ejs template to create the base index.html file of the bundle
     new HtmlWebpackPlugin({
       favicon: CLIENT_FAVICON_PATH,
       template: templatePath,
       title: CLIENT_PAGE_TITLE,
     }),
-    // dev
+
+    // DEV-ONLY
+    // React fast-refresh
     isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
-    // dev
     isEnvDevelopment && new ReactRefreshWebpackPlugin(),
-    // prod
+
+    // PROD-ONLY
     isEnvProduction &&
       new MiniCssExtractPlugin({
         chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         filename: 'static/css/[name].[contenthash:8].css',
       }),
-    // new webpack.NoEmitOnErrorsPlugin(),
+
+    // Make sure environment variables are defined
     new webpack.EnvironmentPlugin([
       'NODE_ENV',
       'SERVER_PROTOCOL',
@@ -117,13 +128,21 @@ module.exports = {
       'SERVER_PORT',
       ...otherVariables,
     ]),
+
+    // Copy static assets to root of build folder
     new CopyPlugin({
       patterns: [{ from: staticFolderPath }],
     }),
+
     new webpack.optimize.AggressiveMergingPlugin(),
-    // new webpack.optimize.OccurrenceOrderPlugin(),
     new CompressionPlugin(),
+
+    // TO DELETE
+    // new webpack.NoEmitOnErrorsPlugin(),
+    // new webpack.optimize.OccurrenceOrderPlugin(),
   ].filter(Boolean),
+
+  // TO DELETE
   // resolve: {
   //   alias: {
   //     config: clientConfigPath,
@@ -132,5 +151,27 @@ module.exports = {
   //   enforceExtension: false,
   //   extensions: ['.mjs', '.js', '.jsx', '.json', '.scss'],
   // },
-  target: 'web',
 }
+
+if (isEnvDevelopment) {
+  //
+  /* WEBPACK DEV SERVER CONFIGURATION */
+  //
+
+  webpackConfig.devServer = {
+    contentBase: path.join(__dirname),
+    historyApiFallback: true,
+    host: '0.0.0.0',
+    port: CLIENT_PORT,
+    hot: true,
+    publicPath: '/',
+
+    /**
+     * BAD IDEA unless you know what you're doing:
+     * https://webpack.js.org/configuration/dev-server/#devserverdisablehostcheck
+     */
+    // disableHostCheck: true,
+  }
+}
+
+module.exports = webpackConfig

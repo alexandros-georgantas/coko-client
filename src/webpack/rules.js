@@ -1,96 +1,64 @@
 // const path = require('path')
-
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-const { NODE_ENV } = process.env
-
-const mode = NODE_ENV === 'production' ? 'production' : 'development'
-const isEnvDevelopment = mode === 'development'
-// const isEnvProduction = mode === 'production'
-
 module.exports = [
+  // Typescript
   { test: /\.tsx?$/, loader: 'ts-loader' },
+
+  // TO DELETE?
+  // mjs files: needed because of apollo client??
   {
     test: /\.m?js/,
     resolve: {
       fullySpecified: false,
     },
   },
-  // {
-  //   test: /\.js$|\.jsx$/,
-  //   loader: 'babel-loader',
-  //   options: {
-  //     presets: ['@babel/preset-env', '@babel/preset-react'],
-  //     plugins: [require.resolve('react-refresh/babel')],
-  //   },
-  // },
+
+  // js files
   {
     test: /\.js$|\.jsx$/,
     // exclude: /(node_modules|bower_components)/,
     use: {
       loader: 'babel-loader',
       options: {
-        //       include: [
-        //         // include app folder
-        //         path.join(__dirname),
-        //         // path.join(__dirname, '..', 'app'),
-        //         // path.join(__dirname, '..', 'ui'),
-        //         // include pubsweet packages which are published untranspiled
-        //         /pubsweet-[^/\\]+\/(?!node_modules)/,
-        //         /@pubsweet\/[^/\\]+\/(?!node_modules)/,
-        //       ],
+        // include: [
+        //   // include app folder
+        //   path.join(__dirname),
+        //   // path.join(__dirname, '..', 'app'),
+        //   // path.join(__dirname, '..', 'ui'),
+        //   // include pubsweet packages which are published untranspiled
+        //   /pubsweet-[^/\\]+\/(?!node_modules)/,
+        //   /@pubsweet\/[^/\\]+\/(?!node_modules)/,
+        // ],
         presets: [
           '@babel/preset-env',
           // ['@babel/preset-env', { modules: false }],
           '@babel/preset-react',
         ],
         plugins: [
+          // https://github.com/styled-components/babel-plugin-styled-components#babel-plugin-styled-components
           'babel-plugin-styled-components',
-          isEnvDevelopment && require.resolve('react-refresh/babel'),
+
+          // https://babeljs.io/docs/en/babel-plugin-proposal-class-properties
           '@babel/plugin-proposal-class-properties',
+
           // 'transform-decorators-legacy',
         ].filter(Boolean),
-        //       // env: {
-        //       //   production: {
-        //       //     /* bug requires mangle:false https://github.com/babel/minify/issues/556#issuecomment-339751209 */
-        //       //     presets: [['minify', { builtIns: false, mangle: false }]],
-        //       //   },
-        //       // },
+
+        env: {
+          development: {
+            plugins: [require.resolve('react-refresh/babel')],
+          },
+          //   production: {
+          //     /* bug requires mangle:false https://github.com/babel/minify/issues/556#issuecomment-339751209 */
+          //     presets: [['minify', { builtIns: false, mangle: false }]],
+          //   },
+        },
       },
     },
   },
-  // {
-  //   test: /\.js$|\.jsx$/,
-  //   loader: 'babel-loader',
-  //   query: {
-  //     presets: [
-  //       ['@babel/preset-env', { modules: false }],
-  //       '@babel/preset-react',
-  //     ],
-  //     plugins: [
-  //       'babel-plugin-styled-components',
-  //       require.resolve('react-refresh/babel'),
-  //       // require.resolve('react-hot-loader/babel'),
-  //       '@babel/plugin-proposal-class-properties',
-  //       // 'transform-decorators-legacy',
-  //     ],
-  //     env: {
-  //       production: {
-  //         /* bug requires mangle:false https://github.com/babel/minify/issues/556#issuecomment-339751209 */
-  //         presets: [['minify', { builtIns: false, mangle: false }]],
-  //       },
-  //     },
-  //   },
-  //   include: [
-  //     // include app folder
-  //     path.join(__dirname),
-  //     // path.join(__dirname, '..', 'app'),
-  //     // path.join(__dirname, '..', 'ui'),
-  //     // include pubsweet packages which are published untranspiled
-  //     /pubsweet-[^/\\]+\/(?!node_modules)/,
-  //     /@pubsweet\/[^/\\]+\/(?!node_modules)/,
-  //   ],
-  // },
+
+  // Images
   {
     test: /\.png|\.jpg$/,
     loader: 'url-loader',
@@ -98,6 +66,8 @@ module.exports = [
     //   limit: 5000,
     // },
   },
+
+  // Fonts
   {
     test: /\.(woff|woff2|eot|ttf|otf)$/i,
     type: 'asset/resource',
@@ -111,44 +81,13 @@ module.exports = [
   //     esModule: false,
   //   },
   // },
+
+  // HTML
   { test: /\.html$/, loader: 'html-loader' },
+
+  // CSS
   {
     test: /\.css$/i,
     use: ['style-loader', 'css-loader'],
   },
-  // {
-  //   test: /\.css$|\.scss$/,
-  //   exclude: /\.local\.s?css$/, // Exclude local styles from global
-  //   loader: [
-  //     {
-  //       loader: 'style-loader',
-  //     },
-  //     {
-  //       loader: 'css-loader',
-  //     },
-  //   ],
-  // },
-  // {
-  //   test: /\.css$|\.scss$/,
-  //   include: /\.local\.s?css/, // Local styles
-  //   loader: [
-  //     {
-  //       loader: 'style-loader',
-  //     },
-  //     {
-  //       loader: MiniCssExtractPlugin.loader,
-  //       options: {
-  //         hmr: process.env.NODE_ENV === 'development',
-  //       },
-  //     },
-  //     {
-  //       loader: 'css-loader',
-  //       options: {
-  //         modules: true,
-  //         importLoaders: 1,
-  //         localIdentName: '[name]_[local]-[hash:base64:8]',
-  //       },
-  //     },
-  //   ],
-  // },
 ]
