@@ -14,11 +14,13 @@
   "author": "Yannis Barlas",
   "main": "dist",
   "bin": {
-    "coko-client-build": "./src/scripts/coko-client-build.sh",
-    "coko-client-dev": "./src/scripts/coko-client-dev.sh"
+    "coko-client-build": "./scripts/coko-client-build.sh",
+    "coko-client-dev": "./scripts/coko-client-dev.sh"
   },
   "files": [
-    "dist"
+    "dist",
+    "scripts",
+    "webpack"
   ],
   "scripts": {
     "build": "npx babel --delete-dir-on-start src --out-dir dist",

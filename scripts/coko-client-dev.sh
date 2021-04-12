@@ -20,9 +20,9 @@ PHYS_DIR=`pwd -P`
 # CONFIG_DIR_PATH=$PHYS_DIR/config
 
 
-DEFAULT_CONFIG_DIR=$PHYS_DIR/../webpack/webpack.config.js
+DEFAULT_CONFIG_PATH=$PHYS_DIR/../webpack/webpack.config.js
 
 cd $ORIGINAL_DIR
 
 yarn webpack serve \
-  --config ${WEBPACK_CONFIG_DIR:-$DEFAULT_CONFIG_DIR}
+  --config ${WEBPACK_CONFIG_PATH:-$DEFAULT_CONFIG_PATH}

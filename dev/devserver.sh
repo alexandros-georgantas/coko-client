@@ -12,6 +12,6 @@ export SERVER_PROTOCOL='https'
 export SERVER_HOST='48p1r2roz4.sse.codesandbox.io'
 export SERVER_PORT='443'
 
-export WEBPACK_CONFIG_DIR='../client/src/webpack/webpack.config.js'
+export WEBPACK_CONFIG_PATH='./webpack/webpack.config.js'
 
-sh ../client/src/scripts/coko-client-dev.sh
+sh ./scripts/coko-client-dev.sh
