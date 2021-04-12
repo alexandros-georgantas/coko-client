@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components'
 import { gql, useQuery } from '@apollo/client'
 import { Link } from 'react-router-dom'
 
-import { uuid } from '../src'
+import { uuid } from '../../src'
 
 const GET_THOSE_RATES = gql`
   query GetRates {
