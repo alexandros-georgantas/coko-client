@@ -41,6 +41,8 @@ const otherVariables = Object.keys(process.env).filter(k => {
 })
 
 const mode = NODE_ENV === 'production' ? 'production' : 'development'
+const isEnvDevelopment = mode === 'development'
+const isEnvProduction = mode === 'production'
 
 const templatePath = path.resolve(__dirname, 'index.ejs')
 
@@ -65,27 +67,27 @@ module.exports = {
     host: '0.0.0.0',
     port: CLIENT_PORT,
     hot: true,
-    // publicPath: '/',
+    publicPath: '/',
   },
   // should be dev only?
   devtool: 'cheap-module-source-map',
   entry: CLIENT_ENTRY_FILE_PATH || './start.js',
   mode,
   module: { rules },
-  // name: 'Client application',
-  // output: {
-  //   chunkFilename: isEnvProduction
-  //     ? 'js/[name].[hash:8].chunk.js'
-  //     : isEnvDevelopment && 'js/[name].chunk.js',
-  //   filename: isEnvProduction
-  //     ? 'js/[name].[hash:8].js'
-  //     : isEnvDevelopment && 'js/bundle.js',
-  //   // TODO: remove this when upgrading to webpack 5
-  //   futureEmitAssets: true,
-  //   // There are also additional JS chunk files if you use code splitting.
-  //   path: contentBase,
-  //   publicPath: isEnvProduction ? '/assets/' : '/',
-  // },
+  name: 'Client application',
+  output: {
+    chunkFilename: isEnvProduction
+      ? 'js/[name].[hash:8].chunk.js'
+      : isEnvDevelopment && 'js/[name].chunk.js',
+    filename: isEnvProduction
+      ? 'js/[name].[hash:8].js'
+      : isEnvDevelopment && 'js/bundle.js',
+    // There are also additional JS chunk files if you use code splitting.
+    // path: contentBase,
+    path: appPath,
+    // publicPath: isEnvProduction ? '/assets/' : '/',
+    publicPath: '/',
+  },
   plugins: [
     new HtmlWebpackPlugin({
       favicon: CLIENT_FAVICON_PATH,
@@ -109,7 +111,6 @@ module.exports = {
       'SERVER_PORT',
       ...otherVariables,
     ]),
-    // TO DO path?
     new CopyPlugin({
       patterns: [{ from: staticFolderPath }],
     }),
