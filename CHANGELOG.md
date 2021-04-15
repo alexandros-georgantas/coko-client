@@ -4,20 +4,18 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.0.8](https://gitlab.coko.foundation///compare/v0.0.7...v0.0.8) (2021-04-12)
 
-
 ### Features
 
-* add react fast refresh to webpack ([603e34f](https://gitlab.coko.foundation///commit/603e34f1a49f8bc00d70d78c01156464c25c2dbd))
-* webpack in client first attempt ([f0de968](https://gitlab.coko.foundation///commit/f0de968683c5e21b5ce4f8a3705611e6254acbaf))
-* **theme:** add colorDisabled variable ([91267e5](https://gitlab.coko.foundation///commit/91267e5074fd96b9ec3e9983aa8be1c4c00c37d3))
-* **webpack:** fix production build ([96de23a](https://gitlab.coko.foundation///commit/96de23a198ece7b73b8e00146ba3d9c6eb662766))
-
+- add react fast refresh to webpack ([603e34f](https://gitlab.coko.foundation///commit/603e34f1a49f8bc00d70d78c01156464c25c2dbd))
+- webpack in client first attempt ([f0de968](https://gitlab.coko.foundation///commit/f0de968683c5e21b5ce4f8a3705611e6254acbaf))
+- **theme:** add colorDisabled variable ([91267e5](https://gitlab.coko.foundation///commit/91267e5074fd96b9ec3e9983aa8be1c4c00c37d3))
+- **webpack:** fix production build ([96de23a](https://gitlab.coko.foundation///commit/96de23a198ece7b73b8e00146ba3d9c6eb662766))
 
 ### Bug Fixes
 
-* do not compile webpack and scripts folders ([7a0f5ee](https://gitlab.coko.foundation///commit/7a0f5eea140cbdb882b702c523d9eec9bfd14333))
-* **webpack:** add ouput section to config ([91dc3d6](https://gitlab.coko.foundation///commit/91dc3d6489ea5111d2feb07d19dec6c98c831b71))
-* **webpack:** use babel config instead of babelrc ([779c11b](https://gitlab.coko.foundation///commit/779c11b508def724cf0e60236bbbb649daf41e4f))
+- do not compile webpack and scripts folders ([7a0f5ee](https://gitlab.coko.foundation///commit/7a0f5eea140cbdb882b702c523d9eec9bfd14333))
+- **webpack:** add ouput section to config ([91dc3d6](https://gitlab.coko.foundation///commit/91dc3d6489ea5111d2feb07d19dec6c98c831b71))
+- **webpack:** use babel config instead of babelrc ([779c11b](https://gitlab.coko.foundation///commit/779c11b508def724cf0e60236bbbb649daf41e4f))
 
 ### [0.0.7](https://gitlab.coko.foundation///compare/v0.0.6...v0.0.7) (2021-01-10)
 

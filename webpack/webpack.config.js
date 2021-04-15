@@ -159,18 +159,9 @@ if (isEnvDevelopment) {
   //
 
   webpackConfig.devServer = {
-    contentBase: path.join(__dirname),
     historyApiFallback: true,
     host: '0.0.0.0',
     port: CLIENT_PORT,
-    hot: true,
-    publicPath: '/',
-
-    /**
-     * BAD IDEA unless you know what you're doing:
-     * https://webpack.js.org/configuration/dev-server/#devserverdisablehostcheck
-     */
-    // disableHostCheck: true,
   }
 }
 
