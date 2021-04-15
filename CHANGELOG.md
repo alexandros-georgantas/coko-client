@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://gitlab.coko.foundation///compare/v0.0.8...v0.0.9) (2021-04-15)
+
+
+### Bug Fixes
+
+* **webpack:** fix clashing dependencies ([0c18063](https://gitlab.coko.foundation///commit/0c18063aacb3d55e564306025bb43b075e7a1a3b))
+
 ### [0.0.8](https://gitlab.coko.foundation///compare/v0.0.7...v0.0.8) (2021-04-12)
 
 ### Features
