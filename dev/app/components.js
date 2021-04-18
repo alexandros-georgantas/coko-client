@@ -7,6 +7,10 @@ import { Link } from 'react-router-dom'
 
 import { uuid } from '../../src'
 
+/**
+ * GRAPHQL
+ */
+
 const GET_THOSE_RATES = gql`
   query GetRates {
     rates(currency: "USD") {
@@ -15,6 +19,10 @@ const GET_THOSE_RATES = gql`
     }
   }
 `
+
+/**
+ * STYLED COMPONENTS
+ */
 
 const Container = styled.div`
   background: ${props => props.theme.colorBackground};
@@ -67,6 +75,18 @@ const StyledItemList = styled.div`
   flex-direction: column;
 `
 
+const ImageContainer = styled.div`
+  height: 300px;
+
+  img {
+    height: 100%;
+  }
+`
+
+/**
+ * REACT
+ */
+
 const Item = props => {
   const { currency, rate } = props
 
@@ -116,6 +136,9 @@ const Second = () => (
     <div>
       <Link to="/">Go back</Link>
     </div>
+    <ImageContainer>
+      <img alt="a bird" src="sample-image.jpg" />
+    </ImageContainer>
   </Container>
 )
 

@@ -10,6 +10,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
 const {
+  NODE_ENV,
+
   CLIENT_APP_ROOT_PATH,
   CLIENT_BUILD_FOLDER_PATH,
   CLIENT_ENTRY_FILE_PATH,
@@ -18,7 +20,10 @@ const {
   CLIENT_PAGE_TITLE,
   CLIENT_STATIC_FOLDER_PATH,
   CLIENT_PORT,
-  NODE_ENV,
+
+  SERVER_PROTOCOL,
+  SERVER_HOST,
+  SERVER_PORT,
 } = process.env
 
 //
@@ -80,9 +85,41 @@ const useFastRefresh =
 
 const templatePath = path.resolve(__dirname, 'index.ejs')
 const entryFilePath = CLIENT_ENTRY_FILE_PATH || './start.js'
-const devSeverPort = CLIENT_PORT
+const devSeverPort = CLIENT_PORT || 8080
 const faviconPath = CLIENT_FAVICON_PATH
 const pageTitle = CLIENT_PAGE_TITLE
+
+const serverUrl = `${SERVER_PROTOCOL}://${SERVER_HOST}${
+  SERVER_PORT ? `:${SERVER_PORT}` : ''
+}`
+
+/* eslint-disable no-console */
+console.log('\n###################\n')
+
+console.log('=> COKO CLIENT INFO\n')
+console.log(`env is: ${NODE_ENV}`)
+
+console.log('')
+console.log(`app context path is set to: ${appPath}`)
+isEnvProduction && console.log(`build will be written to: ${buildFolderPath}`)
+console.log(`static folder path found at: ${staticFolderPath}`)
+console.log(`app entry file will be: ${entryFilePath}`)
+console.log(`favicon path will be: ${faviconPath}`)
+console.log(`page title set to: ${pageTitle}`)
+
+console.log('')
+isEnvDevelopment && console.log(`dev server will run at port: ${devSeverPort}`)
+console.log(`server will be requested at: ${serverUrl}`)
+console.log(`react fast-refresh is: ${useFastRefresh ? 'on' : 'off'}`)
+
+console.log(
+  `custom environment variables detected: ${
+    customVariables.length > 0 ? `${customVariables}` : 'none'
+  }`,
+)
+
+console.log('\n###################\n')
+/* eslint-enable no-console */
 
 //
 /* BASE CONFIG */
@@ -96,6 +133,7 @@ const webpackConfig = {
   // TO D0 -- browserlist?
   target: 'web',
 
+  // TO DO -- bundle analyzer
   // TO DO -- code splitting
   // TO DO -- hash is deprecated
   output: {
@@ -173,14 +211,20 @@ const webpackConfig = {
         },
       },
 
+      // TO DO -- remove url-loader from dependencies
+
       // Images
       {
         test: /\.png|\.jpg$/,
-        loader: 'url-loader',
-        // options: {
-        //   limit: 5000,
-        // },
+        type: 'asset/resource',
       },
+      // {
+      //   test: /\.png|\.jpg$/,
+      //   loader: 'url-loader',
+      //   // options: {
+      //   //   limit: 5000,
+      //   // },
+      // },
 
       // Fonts
       {
