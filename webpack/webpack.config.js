@@ -9,18 +9,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
-const rules = require('./rules')
-
-// TO DO: install babel-preset-minify?
-
-//
-/* SET UP VARS */
-//
-
 const {
   CLIENT_APP_ROOT_PATH,
   CLIENT_BUILD_FOLDER_PATH,
   CLIENT_ENTRY_FILE_PATH,
+  CLIENT_FAST_REFRESH,
   CLIENT_FAVICON_PATH,
   CLIENT_PAGE_TITLE,
   CLIENT_STATIC_FOLDER_PATH,
@@ -28,29 +21,44 @@ const {
   NODE_ENV,
 } = process.env
 
-const knownVariables = [
+//
+/* SET UP VARS */
+//
+
+// Environment variables that will only be used in this config
+const variablesForWebpackConfig = [
   'CLIENT_APP_ROOT_PATH',
   'CLIENT_BUILD_FOLDER_PATH',
   'CLIENT_ENTRY_FILE',
+  'CLIENT_FAST_REFRESH',
   'CLIENT_FAVICON_PATH',
   'CLIENT_PAGE_TITLE',
   'CLIENT_STATIC_FOLDER_PATH',
   'CLIENT_PORT',
+]
+
+// Environment variables that will be passed down to the build
+const variablesForBuild = [
+  'NODE_ENV',
   'SERVER_PROTOCOL',
   'SERVER_HOST',
   'SERVER_PORT',
-  'NODE_ENV',
 ]
 
-const otherVariables = Object.keys(process.env).filter(k => {
-  return !knownVariables.includes(k) && startsWith(k, 'CLIENT_')
+// Allow custom variables that start with CLIENT_ to pass into the build
+const customVariables = Object.keys(process.env).filter(k => {
+  return (
+    !variablesForWebpackConfig.includes(k) &&
+    !variablesForBuild.includes(k) &&
+    startsWith(k, 'CLIENT_')
+  )
 })
+
+const variablesInBuild = [...variablesForBuild, ...customVariables]
 
 const mode = NODE_ENV === 'production' ? 'production' : 'development'
 const isEnvDevelopment = mode === 'development'
 const isEnvProduction = mode === 'production'
-
-const templatePath = path.resolve(__dirname, 'index.ejs')
 
 let appPath
 
@@ -66,22 +74,30 @@ const staticFolderPath =
 const buildFolderPath =
   CLIENT_BUILD_FOLDER_PATH || path.resolve(appPath, '..', '_build')
 
+// react's fast-refresh is opt-in for the time being
+const useFastRefresh =
+  CLIENT_FAST_REFRESH === 1 || CLIENT_FAST_REFRESH === 'true'
+
+const templatePath = path.resolve(__dirname, 'index.ejs')
+const entryFilePath = CLIENT_ENTRY_FILE_PATH || './start.js'
+const devSeverPort = CLIENT_PORT
+const faviconPath = CLIENT_FAVICON_PATH
+const pageTitle = CLIENT_PAGE_TITLE
+
 //
 /* BASE CONFIG */
 //
 
 const webpackConfig = {
   context: appPath,
-  entry: CLIENT_ENTRY_FILE_PATH || './start.js',
+  entry: entryFilePath,
   name: 'client',
   mode,
+  // TO D0 -- browserlist?
   target: 'web',
 
-  // dev
-  // should be dev only?
-  devtool: 'cheap-module-source-map',
-
-  module: { rules },
+  // TO DO -- code splitting
+  // TO DO -- hash is deprecated
   output: {
     chunkFilename: isEnvProduction
       ? 'js/[name].[hash:8].chunk.js'
@@ -97,21 +113,119 @@ const webpackConfig = {
   },
 
   //
+  /* RULES */
+  //
+
+  module: {
+    rules: [
+      // Typescript
+      { test: /\.tsx?$/, loader: 'ts-loader' },
+
+      // TO DELETE?
+      // mjs files: needed because of apollo client??
+      {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
+
+      // js files
+      {
+        test: /\.js$|\.jsx$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            // include: [
+            //   // include app folder
+            //   path.join(__dirname),
+            //   // path.join(__dirname, '..', 'app'),
+            //   // path.join(__dirname, '..', 'ui'),
+            //   // include pubsweet packages which are published untranspiled
+            //   /pubsweet-[^/\\]+\/(?!node_modules)/,
+            //   /@pubsweet\/[^/\\]+\/(?!node_modules)/,
+            // ],
+            presets: [
+              '@babel/preset-env',
+              // ['@babel/preset-env', { modules: false }],
+              '@babel/preset-react',
+            ],
+            plugins: [
+              'babel-plugin-styled-components',
+              '@babel/plugin-proposal-class-properties',
+              // 'transform-decorators-legacy',
+            ].filter(Boolean),
+
+            env: {
+              development: {
+                plugins: [
+                  useFastRefresh && require.resolve('react-refresh/babel'),
+                ].filter(Boolean),
+              },
+              // TO DO: install babel-preset-minify?
+              //   production: {
+              //     /* bug requires mangle:false https://github.com/babel/minify/issues/556#issuecomment-339751209 */
+              //     presets: [['minify', { builtIns: false, mangle: false }]],
+              //   },
+            },
+          },
+        },
+      },
+
+      // Images
+      {
+        test: /\.png|\.jpg$/,
+        loader: 'url-loader',
+        // options: {
+        //   limit: 5000,
+        // },
+      },
+
+      // Fonts
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
+      },
+      // {
+      //   test: /\.woff|\.woff2|\.svg|.eot|\.ttf/,
+      //   loader: 'url-loader',
+      //   options: {
+      //     name: 'static/media/[name].[hash:8].[ext]',
+      //     // fonts break without this line, revisit when webpack dependencies are upgraded
+      //     esModule: false,
+      //   },
+      // },
+
+      // HTML
+      { test: /\.html$/, loader: 'html-loader' },
+
+      // CSS
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
+
+  //
   /* PLUGINS */
   //
 
   plugins: [
     // Use the index.ejs template to create the base index.html file of the bundle
     new HtmlWebpackPlugin({
-      favicon: CLIENT_FAVICON_PATH,
+      favicon: faviconPath,
       template: templatePath,
-      title: CLIENT_PAGE_TITLE,
+      title: pageTitle,
     }),
 
     // DEV-ONLY
     // React fast-refresh
-    isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
-    isEnvDevelopment && new ReactRefreshWebpackPlugin(),
+    isEnvDevelopment &&
+      useFastRefresh &&
+      new webpack.HotModuleReplacementPlugin(),
+    isEnvDevelopment && useFastRefresh && new ReactRefreshWebpackPlugin(),
 
     // PROD-ONLY
     isEnvProduction &&
@@ -121,13 +235,7 @@ const webpackConfig = {
       }),
 
     // Make sure environment variables are defined
-    new webpack.EnvironmentPlugin([
-      'NODE_ENV',
-      'SERVER_PROTOCOL',
-      'SERVER_HOST',
-      'SERVER_PORT',
-      ...otherVariables,
-    ]),
+    new webpack.EnvironmentPlugin(variablesInBuild),
 
     // Copy static assets to root of build folder
     new CopyPlugin({
@@ -154,14 +262,19 @@ const webpackConfig = {
 }
 
 if (isEnvDevelopment) {
+  // TO DO -- use any source map in production?
+  webpackConfig.devtool = 'cheap-module-source-map'
+
   //
-  /* WEBPACK DEV SERVER CONFIGURATION */
+  /* WEBPACK DEV SERVER */
   //
 
   webpackConfig.devServer = {
+    // handle unknown routes
     historyApiFallback: true,
+    // play nice from a within a docker container
     host: '0.0.0.0',
-    port: CLIENT_PORT,
+    port: devSeverPort,
   }
 }
 
