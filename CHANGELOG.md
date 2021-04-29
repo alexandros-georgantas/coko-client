@@ -4,11 +4,10 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.0.10](https://gitlab.coko.foundation///compare/v0.0.9...v0.0.10) (2021-04-18)
 
-
 ### Bug Fixes
 
-* **webpack:** do not use depecrated url-loader in config ([f541a19](https://gitlab.coko.foundation///commit/f541a19edace3ada8f2bdbb7a58bdd7fc0b79401))
-* **webpack:** make fast-refresh opt-in ([9072727](https://gitlab.coko.foundation///commit/90727271503f23e0fa4acbbf0c76c7a7f8648ef1))
+- **webpack:** do not use depecrated url-loader in config ([f541a19](https://gitlab.coko.foundation///commit/f541a19edace3ada8f2bdbb7a58bdd7fc0b79401))
+- **webpack:** make fast-refresh opt-in ([9072727](https://gitlab.coko.foundation///commit/90727271503f23e0fa4acbbf0c76c7a7f8648ef1))
 
 ### [0.0.9](https://gitlab.coko.foundation///compare/v0.0.8...v0.0.9) (2021-04-15)
 
