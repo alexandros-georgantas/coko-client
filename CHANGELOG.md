@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.11](https://gitlab.coko.foundation///compare/v0.0.10...v0.0.11) (2021-05-05)
+
+
+### Bug Fixes
+
+* **webpack:** correct known environment variables list ([17abc46](https://gitlab.coko.foundation///commit/17abc46ab63a59eacfa96bda20807d493441a8c5))
+* **webpack:** fix webpack fast refresh dnd issue ([2ab0790](https://gitlab.coko.foundation///commit/2ab0790dbc2997886cd3affd30227873643f489f))
+
 ### [0.0.10](https://gitlab.coko.foundation///compare/v0.0.9...v0.0.10) (2021-04-18)
 
 ### Bug Fixes
