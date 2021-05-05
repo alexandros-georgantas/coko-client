@@ -1271,10 +1271,10 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
-"@pmmmwh/react-refresh-webpack-plugin@^0.5.0-beta.3":
-  version "0.5.0-beta.3"
-  resolved "https://registry.yarnpkg.com/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.5.0-beta.3.tgz#58dd62a81b6a0ca8864392ffda97bd6b5b439433"
-  integrity sha512-21vRTjPQC/Z9S6ecmRLlo/VvnLNkWdUIU6AUaouZjYVOH/vMcjDUx6LWdCqBdibL7fRygYIaUEMevO4rjcvO5w==
+"@pmmmwh/react-refresh-webpack-plugin@^0.5.0-beta.6":
+  version "0.5.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.5.0-beta.6.tgz#0451cf4888c120496a3d3acf9ce925e3ea62cf10"
+  integrity sha512-VLuUjTd2udukyhsEMLO3rAGWQe8yXsudFsp3UTEQQIgNlH3LfeTaoUP2KFWZ4cVRm3/IGcbJP28Z62Ja7yYDzw==
   dependencies:
     ansi-html "^0.0.7"
     core-js-pure "^3.8.1"

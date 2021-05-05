@@ -80,8 +80,10 @@ const buildFolderPath =
   CLIENT_BUILD_FOLDER_PATH || path.resolve(appPath, '..', '_build')
 
 // react's fast-refresh is opt-in for the time being
-const useFastRefresh =
-  CLIENT_FAST_REFRESH === 1 || CLIENT_FAST_REFRESH === 'true'
+const fastRefreshValue =
+  CLIENT_FAST_REFRESH && CLIENT_FAST_REFRESH.toString().toLowerCase()
+
+const useFastRefresh = fastRefreshValue === '1' || fastRefreshValue === 'true'
 
 const templatePath = path.resolve(__dirname, 'index.ejs')
 const entryFilePath = CLIENT_ENTRY_FILE_PATH || './start.js'

@@ -14,4 +14,6 @@ export SERVER_PORT='443'
 
 export WEBPACK_CONFIG_PATH='./webpack/webpack.config.js'
 
+export CLIENT_FAST_REFRESH=1
+
 sh ./scripts/coko-client-dev.sh
