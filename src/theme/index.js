@@ -14,22 +14,21 @@ import {
 const cokoTheme = {
   /* Colors */
   colorBackground: 'white',
+  colorBackgroundHue: '#F1F1F1', // deprecate
+  colorFurniture: '#CCC', // deprecate
+
   colorPrimary: '#0B65CB',
   colorSecondary: '#E7E7E7',
-  colorFurniture: '#CCC',
   colorDisabled: '#595959',
   colorBorder: '#AAA',
-  colorBackgroundHue: '#F1F1F1',
+
   colorSuccess: '#008800',
   colorError: '#FF2D1A',
+  colorWarning: '#ffc107',
+
   colorText: '#111',
   colorTextReverse: '#FFF',
   colorTextPlaceholder: '#595959',
-  colorWarning: '#ffc107',
-
-  // TODO -- not used anywhere
-  //   $colorInteract: var($colorPrimaryDarker);
-  // $colorPrimaryDarker: #0551a8
 
   /* Text variables */
 
@@ -37,11 +36,11 @@ const cokoTheme = {
   fontInterface: '',
   fontHeading: '',
   fontReading: '',
-  fontWriting: '',
+  fontWriting: '', // deprecate
 
   // font sizes
   fontSizeBase: '16px',
-  fontSizeBaseSmall: '14px',
+  fontSizeBaseSmall: '14px', // rename to fontSizeSmall
   fontSizeHeading1: '40px',
   fontSizeHeading2: '36px',
   fontSizeHeading3: '28px',
@@ -51,7 +50,7 @@ const cokoTheme = {
 
   // line heights
   lineHeightBase: '24px',
-  lineHeightBaseSmall: '16px',
+  lineHeightBaseSmall: '16px', // rename to lineHeightSmall
   lineHeightHeading1: '48px',
   lineHeightHeading2: '40px',
   lineHeightHeading3: '32px',
@@ -74,12 +73,14 @@ const cokoTheme = {
   boxShadow: '0 2px 4px 0 rgba(51, 51, 51, 0.3)',
 
   /* Transition */
-  transitionDuration: '0.2s', // TODO -- julien: not 0.05s
+  transitionDuration: '0.2s',
   transitionTimingFunction: 'ease',
   transitionDelay: '0',
-  /* Breakpoints */
-  breakpoints: [480, 768, 1000, 1272],
 
+  /* Breakpoints */
+  // breakpoints: [480, 768, 1000, 1272],
+
+  // TO DO: Revisit the need for any of these
   cssOverrides: {
     Login: {
       Logo,

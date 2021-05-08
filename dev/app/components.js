@@ -5,6 +5,8 @@ import styled, { css } from 'styled-components'
 import { gql, useQuery } from '@apollo/client'
 import { Link } from 'react-router-dom'
 
+import { Button } from 'antd'
+
 import { uuid } from '../../src'
 
 /**
@@ -124,6 +126,7 @@ const First = () => {
     <Container>
       <div>
         <Link to="/second">Change page</Link>
+        <Link to="/ant">Ant</Link>
       </div>
 
       <ItemList data={data} loading={loading} />
@@ -142,6 +145,17 @@ const Second = () => (
   </Container>
 )
 
+const AntPage = () => (
+  <Container second>
+    <div>
+      <Link to="/">Go back</Link>
+    </div>
+    <div>
+      <Button type="primary">Primary button</Button>
+    </div>
+  </Container>
+)
+
 const StyledNavigationBar = styled.div`
   background: cornflowerblue;
   color: white;
@@ -156,4 +170,4 @@ const NavigationBar = () => (
   </StyledNavigationBar>
 )
 
-export { First, Second, NavigationBar }
+export { First, Second, AntPage, NavigationBar }

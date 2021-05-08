@@ -4,10 +4,16 @@ import { createBrowserHistory } from 'history'
 
 import { Root } from '@pubsweet/client'
 
+// eslint-disable-next-line import/no-unresolved
+import theme from 'theme'
+
+// ADD THIS IF WE STANDARDIZE ANTD ACROSS THE APPS AND ANTD IS A CLIENT DEPENDENCY
+// import 'antd/dist/antd.less'
+
 const history = createBrowserHistory()
 const rootEl = document.getElementById('root')
 
-const startClient = (routes, theme, options = {}) => {
+const startClient = (routes, options = {}) => {
   const connectToWebSocket = options.connectToWebSocket || false
 
   ReactDOM.render(

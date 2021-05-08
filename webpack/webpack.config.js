@@ -9,6 +9,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
+const lessThemeMapper = require('./lessThemeMapper')
+
 const {
   NODE_ENV,
 
@@ -20,6 +22,7 @@ const {
   CLIENT_PAGE_TITLE,
   CLIENT_STATIC_FOLDER_PATH,
   CLIENT_PORT,
+  CLIENT_THEME_PATH,
 
   SERVER_PROTOCOL,
   SERVER_HOST,
@@ -40,6 +43,7 @@ const variablesForWebpackConfig = [
   'CLIENT_PAGE_TITLE',
   'CLIENT_STATIC_FOLDER_PATH',
   'CLIENT_PORT',
+  'CLIENT_THEME_PATH',
 ]
 
 // Environment variables that will be passed down to the build
@@ -72,6 +76,10 @@ if (CLIENT_APP_ROOT_PATH) {
 } else {
   appPath = path.resolve(appRootPath.toString(), 'app')
 }
+
+const themePath = path.resolve(appPath, CLIENT_THEME_PATH || 'theme.js')
+// eslint-disable-next-line import/no-dynamic-require
+const theme = require(themePath)
 
 const staticFolderPath =
   CLIENT_STATIC_FOLDER_PATH || path.resolve(appPath, '..', 'static')
@@ -108,6 +116,7 @@ console.log(`static folder path found at: ${staticFolderPath}`)
 console.log(`app entry file will be: ${entryFilePath}`)
 console.log(`favicon path will be: ${faviconPath}`)
 console.log(`page title set to: ${pageTitle}`)
+console.log(`theme will be loaded from: ${themePath}`)
 
 console.log('')
 isEnvDevelopment && console.log(`dev server will run at port: ${devSeverPort}`)
@@ -251,6 +260,28 @@ const webpackConfig = {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
+
+      {
+        test: /\.less$/,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader', // translates CSS into CommonJS
+          },
+          {
+            loader: 'less-loader', // compiles Less to CSS
+            options: {
+              lessOptions: {
+                // override default (antd) less variables
+                modifyVars: lessThemeMapper(theme),
+                javascriptEnabled: true,
+              },
+            },
+          },
+        ],
+      },
     ],
   },
 
@@ -305,6 +336,12 @@ const webpackConfig = {
   //   enforceExtension: false,
   //   extensions: ['.mjs', '.js', '.jsx', '.json', '.scss'],
   // },
+
+  resolve: {
+    alias: {
+      theme: themePath,
+    },
+  },
 }
 
 if (isEnvDevelopment) {
