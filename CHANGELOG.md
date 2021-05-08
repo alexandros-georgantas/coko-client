@@ -4,18 +4,16 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.0.12](https://gitlab.coko.foundation///compare/v0.0.11...v0.0.12) (2021-05-08)
 
-
 ### Features
 
-* **webpack:** add antd support ([6426fdd](https://gitlab.coko.foundation///commit/6426fdd1d710c250c58637c2845428c8ed8566c4))
+- **webpack:** add antd support ([6426fdd](https://gitlab.coko.foundation///commit/6426fdd1d710c250c58637c2845428c8ed8566c4))
 
 ### [0.0.11](https://gitlab.coko.foundation///compare/v0.0.10...v0.0.11) (2021-05-05)
 
-
 ### Bug Fixes
 
-* **webpack:** correct known environment variables list ([17abc46](https://gitlab.coko.foundation///commit/17abc46ab63a59eacfa96bda20807d493441a8c5))
-* **webpack:** fix webpack fast refresh dnd issue ([2ab0790](https://gitlab.coko.foundation///commit/2ab0790dbc2997886cd3affd30227873643f489f))
+- **webpack:** correct known environment variables list ([17abc46](https://gitlab.coko.foundation///commit/17abc46ab63a59eacfa96bda20807d493441a8c5))
+- **webpack:** fix webpack fast refresh dnd issue ([2ab0790](https://gitlab.coko.foundation///commit/2ab0790dbc2997886cd3affd30227873643f489f))
 
 ### [0.0.10](https://gitlab.coko.foundation///compare/v0.0.9...v0.0.10) (2021-04-18)
 

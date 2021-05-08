@@ -21,8 +21,10 @@ const {
   CLIENT_FAVICON_PATH,
   CLIENT_PAGE_TITLE,
   CLIENT_STATIC_FOLDER_PATH,
+  CLIENT_PAGES_FOLDER_PATH,
   CLIENT_PORT,
   CLIENT_THEME_PATH,
+  CLIENT_UI_FOLDER_PATH,
 
   SERVER_PROTOCOL,
   SERVER_HOST,
@@ -42,8 +44,10 @@ const variablesForWebpackConfig = [
   'CLIENT_FAVICON_PATH',
   'CLIENT_PAGE_TITLE',
   'CLIENT_STATIC_FOLDER_PATH',
+  'CLIENT_PAGES_FOLDER_PATH',
   'CLIENT_PORT',
   'CLIENT_THEME_PATH',
+  'CLIENT_UI_FOLDER_PATH',
 ]
 
 // Environment variables that will be passed down to the build
@@ -81,6 +85,15 @@ const themePath = path.resolve(appPath, CLIENT_THEME_PATH || 'theme.js')
 // eslint-disable-next-line import/no-dynamic-require
 const theme = require(themePath)
 
+const uiFolderPath = path.resolve(appPath, CLIENT_UI_FOLDER_PATH || 'ui')
+
+const pagesFolderPath = path.resolve(
+  appPath,
+  CLIENT_PAGES_FOLDER_PATH || 'pages',
+)
+
+const noopPath = path.resolve(__dirname, 'noop.js')
+
 const staticFolderPath =
   CLIENT_STATIC_FOLDER_PATH || path.resolve(appPath, '..', 'static')
 
@@ -117,6 +130,8 @@ console.log(`app entry file will be: ${entryFilePath}`)
 console.log(`favicon path will be: ${faviconPath}`)
 console.log(`page title set to: ${pageTitle}`)
 console.log(`theme will be loaded from: ${themePath}`)
+console.log(`ui folder path will be: ${uiFolderPath}`)
+console.log(`pages folder path will be: ${pagesFolderPath}`)
 
 console.log('')
 isEnvDevelopment && console.log(`dev server will run at port: ${devSeverPort}`)
@@ -339,7 +354,14 @@ const webpackConfig = {
 
   resolve: {
     alias: {
+      pages: pagesFolderPath,
       theme: themePath,
+      ui: uiFolderPath,
+    },
+    fallback: {
+      pages: noopPath,
+      theme: noopPath,
+      ui: noopPath,
     },
   },
 }
