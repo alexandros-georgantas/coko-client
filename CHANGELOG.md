@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.12](https://gitlab.coko.foundation///compare/v0.0.11...v0.0.12) (2021-05-08)
+
+
+### Features
+
+* **webpack:** add antd support ([6426fdd](https://gitlab.coko.foundation///commit/6426fdd1d710c250c58637c2845428c8ed8566c4))
+
 ### [0.0.11](https://gitlab.coko.foundation///compare/v0.0.10...v0.0.11) (2021-05-05)
 
 
