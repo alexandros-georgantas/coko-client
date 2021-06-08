@@ -1350,10 +1350,19 @@
     styled-components "^5.2.3"
     styled-normalize "^8.0.6"
 
-"@pubsweet/ui-toolkit@^2.3.13", "@pubsweet/ui-toolkit@^2.3.14":
+"@pubsweet/ui-toolkit@^2.3.14":
   version "2.3.14"
   resolved "https://registry.yarnpkg.com/@pubsweet/ui-toolkit/-/ui-toolkit-2.3.14.tgz#0462c5bda3b8af199783f32f2f60aa160ee07ccf"
   integrity sha512-xKLbvrOcTM6NZ4sbBOIiwqhljkuHxS1vKZtudaQD9cyPfeKZYQeURE9Sfp5Y8hJaazuQ4AoqaTZVylmbSf8+Og==
+  dependencies:
+    color "^3.0.0"
+    lodash "^4.17.4"
+    styled-components "^5.2.3"
+
+"@pubsweet/ui-toolkit@^2.3.16":
+  version "2.3.16"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui-toolkit/-/ui-toolkit-2.3.16.tgz#8674ca5596ffd1bf5bf346ba65bc5ebaca508873"
+  integrity sha512-VdZDxrCpL6uLW504nOw1TYoj4zgGNV4as88IwvRasT6hWGWLH+Bt1QEpwy0GYP6fCHyfhsTgnxDUe8lBBRlcWQ==
   dependencies:
     color "^3.0.0"
     lodash "^4.17.4"
