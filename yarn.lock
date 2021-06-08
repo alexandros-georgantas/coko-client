@@ -1359,6 +1359,15 @@
     lodash "^4.17.4"
     styled-components "^5.2.3"
 
+"@pubsweet/ui-toolkit@^2.3.17":
+  version "2.3.17"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui-toolkit/-/ui-toolkit-2.3.17.tgz#9ae2325fb55d32f584eb246af274da662b749b8d"
+  integrity sha512-8rcEZcTkgl/zmTMsz90wdePN1Sfx6H+gA+Q7XXlWxr7WsXrVuQ9TfsXPtTlhGyWwUrAjdwtK7m5v3BPvBuY9Dw==
+  dependencies:
+    color "^3.0.0"
+    lodash "^4.17.4"
+    styled-components "^5.2.3"
+
 "@pubsweet/ui@^12.6.14":
   version "12.6.14"
   resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-12.6.14.tgz#a48355a2b81412c128852bd8f1b36de8005c3599"
