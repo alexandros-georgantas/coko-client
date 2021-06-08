@@ -6,7 +6,7 @@ import { Root } from '@pubsweet/client'
 
 // eslint-disable-next-line import/no-unresolved
 import theme from 'theme'
-import lessThemeMapper from '../../webpack/lessThemeMapper'
+import lessThemeMapper from './lessThemeMapper'
 
 // ADD THIS IF WE STANDARDIZE ANTD ACROSS THE APPS AND ANTD IS A CLIENT DEPENDENCY
 // import 'antd/dist/antd.less'
