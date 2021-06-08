@@ -10,9 +10,9 @@ const theme = {
   gridUnit: '8px',
 
   ant: {
-    primaryColor: primary,
+    // primaryColor: primary,
     // 'primary-color': primary,
   },
 }
 
-module.exports = theme
+export default theme

@@ -8,8 +8,9 @@ const CopyPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+const AntDesignThemePlugin = require('antd-theme-webpack-plugin')
 
-const lessThemeMapper = require('./lessThemeMapper')
+const antdThemeVariables = require('./antdThemeVariables')
 
 const {
   NODE_ENV,
@@ -82,8 +83,9 @@ if (CLIENT_APP_ROOT_PATH) {
 }
 
 const themePath = path.resolve(appPath, CLIENT_THEME_PATH || 'theme.js')
+
 // eslint-disable-next-line import/no-dynamic-require
-const theme = require(themePath)
+// const theme = require(themeVariablesPath)
 
 const uiFolderPath = path.resolve(appPath, CLIENT_UI_FOLDER_PATH || 'ui')
 
@@ -115,6 +117,18 @@ const pageTitle = CLIENT_PAGE_TITLE
 const serverUrl = `${SERVER_PROTOCOL}://${SERVER_HOST}${
   SERVER_PORT ? `:${SERVER_PORT}` : ''
 }`
+
+const options = {
+  antDir: path.join(__dirname, '../node_modules/antd'),
+  stylesDir: path.join(__dirname),
+  varFile: path.join(__dirname, 'variables.less'),
+  themeVariables: antdThemeVariables,
+  // indexFileName: 'index.html',
+  // generateOnce: false,
+  // customColorRegexArray: [],
+}
+
+const themePlugin = new AntDesignThemePlugin(options)
 
 /* eslint-disable no-console */
 console.log('\n###################\n')
@@ -290,7 +304,7 @@ const webpackConfig = {
             options: {
               lessOptions: {
                 // override default (antd) less variables
-                modifyVars: lessThemeMapper(theme),
+                // modifyVars: lessThemeMapper(themeVariables),
                 javascriptEnabled: true,
               },
             },
@@ -336,6 +350,8 @@ const webpackConfig = {
 
     new webpack.optimize.AggressiveMergingPlugin(),
     new CompressionPlugin(),
+
+    themePlugin,
 
     // TO DELETE
     // new webpack.NoEmitOnErrorsPlugin(),
