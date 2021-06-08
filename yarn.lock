@@ -1331,14 +1331,14 @@
     schema-utils "^3.0.0"
     source-map "^0.7.3"
 
-"@pubsweet/client@^11.0.10":
-  version "11.0.11"
-  resolved "https://registry.yarnpkg.com/@pubsweet/client/-/client-11.0.11.tgz#270197a8388a903906fc5dea0956800594e20339"
-  integrity sha512-jjUfAvgYn/ZIvOdrNoMKfZ1ePUEaCCySx0E63nGcVZzKpaSVV3AqBD+qCiaZNhWuPm+VUjh8jUfed+mN3KYMWg==
+"@pubsweet/client@^11.0.13":
+  version "11.0.13"
+  resolved "https://registry.yarnpkg.com/@pubsweet/client/-/client-11.0.13.tgz#29f85d35b2310559357318c8b48a6547e6c6b268"
+  integrity sha512-ZEKfw1hJUwdw34Ft2Y4wPt4iJVC/o79QbGkflOxbXCmNheCvIeb6Hn2jypTfIlra94LOqSzpMMy8Ld8OvobyFA==
   dependencies:
     "@apollo/client" "^3.2.6"
-    "@pubsweet/ui" "^12.6.12"
-    "@pubsweet/ui-toolkit" "^2.3.14"
+    "@pubsweet/ui" "^12.6.14"
+    "@pubsweet/ui-toolkit" "^2.3.16"
     apollo-upload-client "^11.0.0"
     authsome "^0.1.0"
     config "^3.0.1"
@@ -1350,15 +1350,6 @@
     styled-components "^5.2.3"
     styled-normalize "^8.0.6"
 
-"@pubsweet/ui-toolkit@^2.3.14":
-  version "2.3.14"
-  resolved "https://registry.yarnpkg.com/@pubsweet/ui-toolkit/-/ui-toolkit-2.3.14.tgz#0462c5bda3b8af199783f32f2f60aa160ee07ccf"
-  integrity sha512-xKLbvrOcTM6NZ4sbBOIiwqhljkuHxS1vKZtudaQD9cyPfeKZYQeURE9Sfp5Y8hJaazuQ4AoqaTZVylmbSf8+Og==
-  dependencies:
-    color "^3.0.0"
-    lodash "^4.17.4"
-    styled-components "^5.2.3"
-
 "@pubsweet/ui-toolkit@^2.3.16":
   version "2.3.16"
   resolved "https://registry.yarnpkg.com/@pubsweet/ui-toolkit/-/ui-toolkit-2.3.16.tgz#8674ca5596ffd1bf5bf346ba65bc5ebaca508873"
@@ -1368,12 +1359,12 @@
     lodash "^4.17.4"
     styled-components "^5.2.3"
 
-"@pubsweet/ui@^12.6.12":
-  version "12.6.12"
-  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-12.6.12.tgz#06a3d2cdf33fd2e7313cae8ee8a9cc955a28330e"
-  integrity sha512-+xGFjaAiTBySroRPbQDVraQLBGqEawcYfFwAe4caJvekQ+DWQPbJcfAJiNg58OXz+6B5f3CidfnLTuOeuOzefQ==
+"@pubsweet/ui@^12.6.14":
+  version "12.6.14"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-12.6.14.tgz#a48355a2b81412c128852bd8f1b36de8005c3599"
+  integrity sha512-v+eEEeMxcP4pt0UvoHSZ2sE+ibGODOJON3Iu4K/4Nl3dDn4nOj2DVZPU+oOgFEAZpLuBFbSILZgFVcXeYVshgA==
   dependencies:
-    "@pubsweet/ui-toolkit" "^2.3.14"
+    "@pubsweet/ui-toolkit" "^2.3.16"
     "@wojtekmaj/enzyme-adapter-react-17" "0.6.0"
     enzyme "^3.7.0"
     formik "^1.4.2"
