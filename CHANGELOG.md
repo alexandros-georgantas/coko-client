@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.17](https://gitlab.coko.foundation///compare/v0.0.16...v0.0.17) (2021-06-08)
+
+
+### Features
+
+* **webpack:** less variable live reloading ([a43e30e](https://gitlab.coko.foundation///commit/a43e30e172fcde23230308ee597dc804e246a3ec))
+
 ### [0.0.16](https://gitlab.coko.foundation///compare/v0.0.15...v0.0.16) (2021-06-08)
 
 ### [0.0.15](https://gitlab.coko.foundation///compare/v0.0.14...v0.0.15) (2021-06-08)
