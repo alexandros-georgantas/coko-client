@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.19](https://gitlab.coko.foundation///compare/v0.0.18...v0.0.19) (2021-06-09)
+
+
+### Features
+
+* **theme:** remove theme from env vars ([7bd0c7e](https://gitlab.coko.foundation///commit/7bd0c7eb870c5a3467b99b81e97f8eeb72a56a63))
+
 ### [0.0.18](https://gitlab.coko.foundation///compare/v0.0.17...v0.0.18) (2021-06-08)
 
 ### [0.0.17](https://gitlab.coko.foundation///compare/v0.0.16...v0.0.17) (2021-06-08)
