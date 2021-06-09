@@ -27,7 +27,7 @@ const GET_THOSE_RATES = gql`
  */
 
 const Container = styled.div`
-  background: ${props => props.theme.colorBackground};
+  /* background: ${props => props.theme.colorBackground}; */
   display: flex;
   flex-direction: column;
   min-height: 100%;

@@ -1,3 +1,6 @@
+import 'fontsource-advent-pro'
+import 'antd/dist/antd.less'
+
 const primary = 'olive'
 
 const theme = {

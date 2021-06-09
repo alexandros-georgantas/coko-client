@@ -6,10 +6,9 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
-import 'fontsource-advent-pro'
-import 'antd/dist/antd.less'
-
 import { startClient, PageLayout } from '../../src'
+
+import theme from './theme'
 
 import { First, Second, AntPage, NavigationBar } from './components'
 
@@ -23,4 +22,4 @@ const routes = (
   </PageLayout>
 )
 
-startClient(routes)
+startClient(routes, theme)

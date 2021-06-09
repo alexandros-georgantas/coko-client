@@ -24,7 +24,6 @@ const {
   CLIENT_STATIC_FOLDER_PATH,
   CLIENT_PAGES_FOLDER_PATH,
   CLIENT_PORT,
-  CLIENT_THEME_PATH,
   CLIENT_UI_FOLDER_PATH,
 
   SERVER_PROTOCOL,
@@ -47,7 +46,6 @@ const variablesForWebpackConfig = [
   'CLIENT_STATIC_FOLDER_PATH',
   'CLIENT_PAGES_FOLDER_PATH',
   'CLIENT_PORT',
-  'CLIENT_THEME_PATH',
   'CLIENT_UI_FOLDER_PATH',
 ]
 
@@ -81,11 +79,6 @@ if (CLIENT_APP_ROOT_PATH) {
 } else {
   appPath = path.resolve(appRootPath.toString(), 'app')
 }
-
-const themePath = path.resolve(appPath, CLIENT_THEME_PATH || 'theme.js')
-
-// eslint-disable-next-line import/no-dynamic-require
-// const theme = require(themeVariablesPath)
 
 const uiFolderPath = path.resolve(appPath, CLIENT_UI_FOLDER_PATH || 'ui')
 
@@ -124,7 +117,7 @@ const options = {
   varFile: path.join(__dirname, 'variables.less'),
   themeVariables: antdThemeVariables,
   // indexFileName: 'index.html',
-  // generateOnce: false,
+  generateOnce: isEnvProduction,
   // customColorRegexArray: [],
 }
 
@@ -143,7 +136,6 @@ console.log(`static folder path found at: ${staticFolderPath}`)
 console.log(`app entry file will be: ${entryFilePath}`)
 console.log(`favicon path will be: ${faviconPath}`)
 console.log(`page title set to: ${pageTitle}`)
-console.log(`theme will be loaded from: ${themePath}`)
 console.log(`ui folder path will be: ${uiFolderPath}`)
 console.log(`pages folder path will be: ${pagesFolderPath}`)
 
@@ -371,12 +363,10 @@ const webpackConfig = {
   resolve: {
     alias: {
       pages: pagesFolderPath,
-      theme: themePath,
       ui: uiFolderPath,
     },
     fallback: {
       pages: noopPath,
-      theme: noopPath,
       ui: noopPath,
     },
   },

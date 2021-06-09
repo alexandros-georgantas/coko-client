@@ -16,9 +16,7 @@ const GlobalStyle = createGlobalStyle`
     overflow: hidden;
   }
 
-  #root,
-  #root > div,
-  #root > div > div {
+  #root {
     height: 100%;
   }
 `
