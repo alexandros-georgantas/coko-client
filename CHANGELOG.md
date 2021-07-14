@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.20](https://gitlab.coko.foundation///compare/v0.0.19...v0.0.20) (2021-07-14)
+
+
+### Bug Fixes
+
+* move antd to dependencies ([72a09dc](https://gitlab.coko.foundation///commit/72a09dc778d2d7c98a348148e374e7ef8dea173e))
+
 ### [0.0.19](https://gitlab.coko.foundation///compare/v0.0.18...v0.0.19) (2021-06-09)
 
 ### Features
