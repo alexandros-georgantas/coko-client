@@ -111,17 +111,24 @@ const serverUrl = `${SERVER_PROTOCOL}://${SERVER_HOST}${
   SERVER_PORT ? `:${SERVER_PORT}` : ''
 }`
 
-const options = {
-  antDir: path.join(__dirname, '../node_modules/antd'),
-  stylesDir: path.join(__dirname),
+const antPath = path.join(path.dirname(require.resolve('antd')), '..')
+
+// const antVariablesPath = require.resolve(
+//   path.join(antPath, 'lib/style/themes/default.less'),
+// )
+
+const antPluginOptions = {
+  antDir: antPath,
+  // stylesDir: path.join(__dirname),
   varFile: path.join(__dirname, 'variables.less'),
+  // varFile: antVariablesPath,
   themeVariables: antdThemeVariables,
   // indexFileName: 'index.html',
   generateOnce: isEnvProduction,
   // customColorRegexArray: [],
 }
 
-const themePlugin = new AntDesignThemePlugin(options)
+const themePlugin = new AntDesignThemePlugin(antPluginOptions)
 
 /* eslint-disable no-console */
 console.log('\n###################\n')
