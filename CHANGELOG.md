@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.21](https://gitlab.coko.foundation///compare/v0.0.20...v0.0.21) (2021-07-15)
+
+
+### Bug Fixes
+
+* **theme:** fix dynamic theme loading of ant vars ([780ef8a](https://gitlab.coko.foundation///commit/780ef8a77452683a4a10f7a742ba173c24952907))
+
 ### [0.0.20](https://gitlab.coko.foundation///compare/v0.0.19...v0.0.20) (2021-07-14)
 
 ### Bug Fixes
