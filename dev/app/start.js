@@ -12,6 +12,12 @@ import theme from './theme'
 
 import { First, Second, AntPage, NavigationBar } from './components'
 
+// Make sure async functions are supported
+/* eslint-disable no-unused-vars */
+const doSomethingAsync = async () => {
+  await console.error('do it')
+}
+
 const routes = (
   <PageLayout fadeInPages navComponent={NavigationBar} padPages>
     <Switch>
