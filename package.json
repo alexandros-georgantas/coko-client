@@ -15,7 +15,8 @@
   "main": "dist",
   "bin": {
     "coko-client-build": "./scripts/coko-client-build.sh",
-    "coko-client-dev": "./scripts/coko-client-dev.sh"
+    "coko-client-dev": "./scripts/coko-client-dev.sh",
+    "coko-client-dev-js": "./scripts/coko-client-dev.js"
   },
   "files": [
     "dist",
