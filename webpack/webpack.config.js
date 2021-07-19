@@ -231,6 +231,7 @@ const webpackConfig = {
             plugins: [
               'babel-plugin-styled-components',
               '@babel/plugin-proposal-class-properties',
+              '@babel/plugin-transform-runtime',
               // 'transform-decorators-legacy',
             ].filter(Boolean),
 
