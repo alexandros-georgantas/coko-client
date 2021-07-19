@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.22](https://gitlab.coko.foundation///compare/v0.0.21...v0.0.22) (2021-07-19)
+
+
+### Bug Fixes
+
+* **webpack:** add babel plugin transform runtime ([6199971](https://gitlab.coko.foundation///commit/6199971889ee3556f4cd6f95a433d2221d1817a6))
+
 ### [0.0.21](https://gitlab.coko.foundation///compare/v0.0.20...v0.0.21) (2021-07-15)
 
 ### Bug Fixes
