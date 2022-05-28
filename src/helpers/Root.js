@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
@@ -20,6 +20,7 @@ import { WebSocketLink } from '@apollo/client/link/ws'
 import { createUploadLink } from 'apollo-upload-client'
 
 import lessThemeMapper from './lessThemeMapper'
+import { CurrentUserContext } from './currentUserContext'
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -137,18 +138,21 @@ const LessVariablesRemapper = ({ theme }) => {
 
 const Root = props => {
   const { makeApolloConfig, routes, theme, connectToWebSocket } = props
+  const [currentUser, setCurrentUser] = useState(null)
 
   return (
     <ApolloProvider
       client={makeApolloClient(makeApolloConfig, connectToWebSocket)}
     >
       <BrowserRouter>
-        <ThemeProvider theme={theme}>
-          <Normalize />
-          <GlobalStyle />
-          <LessVariablesRemapper theme={theme} />
-          {routes}
-        </ThemeProvider>
+        <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
+          <ThemeProvider theme={theme}>
+            <Normalize />
+            <GlobalStyle />
+            <LessVariablesRemapper theme={theme} />
+            {routes}
+          </ThemeProvider>
+        </CurrentUserContext.Provider>
       </BrowserRouter>
     </ApolloProvider>
   )
