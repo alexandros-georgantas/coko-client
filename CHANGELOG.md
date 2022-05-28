@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.0.24](https://gitlab.coko.foundation///compare/v0.0.23...v0.0.24) (2022-05-28)
 
-
 ### Features
 
-* **components:** add require auth component ([13dd1e6](https://gitlab.coko.foundation///commit/13dd1e6137ed24932a921ecfb26db6b795fbe0f2))
+- **components:** add require auth component ([13dd1e6](https://gitlab.coko.foundation///commit/13dd1e6137ed24932a921ecfb26db6b795fbe0f2))
 
 ### [0.0.23](https://gitlab.coko.foundation///compare/v0.0.22...v0.0.23) (2021-07-19)
 

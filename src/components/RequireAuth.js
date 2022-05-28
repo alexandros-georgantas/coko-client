@@ -12,6 +12,11 @@ const CURRENT_USER = gql`
       displayName
       username
       # roles
+
+      defaultIdentity {
+        id
+        isVerified
+      }
     }
   }
 `
@@ -19,9 +24,11 @@ const CURRENT_USER = gql`
 const RequireAuth = props => {
   const {
     notAuthenticatedRedirectTo,
-    LoadingComponent,
+    loadingComponent: LoadingComponent,
     cleanUp,
     children,
+    requireIdentityVerification,
+    notVerifiedRedirectTo,
   } = props
 
   const client = useApolloClient()
@@ -60,16 +67,25 @@ const RequireAuth = props => {
     return null
   }
 
+  if (requireIdentityVerification) {
+    const verified = currentUser?.defaultIdentity?.isVerified
+    if (!verified) return <Redirect to={notVerifiedRedirectTo} />
+  }
+
   return children
 }
 
 RequireAuth.propTypes = {
   cleanUp: PropTypes.func,
+  requireIdentityVerification: PropTypes.bool,
+  notVerifiedRedirectTo: PropTypes.string,
 }
 
 RequireAuth.defaultProps = {
-  LoadingComponent: 'Loading...',
+  loadingComponent: 'Loading...',
   cleanUp: () => {},
+  requireIdentityVerification: true,
+  notVerifiedRedirectTo: '/ensure-verified-login',
 }
 
 export default RequireAuth
