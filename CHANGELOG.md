@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.26](https://gitlab.coko.foundation///compare/v0.0.25...v0.0.26) (2022-05-29)
+
+
+### Features
+
+* **components:** allow custom current user query ([6240412](https://gitlab.coko.foundation///commit/62404123ff450d5500f39fb74ef0ffc5703269fe))
+
 ### [0.0.25](https://gitlab.coko.foundation///compare/v0.0.24...v0.0.25) (2022-05-28)
 
 ### Features
