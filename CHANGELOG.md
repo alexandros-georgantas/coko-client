@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.0.25](https://gitlab.coko.foundation///compare/v0.0.24...v0.0.25) (2022-05-28)
 
-
 ### Features
 
-* **components:** handle correct login but identity not verified ([6f8b8c1](https://gitlab.coko.foundation///commit/6f8b8c1626e381e02399e05bc0034763339ac438))
+- **components:** handle correct login but identity not verified ([6f8b8c1](https://gitlab.coko.foundation///commit/6f8b8c1626e381e02399e05bc0034763339ac438))
 
 ### [0.0.24](https://gitlab.coko.foundation///compare/v0.0.23...v0.0.24) (2022-05-28)
 

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { Redirect, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useQuery, useApolloClient, gql } from '@apollo/client'
+import get from 'lodash/get'
 
 import { useCurrentUser } from '../helpers/currentUserContext'
 
@@ -21,6 +22,22 @@ const CURRENT_USER = gql`
   }
 `
 
+const requiredFields = [
+  'id',
+  'displayName',
+  'username',
+  'defaultIdentity.id',
+  'defaultIdentity.isVerified',
+]
+
+const checkForRequiredFields = user => {
+  const fieldsMissing = requiredFields.some(k => {
+    return typeof get(user, k) === 'undefined'
+  })
+
+  return !fieldsMissing
+}
+
 const RequireAuth = props => {
   const {
     notAuthenticatedRedirectTo,
@@ -29,6 +46,7 @@ const RequireAuth = props => {
     children,
     requireIdentityVerification,
     notVerifiedRedirectTo,
+    currentUserQuery,
   } = props
 
   const client = useApolloClient()
@@ -36,13 +54,23 @@ const RequireAuth = props => {
   const { currentUser, setCurrentUser } = useCurrentUser()
   const token = localStorage.getItem('token')
 
-  const { data, loading, error } = useQuery(CURRENT_USER, {
+  const { data, loading, error } = useQuery(currentUserQuery, {
     skip: !token || currentUser,
   })
 
   // update context when data arrives
   useEffect(() => {
     if (data && data.currentUser) {
+      const requiredFieldsExist = checkForRequiredFields(data.currentUser)
+
+      if (!requiredFieldsExist) {
+        throw new Error(
+          `Your current user query is missing some required fields! Make sure that the query requests the following fields: ${requiredFields.join(
+            ', ',
+          )}`,
+        )
+      }
+
       setCurrentUser(data.currentUser)
     }
   }, [data])
@@ -77,6 +105,7 @@ const RequireAuth = props => {
 
 RequireAuth.propTypes = {
   cleanUp: PropTypes.func,
+  currentUserQuery: PropTypes.string,
   requireIdentityVerification: PropTypes.bool,
   notVerifiedRedirectTo: PropTypes.string,
 }
@@ -84,6 +113,7 @@ RequireAuth.propTypes = {
 RequireAuth.defaultProps = {
   loadingComponent: 'Loading...',
   cleanUp: () => {},
+  currentUser: CURRENT_USER,
   requireIdentityVerification: true,
   notVerifiedRedirectTo: '/ensure-verified-login',
 }
