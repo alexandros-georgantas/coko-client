@@ -72,12 +72,13 @@ const Layout = ({
 Layout.propTypes = {
   fadeInPages: PropTypes.bool,
   padPages: PropTypes.bool,
-  navComponent: PropTypes.elementType.isRequired,
+  navComponent: PropTypes.elementType,
 }
 
 Layout.defaultProps = {
   fadeInPages: true,
   padPages: true,
+  navComponent: null,
 }
 
 export default Layout
