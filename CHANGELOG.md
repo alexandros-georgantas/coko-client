@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.27](https://gitlab.coko.foundation///compare/v0.0.26...v0.0.27) (2022-06-26)
+
+
+### Bug Fixes
+
+* **components:** fix require auth user query prop type ([47a4ab2](https://gitlab.coko.foundation///commit/47a4ab2e10320484a9d9705209dd6d52ba3e4753))
+* **components:** pass classname prop to page layout ([5f8d32c](https://gitlab.coko.foundation///commit/5f8d32c1d1e487131d7839715fdc978cb5e2325f))
+
 ### [0.0.26](https://gitlab.coko.foundation///compare/v0.0.25...v0.0.26) (2022-05-29)
 
 ### Features
