@@ -51,10 +51,16 @@ const Page = styled.div`
 `
 
 // TO DO -- move global style to root when you export that from this client
-const Layout = ({ children, fadeInPages, padPages, navComponent }) => (
+const Layout = ({
+  children,
+  className,
+  fadeInPages,
+  padPages,
+  navComponent,
+}) => (
   <>
     <GlobalStyle />
-    <PageLayout>
+    <PageLayout className={className}>
       <Route component={navComponent} />
       <Page fadeInPages={fadeInPages} padPages={padPages}>
         {children}
