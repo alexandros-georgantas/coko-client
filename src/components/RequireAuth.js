@@ -105,7 +105,8 @@ const RequireAuth = props => {
 
 RequireAuth.propTypes = {
   cleanUp: PropTypes.func,
-  currentUserQuery: PropTypes.string,
+  /* eslint-disable-next-line react/forbid-prop-types */
+  currentUserQuery: PropTypes.object,
   requireIdentityVerification: PropTypes.bool,
   notVerifiedRedirectTo: PropTypes.string,
 }
