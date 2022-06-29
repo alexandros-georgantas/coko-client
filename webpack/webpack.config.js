@@ -255,7 +255,7 @@ const webpackConfig = {
 
       // Images
       {
-        test: /\.png|\.jpg$/,
+        test: /\.png|\.jpg|\.svg$/,
         type: 'asset/resource',
       },
       // {
