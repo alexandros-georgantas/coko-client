@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.29](https://gitlab.coko.foundation///compare/v0.0.28...v0.0.29) (2022-07-06)
+
+
+### Features
+
+* allow passing of apollo config function ([def2ecf](https://gitlab.coko.foundation///commit/def2ecfa12fe413a6323c9d261a0ed36a9fdf37c))
+
 ### [0.0.28](https://gitlab.coko.foundation///compare/v0.0.27...v0.0.28) (2022-06-26)
 
 ### Bug Fixes
