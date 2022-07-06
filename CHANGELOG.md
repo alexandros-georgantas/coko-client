@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.0.28](https://gitlab.coko.foundation///compare/v0.0.27...v0.0.28) (2022-06-26)
 
-
 ### Bug Fixes
 
-* **components:** make nav component in layout optional ([ca8aaa4](https://gitlab.coko.foundation///commit/ca8aaa47a3122bc355dbacf15bcfa6fd2c656d3f))
+- **components:** make nav component in layout optional ([ca8aaa4](https://gitlab.coko.foundation///commit/ca8aaa47a3122bc355dbacf15bcfa6fd2c656d3f))
 
 ### [0.0.27](https://gitlab.coko.foundation///compare/v0.0.26...v0.0.27) (2022-06-26)
 
