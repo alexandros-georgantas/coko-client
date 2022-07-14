@@ -25,6 +25,7 @@ const {
   CLIENT_PAGES_FOLDER_PATH,
   CLIENT_PORT,
   CLIENT_UI_FOLDER_PATH,
+  CLIENT_LANGUAGE,
 
   SERVER_PROTOCOL,
   SERVER_HOST,
@@ -42,10 +43,11 @@ const variablesForWebpackConfig = [
   'CLIENT_ENTRY_FILE_PATH',
   'CLIENT_FAST_REFRESH',
   'CLIENT_FAVICON_PATH',
+  'CLIENT_LANGUAGE',
   'CLIENT_PAGE_TITLE',
-  'CLIENT_STATIC_FOLDER_PATH',
   'CLIENT_PAGES_FOLDER_PATH',
   'CLIENT_PORT',
+  'CLIENT_STATIC_FOLDER_PATH',
   'CLIENT_UI_FOLDER_PATH',
 ]
 
@@ -106,6 +108,8 @@ const entryFilePath = CLIENT_ENTRY_FILE_PATH || './start.js'
 const devSeverPort = CLIENT_PORT || 8080
 const faviconPath = CLIENT_FAVICON_PATH
 const pageTitle = CLIENT_PAGE_TITLE
+const language = CLIENT_LANGUAGE
+const defaultLanguage = 'en-US'
 
 const serverUrl = `${SERVER_PROTOCOL}://${SERVER_HOST}${
   SERVER_PORT ? `:${SERVER_PORT}` : ''
@@ -143,6 +147,7 @@ console.log(`static folder path found at: ${staticFolderPath}`)
 console.log(`app entry file will be: ${entryFilePath}`)
 console.log(`favicon path will be: ${faviconPath}`)
 console.log(`page title set to: ${pageTitle}`)
+console.log(`language set to: ${language || `${defaultLanguage} (default)`}`)
 console.log(`ui folder path will be: ${uiFolderPath}`)
 console.log(`pages folder path will be: ${pagesFolderPath}`)
 
@@ -324,6 +329,7 @@ const webpackConfig = {
       favicon: faviconPath,
       template: templatePath,
       title: pageTitle,
+      language: language || defaultLanguage,
     }),
 
     // DEV-ONLY
