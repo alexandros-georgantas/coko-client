@@ -1,6 +1,8 @@
 const path = require('path')
 const appRootPath = require('app-root-path')
 const startsWith = require('lodash/startsWith')
+const range = require('lodash/range')
+const colors = require('colors/safe')
 
 const webpack = require('webpack')
 const CompressionPlugin = require('compression-webpack-plugin')
@@ -134,36 +136,53 @@ const antPluginOptions = {
 
 const themePlugin = new AntDesignThemePlugin(antPluginOptions)
 
+// #region log-init
 /* eslint-disable no-console */
-console.log('\n###################\n')
+const symbolGenerator = n => {
+  const SYMBOL = '/'
+  let symbols = ''
+  range(n).forEach(() => (symbols += SYMBOL))
+  return symbols
+}
 
-console.log('=> COKO CLIENT INFO\n')
-console.log(`env is: ${NODE_ENV}`)
+const cyan = t => console.log(colors.cyan(t))
 
-console.log('')
-console.log(`app context path is set to: ${appPath}`)
-isEnvProduction && console.log(`build will be written to: ${buildFolderPath}`)
-console.log(`static folder path found at: ${staticFolderPath}`)
-console.log(`app entry file will be: ${entryFilePath}`)
-console.log(`favicon path will be: ${faviconPath}`)
-console.log(`page title set to: ${pageTitle}`)
-console.log(`language set to: ${language || `${defaultLanguage} (default)`}`)
-console.log(`ui folder path will be: ${uiFolderPath}`)
-console.log(`pages folder path will be: ${pagesFolderPath}`)
+const logSeparator = () => cyan(symbolGenerator(22))
 
-console.log('')
-isEnvDevelopment && console.log(`dev server will run at port: ${devSeverPort}`)
-console.log(`server will be requested at: ${serverUrl}`)
-console.log(`react fast-refresh is: ${useFastRefresh ? 'on' : 'off'}`)
+const logHeader = text => {
+  logSeparator()
+  cyan(`${symbolGenerator(2)} ${text.toUpperCase()}\n`)
+}
 
-console.log(
-  `custom environment variables detected: ${
-    customVariables.length > 0 ? `${customVariables}` : 'none'
-  }`,
+const logStatus = (label, message, newLine) => {
+  console.log(`${colors.cyan(label)}: ${message}${newLine ? '\n' : ''}`)
+}
+
+logHeader('coko client info')
+logStatus('Environment', NODE_ENV, true)
+logStatus(`App context path is set to`, appPath)
+isEnvProduction && logStatus(`Build will be written to`, buildFolderPath)
+logStatus(`Static folder path found at`, staticFolderPath)
+logStatus(`App entry file will be`, entryFilePath)
+logStatus(`UI folder path will be`, uiFolderPath)
+logStatus(`Pages folder path will be`, pagesFolderPath)
+logStatus(`Favicon path will be`, faviconPath)
+logStatus(`Page title set to`, pageTitle)
+logStatus(`Language set to`, language || `${defaultLanguage} (default)`)
+isEnvDevelopment && logStatus(`Dev server will run at port`, devSeverPort)
+logStatus(`Server will be requested at`, serverUrl)
+logStatus(`React fast-refresh is`, useFastRefresh ? 'on' : 'off')
+
+logStatus(
+  'Custom environment variables detected',
+  customVariables.length > 0 ? `${customVariables}` : 'none',
+  true,
 )
 
-console.log('\n###################\n')
+logSeparator()
+console.log('')
 /* eslint-enable no-console */
+// #endregion log-init
 
 //
 /* BASE CONFIG */
