@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.30](https://gitlab.coko.foundation///compare/v0.0.29...v0.0.30) (2022-07-14)
+
+
+### Features
+
+* **webpack:** add lang attribute to html, read from env, default en-US ([926dce3](https://gitlab.coko.foundation///commit/926dce35113134769c2c00842ce01ce0c3bb9a56))
+* **webpack:** handle .svg files in the webpack config ([8880c01](https://gitlab.coko.foundation///commit/8880c01e2bb6c234d53521777ce0a9119522eafd))
+
 ### [0.0.29](https://gitlab.coko.foundation///compare/v0.0.28...v0.0.29) (2022-07-06)
 
 
