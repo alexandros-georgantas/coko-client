@@ -1,22 +1,13 @@
-const {
-  CLIENT_PROTOCOL,
-  CLIENT_HOST,
-  CLIENT_PORT,
-  SERVER_PROTOCOL,
-  SERVER_HOST,
-  SERVER_PORT,
-} = process.env
-
 const mapper = {
   client: {
-    protocol: CLIENT_PROTOCOL,
-    host: CLIENT_HOST,
-    port: CLIENT_PORT,
+    protocol: process.env.CLIENT_PROTOCOL,
+    host: process.env.CLIENT_HOST,
+    port: process.env.CLIENT_PORT,
   },
   server: {
-    protocol: SERVER_PROTOCOL,
-    host: SERVER_HOST,
-    port: SERVER_PORT,
+    protocol: process.env.SERVER_PROTOCOL,
+    host: process.env.SERVER_HOST,
+    port: process.env.SERVER_PORT,
   },
 }
 
