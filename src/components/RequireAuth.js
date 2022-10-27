@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Redirect, useLocation } from 'react-router-dom'
+import { Redirect, useLocation, useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useQuery, useApolloClient, gql } from '@apollo/client'
 import get from 'lodash/get'
@@ -46,11 +46,14 @@ const RequireAuth = props => {
     children,
     requireIdentityVerification,
     notVerifiedRedirectTo,
+    requireUserActivation,
+    notActiveRedirectTo,
     currentUserQuery,
   } = props
 
   const client = useApolloClient()
   const location = useLocation()
+  const history = useHistory()
   const { currentUser, setCurrentUser } = useCurrentUser()
   const token = localStorage.getItem('token')
 
@@ -71,7 +74,13 @@ const RequireAuth = props => {
         )
       }
 
-      setCurrentUser(data.currentUser)
+      if (requireUserActivation) {
+        const isActive = currentUser?.isActive
+        if (!isActive) history.push(notActiveRedirectTo)
+        else setCurrentUser(data.currentUser)
+      } else {
+        setCurrentUser(data.currentUser)
+      }
     }
   }, [data])
 
@@ -108,7 +117,9 @@ RequireAuth.propTypes = {
   /* eslint-disable-next-line react/forbid-prop-types */
   currentUserQuery: PropTypes.object,
   requireIdentityVerification: PropTypes.bool,
+  requireUserActivation: PropTypes.bool,
   notVerifiedRedirectTo: PropTypes.string,
+  notActiveRedirectTo: PropTypes.string,
 }
 
 RequireAuth.defaultProps = {
@@ -116,7 +127,9 @@ RequireAuth.defaultProps = {
   cleanUp: () => {},
   currentUser: CURRENT_USER,
   requireIdentityVerification: true,
+  requireUserActivation: true,
   notVerifiedRedirectTo: '/ensure-verified-login',
+  notActiveRedirectTo: '/user-deactivated',
 }
 
 export default RequireAuth
