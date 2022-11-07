@@ -57,10 +57,11 @@ const Layout = ({
   fadeInPages,
   padPages,
   navComponent,
+  asHtml,
 }) => (
   <>
     <GlobalStyle />
-    <PageLayout className={className}>
+    <PageLayout as={asHtml} className={className}>
       <Route component={navComponent} />
       <Page fadeInPages={fadeInPages} padPages={padPages}>
         {children}
@@ -73,12 +74,14 @@ Layout.propTypes = {
   fadeInPages: PropTypes.bool,
   padPages: PropTypes.bool,
   navComponent: PropTypes.elementType,
+  asHtml: PropTypes.string,
 }
 
 Layout.defaultProps = {
   fadeInPages: true,
   padPages: true,
   navComponent: null,
+  asHtml: 'div',
 }
 
 export default Layout
