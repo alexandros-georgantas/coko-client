@@ -35,7 +35,7 @@ const padPage = css`
   padding: ${grid(2)} ${grid(2)} 50px ${grid(2)};
 `
 
-const Page = styled.div`
+const Page = styled.main`
   flex: auto;
   font-family: ${th('fontInterface')};
   height: 100%;
@@ -57,13 +57,18 @@ const Layout = ({
   fadeInPages,
   padPages,
   navComponent,
-  asHtml,
+  mainId,
 }) => (
   <>
     <GlobalStyle />
-    <PageLayout as={asHtml} className={className}>
+    <PageLayout className={className}>
       <Route component={navComponent} />
-      <Page fadeInPages={fadeInPages} padPages={padPages}>
+      <Page
+        fadeInPages={fadeInPages}
+        id={mainId}
+        padPages={padPages}
+        tabIndex="-1"
+      >
         {children}
       </Page>
     </PageLayout>
@@ -74,14 +79,14 @@ Layout.propTypes = {
   fadeInPages: PropTypes.bool,
   padPages: PropTypes.bool,
   navComponent: PropTypes.elementType,
-  asHtml: PropTypes.string,
+  mainId: PropTypes.string,
 }
 
 Layout.defaultProps = {
   fadeInPages: true,
   padPages: true,
   navComponent: null,
-  asHtml: 'div',
+  mainId: 'main',
 }
 
 export default Layout
