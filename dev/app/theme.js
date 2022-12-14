@@ -1,7 +1,6 @@
 import 'fontsource-advent-pro'
-import 'antd/dist/antd.less'
 
-const primary = 'olive'
+const primary = 'cornflowerblue'
 
 const theme = {
   colorBackground: 'lavender',
@@ -12,10 +11,10 @@ const theme = {
   fontInterface: 'Advent Pro',
   gridUnit: '8px',
 
-  ant: {
-    // primaryColor: primary,
-    // 'primary-color': primary,
-  },
+  fontSize: '16',
+  lineHeight: '1.618',
+
+  fontSizeBase: '16px',
 }
 
 export default theme

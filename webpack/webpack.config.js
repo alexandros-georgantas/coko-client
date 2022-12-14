@@ -10,9 +10,6 @@ const CopyPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
-const AntDesignThemePlugin = require('antd-theme-webpack-plugin')
-
-const antdThemeVariables = require('./antdThemeVariables')
 
 const {
   NODE_ENV,
@@ -117,24 +114,9 @@ const serverUrl = `${SERVER_PROTOCOL}://${SERVER_HOST}${
   SERVER_PORT ? `:${SERVER_PORT}` : ''
 }`
 
-const antPath = path.join(path.dirname(require.resolve('antd')), '..')
-
 // const antVariablesPath = require.resolve(
 //   path.join(antPath, 'lib/style/themes/default.less'),
 // )
-
-const antPluginOptions = {
-  antDir: antPath,
-  // stylesDir: path.join(__dirname),
-  varFile: path.join(__dirname, 'variables.less'),
-  // varFile: antVariablesPath,
-  themeVariables: antdThemeVariables,
-  // indexFileName: 'index.html',
-  generateOnce: isEnvProduction,
-  // customColorRegexArray: [],
-}
-
-const themePlugin = new AntDesignThemePlugin(antPluginOptions)
 
 // #region log-init
 /* eslint-disable no-console */
@@ -323,16 +305,6 @@ const webpackConfig = {
           {
             loader: 'css-loader', // translates CSS into CommonJS
           },
-          {
-            loader: 'less-loader', // compiles Less to CSS
-            options: {
-              lessOptions: {
-                // override default (antd) less variables
-                // modifyVars: lessThemeMapper(themeVariables),
-                javascriptEnabled: true,
-              },
-            },
-          },
         ],
       },
     ],
@@ -375,8 +347,6 @@ const webpackConfig = {
 
     new webpack.optimize.AggressiveMergingPlugin(),
     new CompressionPlugin(),
-
-    themePlugin,
 
     // TO DELETE
     // new webpack.NoEmitOnErrorsPlugin(),

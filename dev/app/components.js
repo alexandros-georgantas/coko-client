@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components'
 import { gql, useQuery } from '@apollo/client'
 import { Link } from 'react-router-dom'
 
-import { Button } from 'antd'
+import { Button, Select } from 'antd'
 
 import { uuid } from '../../src'
 
@@ -129,6 +129,17 @@ const First = () => {
         <Link to="/ant">Ant</Link>
       </div>
 
+      <Container second>
+        <Select
+          options={[
+            { value: '1', label: 'test1' },
+            { value: '2', label: 'test2' },
+            { value: '3', label: 'test3' },
+          ]}
+          placeholder="Select an option"
+        />
+        <Button type="primary">Antd button </Button>
+      </Container>
       <ItemList data={data} loading={loading} />
     </Container>
   )
@@ -157,7 +168,7 @@ const AntPage = () => (
 )
 
 const StyledNavigationBar = styled.div`
-  background: cornflowerblue;
+  background: ${props => props.theme.colorPrimary};
   color: white;
   height: 50px;
   line-height: 50px;

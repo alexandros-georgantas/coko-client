@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.0.31](https://gitlab.coko.foundation///compare/v0.0.30...v0.0.31) (2022-09-01)
 
-
 ### Bug Fixes
 
-* fix getUrl process imports so that it works with webpack 5 ([954e745](https://gitlab.coko.foundation///commit/954e745c2c46d1a184237e53249e006fbddabec3))
+- fix getUrl process imports so that it works with webpack 5 ([954e745](https://gitlab.coko.foundation///commit/954e745c2c46d1a184237e53249e006fbddabec3))
 
 ### [0.0.30](https://gitlab.coko.foundation///compare/v0.0.29...v0.0.30) (2022-07-14)
 

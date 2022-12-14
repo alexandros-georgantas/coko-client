@@ -3,9 +3,10 @@
 import React, { useState } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
-
+import { ConfigProvider } from 'antd'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import { Normalize } from 'styled-normalize'
+import pickBy from 'lodash/pickBy'
 
 import {
   ApolloClient,
@@ -19,8 +20,15 @@ import { setContext } from '@apollo/client/link/context'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { createUploadLink } from 'apollo-upload-client'
 
-import lessThemeMapper from './lessThemeMapper'
 import { CurrentUserContext } from './currentUserContext'
+
+const pxToNumConverter = value => {
+  if (typeof value === 'string') {
+    if (value.slice(-2) === 'px') return parseInt(value.slice(0, -2), 10)
+  }
+
+  return value
+}
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -129,29 +137,44 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
   return new ApolloClient(makeConfig ? makeConfig(config) : config)
 }
 
-const LessVariablesRemapper = ({ theme }) => {
-  const mapper = lessThemeMapper(theme)
-  window.less.modifyVars(mapper)
-
-  return null
-}
-
 const Root = props => {
   const { makeApolloConfig, routes, theme, connectToWebSocket } = props
   const [currentUser, setCurrentUser] = useState(null)
 
+  const mapper = {
+    borderRadius: pxToNumConverter(theme.borderRadius),
+    colorBgBase: theme.colorBackground,
+    colorTextBase: theme.colorText,
+    fontFamily: theme.fontInterface,
+    fontSize: pxToNumConverter(theme.fontSizeBase),
+    lineType: theme.borderStyle,
+    lineWidth: pxToNumConverter(theme.borderWidth),
+    motionUnit: theme.transitionDuration,
+    sizeUnit: pxToNumConverter(theme.gridUnit),
+  }
+
+  const filtered = pickBy(mapper, v => !!v)
+
+  const mappedAntTheme = {
+    token: {
+      ...theme,
+      ...filtered,
+    },
+  }
+
+  const client = makeApolloClient(makeApolloConfig, connectToWebSocket)
+
   return (
-    <ApolloProvider
-      client={makeApolloClient(makeApolloConfig, connectToWebSocket)}
-    >
+    <ApolloProvider client={client}>
       <BrowserRouter>
         <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
-          <ThemeProvider theme={theme}>
-            <Normalize />
-            <GlobalStyle />
-            <LessVariablesRemapper theme={theme} />
-            {routes}
-          </ThemeProvider>
+          <ConfigProvider theme={mappedAntTheme}>
+            <ThemeProvider theme={theme}>
+              <Normalize />
+              <GlobalStyle />
+              {routes}
+            </ThemeProvider>
+          </ConfigProvider>
         </CurrentUserContext.Provider>
       </BrowserRouter>
     </ApolloProvider>
