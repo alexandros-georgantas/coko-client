@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.33](https://gitlab.coko.foundation///compare/v0.0.32...v0.0.33) (2022-12-22)
+
+
+### Bug Fixes
+
+* **components:** pass font size variable pixel numbers to ant correctly ([2867a32](https://gitlab.coko.foundation///commit/2867a3267dfebaeaf72ccedff948bac9bc6fe6dd))
+
 ### [0.0.32](https://gitlab.coko.foundation///compare/v0.0.29...v0.0.32) (2022-12-21)
 
 ### Features
