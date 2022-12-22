@@ -4,19 +4,17 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.0.32](https://gitlab.coko.foundation///compare/v0.0.29...v0.0.32) (2022-12-21)
 
-
 ### Features
 
-* upgrade antd to version 5 ([5e329a5](https://gitlab.coko.foundation///commit/5e329a5c2f280b08dfa1b17c97ef6859511dfd1a))
-* **webpack:** add lang attribute to html, read from env, default en-US ([926dce3](https://gitlab.coko.foundation///commit/926dce35113134769c2c00842ce01ce0c3bb9a56))
-* **webpack:** add viewport meta tag to optimize sites for mobile ([85a019c](https://gitlab.coko.foundation///commit/85a019c426dbca3fc9802ffb94fe6ad2b76c7997))
-* **webpack:** handle .svg files in the webpack config ([56a947f](https://gitlab.coko.foundation///commit/56a947f04e9f3e6bbf0ae22ba4d825d2eb5a3d42))
-
+- upgrade antd to version 5 ([5e329a5](https://gitlab.coko.foundation///commit/5e329a5c2f280b08dfa1b17c97ef6859511dfd1a))
+- **webpack:** add lang attribute to html, read from env, default en-US ([926dce3](https://gitlab.coko.foundation///commit/926dce35113134769c2c00842ce01ce0c3bb9a56))
+- **webpack:** add viewport meta tag to optimize sites for mobile ([85a019c](https://gitlab.coko.foundation///commit/85a019c426dbca3fc9802ffb94fe6ad2b76c7997))
+- **webpack:** handle .svg files in the webpack config ([56a947f](https://gitlab.coko.foundation///commit/56a947f04e9f3e6bbf0ae22ba4d825d2eb5a3d42))
 
 ### Bug Fixes
 
-* fix getUrl process imports so that it works with webpack 5 ([1dec0f5](https://gitlab.coko.foundation///commit/1dec0f5126f5907c06207db734861534eff30608))
-* **webpack:** remove quotation marks from lang attr ([6ee6c2c](https://gitlab.coko.foundation///commit/6ee6c2ce8ab8b47a5a9236213dd7e7c60abdcf58))
+- fix getUrl process imports so that it works with webpack 5 ([1dec0f5](https://gitlab.coko.foundation///commit/1dec0f5126f5907c06207db734861534eff30608))
+- **webpack:** remove quotation marks from lang attr ([6ee6c2c](https://gitlab.coko.foundation///commit/6ee6c2ce8ab8b47a5a9236213dd7e7c60abdcf58))
 
 ### [0.0.31](https://gitlab.coko.foundation///compare/v0.0.30...v0.0.31) (2022-09-01)
 
