@@ -84,7 +84,7 @@
     "webpack-dev-server": "^4.0.0-beta.2"
   },
   "devDependencies": {
-    "@coko/lint": "^1.4.0",
+    "@coko/lint": "^2.0.0",
     "fontsource-advent-pro": "^4.0.0",
     "http-server": "^0.12.3",
     "nodemon": "^2.0.7",
