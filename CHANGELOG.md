@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.34](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.33...v0.0.34) (2023-01-23)
+
+
+### Features
+
+* replace server protocol, port and host with a single serverUrl variable ([bb8489c](https://gitlab.coko.foundation/cokoapps/client/commit/bb8489c7c8f46cef7ef77f21ecdcedfb59e94bd4))
+
 ### [0.0.33](https://gitlab.coko.foundation///compare/v0.0.32...v0.0.33) (2022-12-22)
 
 ### Bug Fixes
