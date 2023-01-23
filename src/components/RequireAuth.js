@@ -107,16 +107,19 @@ RequireAuth.propTypes = {
   cleanUp: PropTypes.func,
   /* eslint-disable-next-line react/forbid-prop-types */
   currentUserQuery: PropTypes.object,
+  loadingComponent: PropTypes.element,
   requireIdentityVerification: PropTypes.bool,
   notVerifiedRedirectTo: PropTypes.string,
+  notAuthenticatedRedirectTo: PropTypes.string,
 }
 
 RequireAuth.defaultProps = {
   loadingComponent: 'Loading...',
   cleanUp: () => {},
-  currentUser: CURRENT_USER,
+  currentUserQuery: CURRENT_USER,
   requireIdentityVerification: true,
   notVerifiedRedirectTo: '/ensure-verified-login',
+  notAuthenticatedRedirectTo: '/',
 }
 
 export default RequireAuth

@@ -173,6 +173,8 @@ const Root = props => {
   return (
     <ApolloProvider client={client}>
       <BrowserRouter>
+        {/* TO DO -- check how to fix this linting error */}
+        {/* eslint-disable-next-line react/jsx-no-constructed-context-values */}
         <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
           <ConfigProvider theme={mappedAntTheme}>
             <ThemeProvider theme={theme}>
