@@ -4,11 +4,6 @@ const mapper = {
     host: process.env.CLIENT_HOST,
     port: process.env.CLIENT_PORT,
   },
-  server: {
-    protocol: process.env.SERVER_PROTOCOL,
-    host: process.env.SERVER_HOST,
-    port: process.env.SERVER_PORT,
-  },
 }
 
 const makeUrl = type => {
@@ -17,7 +12,7 @@ const makeUrl = type => {
 }
 
 const clientUrl = makeUrl('client')
-const serverUrl = makeUrl('server')
+const serverUrl = process.env.SERVER_URL
 
 module.exports = {
   clientUrl,

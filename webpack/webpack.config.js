@@ -25,10 +25,7 @@ const {
   CLIENT_PORT,
   CLIENT_UI_FOLDER_PATH,
   CLIENT_LANGUAGE,
-
-  SERVER_PROTOCOL,
-  SERVER_HOST,
-  SERVER_PORT,
+  SERVER_URL,
 } = process.env
 
 //
@@ -51,12 +48,7 @@ const variablesForWebpackConfig = [
 ]
 
 // Environment variables that will be passed down to the build
-const variablesForBuild = [
-  'NODE_ENV',
-  'SERVER_PROTOCOL',
-  'SERVER_HOST',
-  'SERVER_PORT',
-]
+const variablesForBuild = ['NODE_ENV', 'SERVER_URL']
 
 // Allow custom variables that start with CLIENT_ to pass into the build
 const customVariables = Object.keys(process.env).filter(k => {
@@ -110,9 +102,7 @@ const pageTitle = CLIENT_PAGE_TITLE
 const language = CLIENT_LANGUAGE
 const defaultLanguage = 'en-US'
 
-const serverUrl = `${SERVER_PROTOCOL}://${SERVER_HOST}${
-  SERVER_PORT ? `:${SERVER_PORT}` : ''
-}`
+const serverUrl = SERVER_URL
 
 // const antVariablesPath = require.resolve(
 //   path.join(antPath, 'lib/style/themes/default.less'),

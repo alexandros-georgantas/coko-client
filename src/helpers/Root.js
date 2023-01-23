@@ -44,23 +44,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-const serverProtocol = process.env.SERVER_PROTOCOL
-const serverHost = process.env.SERVER_HOST
-const serverPort = process.env.SERVER_PORT
-const serverServeClient = process.env.SERVER_SERVE_CLIENT
-
-let serverUrl, serverUrlWithProtocol
-
-// can't build a valid url without these two
-if (serverProtocol && serverHost) {
-  serverUrl = `${serverHost}${serverPort ? `:${serverPort}` : ''}`
-  serverUrlWithProtocol = `${serverProtocol}://${serverUrl}`
-}
-
-if (!serverUrl || serverServeClient) {
-  serverUrl = window.location.host
-  serverUrlWithProtocol = `${window.location.protocol}//${serverUrl}`
-}
+const serverUrl = process.env.SERVER_URL
 
 // See https://github.com/apollographql/apollo-feature-requests/issues/6#issuecomment-465305186
 export function stripTypenames(obj) {
@@ -85,7 +69,7 @@ export function stripTypenames(obj) {
 // return the desired config.
 const makeApolloClient = (makeConfig, connectToWebSocket) => {
   const uploadLink = createUploadLink({
-    uri: `${serverUrlWithProtocol}/graphql`,
+    uri: `${serverUrl}/graphql`,
   })
 
   const authLink = setContext((_, { headers }) => {
@@ -109,6 +93,7 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
   let link = ApolloLink.from([removeTypename, authLink, uploadLink])
 
   if (connectToWebSocket) {
+    const serverProtocol = serverUrl.split(':')[0]
     const wsProtocol = serverProtocol === 'https' ? 'wss' : 'ws'
 
     const wsLink = new WebSocketLink({
