@@ -1,0 +1,93 @@
+version: '3'
+
+services:
+  client:
+    build:
+      context: .
+      dockerfile: ./dev/client/Dockerfile-client-development
+    command: ['./scripts/coko-client-dev.sh']
+    ports:
+      - ${CLIENT_PORT:-4000}:${CLIENT_PORT:-4000}
+    environment:
+      - NODE_ENV=development
+      - WEBPACK_CONFIG_PATH=./webpack/webpack.config.js
+      - CLIENT_PORT=${CLIENT_PORT:-4000}
+      - CLIENT_FAST_REFRESH=1
+      - CLIENT_PAGE_TITLE=${CLIENT_PAGE_TITLE:-"Coko client playground"}
+      - CLIENT_APP_ROOT_PATH=./dev/client/app
+      - CLIENT_FAVICON_PATH=../static/favicon.ico
+      - SERVER_URL=${SERVER_URL:-http://localhost:3000}
+    volumes:
+      - ./dev:/home/node/client/dev
+      - ./src:/home/node/client/src
+    tty: true
+
+  server:
+    build:
+      context: ./dev/server
+      dockerfile: ./Dockerfile-server
+    depends_on:
+      - db
+    entrypoint:
+      [
+        'node_modules/.bin/wait-for-it',
+        'db:5432',
+        '--',
+        'sh',
+        'scripts/setupDevServer.sh',
+      ]
+    command:
+      [
+        'node_modules/.bin/nodemon',
+        'startServer.js',
+        '--watch',
+        'startServer.js',
+        '--watch',
+        'app.js',
+        '--watch',
+        'api',
+        '--watch',
+        'config',
+        '--watch',
+        'controllers',
+        '--watch',
+        'models',
+        '--watch',
+        'services',
+        '--watch',
+        'scripts',
+        '--watch',
+        '--ext',
+        'js,graphql',
+      ]
+    # command: ['echo', 'hello']
+    ports:
+      - ${SERVER_PORT:-3000}:${SERVER_PORT:-3000}
+    environment:
+      - NODE_ENV=development
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+      - POSTGRES_DB=${POSTGRES_DB:-dev}
+      - POSTGRES_USER=${POSTGRES_USER:-user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - PUBSWEET_SECRET=${PUBSWEET_SECRET:-thesecret}
+      - SERVER_PORT=${SERVER_PORT:-3000}
+      - CLIENT_URL=${CLIENT_URL:-http://0.0.0.0:4000}
+    volumes:
+      - ./dev/server/api:/home/node/hhmi/api
+      - ./dev/server/config:/home/node/hhmi/config
+      - ./dev/server/controllers:/home/node/hhmi/controllers
+      - ./dev/server/models:/home/node/hhmi/models
+      - ./dev/server/scripts:/home/node/hhmi/scripts
+      - ./dev/server/services:/home/node/hhmi/services
+
+  db:
+    image: postgres:15
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-dev}
+      - POSTGRES_USER=${POSTGRES_USER:-user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+    # volumes:
+    #   - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql

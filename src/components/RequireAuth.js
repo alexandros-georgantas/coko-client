@@ -1,26 +1,10 @@
 import React, { useEffect } from 'react'
 import { Redirect, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { useQuery, useApolloClient, gql } from '@apollo/client'
+import { useApolloClient } from '@apollo/client'
 import get from 'lodash/get'
 
 import { useCurrentUser } from '../helpers/currentUserContext'
-
-const CURRENT_USER = gql`
-  query CurrentUser {
-    currentUser {
-      id
-      displayName
-      username
-      # roles
-
-      defaultIdentity {
-        id
-        isVerified
-      }
-    }
-  }
-`
 
 const requiredFields = [
   'id',
@@ -41,27 +25,19 @@ const checkForRequiredFields = user => {
 const RequireAuth = props => {
   const {
     notAuthenticatedRedirectTo,
-    loadingComponent: LoadingComponent,
     cleanUp,
     children,
     requireIdentityVerification,
     notVerifiedRedirectTo,
-    currentUserQuery,
   } = props
 
   const client = useApolloClient()
   const location = useLocation()
-  const { currentUser, setCurrentUser } = useCurrentUser()
-  const token = localStorage.getItem('token')
+  const { currentUser } = useCurrentUser()
 
-  const { data, loading, error } = useQuery(currentUserQuery, {
-    skip: !token || currentUser,
-  })
-
-  // update context when data arrives
   useEffect(() => {
-    if (data && data.currentUser) {
-      const requiredFieldsExist = checkForRequiredFields(data.currentUser)
+    if (currentUser) {
+      const requiredFieldsExist = checkForRequiredFields(currentUser)
 
       if (!requiredFieldsExist) {
         throw new Error(
@@ -70,29 +46,15 @@ const RequireAuth = props => {
           )}`,
         )
       }
-
-      setCurrentUser(data.currentUser)
     }
-  }, [data])
+  }, [currentUser])
 
-  if (error) console.error(error)
-
-  if (!token || error) {
+  if (!localStorage.getItem('token')) {
     client.cache.reset()
-    localStorage.removeItem('token')
     cleanUp()
 
     const redirectUrl = `${notAuthenticatedRedirectTo}?next=${location.pathname}`
     return <Redirect to={redirectUrl} />
-  }
-
-  if (loading) {
-    return LoadingComponent
-  }
-
-  // render where setCurrentUser has been triggered but the context has not been updated yet
-  if (!currentUser) {
-    return null
   }
 
   if (requireIdentityVerification) {
@@ -105,21 +67,16 @@ const RequireAuth = props => {
 
 RequireAuth.propTypes = {
   cleanUp: PropTypes.func,
-  /* eslint-disable-next-line react/forbid-prop-types */
-  currentUserQuery: PropTypes.object,
-  loadingComponent: PropTypes.element,
   requireIdentityVerification: PropTypes.bool,
   notVerifiedRedirectTo: PropTypes.string,
   notAuthenticatedRedirectTo: PropTypes.string,
 }
 
 RequireAuth.defaultProps = {
-  loadingComponent: 'Loading...',
   cleanUp: () => {},
-  currentUserQuery: CURRENT_USER,
   requireIdentityVerification: true,
   notVerifiedRedirectTo: '/ensure-verified-login',
-  notAuthenticatedRedirectTo: '/',
+  notAuthenticatedRedirectTo: '/login',
 }
 
 export default RequireAuth

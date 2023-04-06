@@ -1059,10 +1059,10 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@coko/lint@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@coko/lint/-/lint-2.0.0.tgz#ba4cb0c6c2e913f40653d5c944fd47bfce661624"
-  integrity sha512-5U3VS3ZRt74xouX34YKLERAC0zOjB4SSCDXZbZebr1n2Jl0k9sxbM01yntONl5EmPyutA9pueHY/iO8Gkm3MmQ==
+"@coko/lint@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@coko/lint/-/lint-2.0.1.tgz#b00d7188d437f4a955b87ed8e4377f5a275a27b8"
+  integrity sha512-IBu72QQIeHOTjRGzEC33RYF3qbLeEwIyjj4HfEOUtIQg1KCYcYgsWp2Drqrg3zDHREelHBcZwrpI0OlIXmqbtA==
   dependencies:
     "@babel/core" "^7.17.7"
     "@babel/eslint-parser" "^7.17.0"
