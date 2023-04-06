@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.35](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.34...v0.0.35) (2023-04-06)
+
+
+### Features
+
+* disconnect current user check from requiring authentication ([7505fe3](https://gitlab.coko.foundation/cokoapps/client/commit/7505fe380e1f95ec57fa21ecba6e7ff1b7dc52ae))
+
 ### [0.0.34](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.33...v0.0.34) (2023-01-23)
 
 
