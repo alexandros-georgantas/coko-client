@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.36](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.35...v0.0.36) (2023-04-10)
+
+
+### Bug Fixes
+
+* **components:** undo wrap root with authenticate, it hardcodes cu query ([e5fff79](https://gitlab.coko.foundation/cokoapps/client/commit/e5fff79cdf36764bbafdf8b44a90967098e7e74b))
+
 ### [0.0.35](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.34...v0.0.35) (2023-04-06)
 
 
