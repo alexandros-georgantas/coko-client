@@ -21,7 +21,7 @@ import { WebSocketLink } from '@apollo/client/link/ws'
 import { createUploadLink } from 'apollo-upload-client'
 
 import { CurrentUserContext } from './currentUserContext'
-import AuthWrapper from '../components/AuthWrapper'
+// import AuthWrapper from '../components/AuthWrapper'
 
 const pxToNumConverter = value => {
   if (typeof value === 'string') {
@@ -162,15 +162,15 @@ const Root = props => {
         {/* TO DO -- check how to fix this linting error */}
         {/* eslint-disable-next-line react/jsx-no-constructed-context-values */}
         <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
-          <AuthWrapper>
-            <AntConfigProvider theme={mappedAntTheme}>
-              <ThemeProvider theme={theme}>
-                <Normalize />
-                <GlobalStyle />
-                {routes}
-              </ThemeProvider>
-            </AntConfigProvider>
-          </AuthWrapper>
+          {/* <AuthWrapper> */}
+          <AntConfigProvider theme={mappedAntTheme}>
+            <ThemeProvider theme={theme}>
+              <Normalize />
+              <GlobalStyle />
+              {routes}
+            </ThemeProvider>
+          </AntConfigProvider>
+          {/* </AuthWrapper> */}
         </CurrentUserContext.Provider>
       </BrowserRouter>
     </ApolloProvider>
