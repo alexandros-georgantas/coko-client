@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.37](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.36...v0.0.37) (2023-04-11)
+
+
+### Bug Fixes
+
+* reinstate current user undefined check in RequireAuth ([da7b312](https://gitlab.coko.foundation/cokoapps/client/commit/da7b312e594c39df928a6b10f841d4f54504232e))
+
 ### [0.0.36](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.35...v0.0.36) (2023-04-10)
 
 
