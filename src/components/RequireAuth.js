@@ -57,6 +57,11 @@ const RequireAuth = props => {
     return <Redirect to={redirectUrl} />
   }
 
+  // render where setCurrentUser has been triggered but the context has not been updated yet
+  if (!currentUser) {
+    return null
+  }
+
   if (requireIdentityVerification) {
     const verified = currentUser?.defaultIdentity?.isVerified
     if (!verified) return <Redirect to={notVerifiedRedirectTo} />
