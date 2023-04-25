@@ -22,6 +22,7 @@ import { createUploadLink } from 'apollo-upload-client'
 
 import { CurrentUserContext } from './currentUserContext'
 // import AuthWrapper from '../components/AuthWrapper'
+import { serverUrl } from './getUrl'
 
 const pxToNumConverter = value => {
   if (typeof value === 'string') {
@@ -44,8 +45,6 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 `
-
-const serverUrl = process.env.SERVER_URL
 
 // See https://github.com/apollographql/apollo-feature-requests/issues/6#issuecomment-465305186
 export function stripTypenames(obj) {
