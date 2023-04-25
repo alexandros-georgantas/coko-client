@@ -1,0 +1,48 @@
+# IMAGE FOR BUILDING
+FROM node:16-bullseye-slim
+
+RUN apt-get update \ 
+    && apt-get upgrade -y \
+    && apt-get install -y
+
+WORKDIR /home/node/app
+
+COPY package.json .
+COPY yarn.lock .
+
+RUN yarn install --frozen-lockfile
+
+COPY ./dev/client ./dev/client
+COPY ./scripts/coko-client-build.sh ./scripts/coko-client-build.sh
+COPY ./src ./src
+COPY ./webpack ./webpack
+
+ARG server_url
+ENV SERVER_URL=$server_url
+
+ENV WEBPACK_CONFIG_PATH=./webpack/webpack.config.js
+ENV NODE_ENV='production'
+ENV CLIENT_PAGE_TITLE='Coko client playground'
+ENV CLIENT_FAVICON_PATH='../static/favicon.ico'
+ENV CLIENT_LANGUAGE='en-US'
+ENV CLIENT_APP_ROOT_PATH='./dev/client/app'
+
+RUN sh ./scripts/coko-client-build.sh
+
+######################################################################
+######################################################################
+
+# IMAGE FOR RUNNING
+
+FROM node:16-bullseye-slim
+
+RUN apt-get update && apt-get install -y
+RUN npm install --global serve
+
+WORKDIR /home/node/app
+
+COPY --from=0 /home/node/app/dev/client/_build ./_build
+COPY ./scripts/env.sh ./env.sh
+
+RUN chown -R node:node .
+USER node

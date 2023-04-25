@@ -96,7 +96,7 @@ const useFastRefresh = fastRefreshValue === '1' || fastRefreshValue === 'true'
 
 const templatePath = path.resolve(__dirname, 'index.ejs')
 const entryFilePath = CLIENT_ENTRY_FILE_PATH || './start.js'
-const devSeverPort = CLIENT_PORT || 8080
+const devServerPort = CLIENT_PORT || 8080
 const faviconPath = CLIENT_FAVICON_PATH
 const pageTitle = CLIENT_PAGE_TITLE
 const language = CLIENT_LANGUAGE
@@ -141,7 +141,7 @@ logStatus(`Pages folder path will be`, pagesFolderPath)
 logStatus(`Favicon path will be`, faviconPath)
 logStatus(`Page title set to`, pageTitle)
 logStatus(`Language set to`, language || `${defaultLanguage} (default)`)
-isEnvDevelopment && logStatus(`Dev server will run at port`, devSeverPort)
+isEnvDevelopment && logStatus(`Dev server will run at port`, devServerPort)
 logStatus(`Server will be requested at`, serverUrl)
 logStatus(`React fast-refresh is`, useFastRefresh ? 'on' : 'off')
 
@@ -378,7 +378,7 @@ if (isEnvDevelopment) {
     historyApiFallback: true,
     // play nice from a within a docker container
     host: '0.0.0.0',
-    port: devSeverPort,
+    port: devServerPort,
   }
 }
 
