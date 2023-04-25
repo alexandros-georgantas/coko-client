@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.38](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.37...v0.0.38) (2023-04-25)
+
+
+### Features
+
+* dynamically pass server url in production ([9ba839a](https://gitlab.coko.foundation/cokoapps/client/commit/9ba839a2f604c122939110e89fe1b37ae4505e2b))
+
 ### [0.0.37](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.36...v0.0.37) (2023-04-11)
 
 
