@@ -2,6 +2,7 @@ const path = require('path')
 const appRootPath = require('app-root-path')
 const startsWith = require('lodash/startsWith')
 const range = require('lodash/range')
+const has = require('lodash/has')
 const colors = require('colors/safe')
 
 const webpack = require('webpack')
@@ -25,7 +26,9 @@ const {
   CLIENT_PORT,
   CLIENT_UI_FOLDER_PATH,
   CLIENT_LANGUAGE,
+
   SERVER_URL,
+  WEBSOCKET_SERVER_URL,
 } = process.env
 
 //
@@ -47,19 +50,37 @@ const variablesForWebpackConfig = [
   'CLIENT_UI_FOLDER_PATH',
 ]
 
+/**
+ * This object maps variables to their default values
+ * If a variable is undefined, an error will be thrown
+ * Use undefined for required variables, and null or an actual value for optional ones
+ * Server url and websocket url are optional because they might not be provided at build time in production,
+ * but at runtime with our dynamic url mechanism
+ */
+
 // Environment variables that will be passed down to the build
-const variablesForBuild = ['NODE_ENV', 'SERVER_URL']
+const variablesForBuild = {
+  NODE_ENV: undefined,
+  SERVER_URL: null,
+  WEBSOCKET_SERVER_URL: null,
+}
 
 // Allow custom variables that start with CLIENT_ to pass into the build
-const customVariables = Object.keys(process.env).filter(k => {
-  return (
-    !variablesForWebpackConfig.includes(k) &&
-    !variablesForBuild.includes(k) &&
-    startsWith(k, 'CLIENT_')
-  )
-})
+const customVariables = Object.keys(process.env)
+  .filter(k => {
+    return (
+      !variablesForWebpackConfig.includes(k) &&
+      !has(variablesForBuild, k) &&
+      startsWith(k, 'CLIENT_')
+    )
+  })
+  .reduce((obj, k) => {
+    const newObj = { ...obj }
+    newObj[k] = undefined
+    return newObj
+  }, {})
 
-const variablesInBuild = [...variablesForBuild, ...customVariables]
+const variablesInBuild = { ...variablesForBuild, ...customVariables }
 
 const mode = NODE_ENV === 'production' ? 'production' : 'development'
 const isEnvDevelopment = mode === 'development'
@@ -103,6 +124,7 @@ const language = CLIENT_LANGUAGE
 const defaultLanguage = 'en-US'
 
 const serverUrl = SERVER_URL
+const websocketServerUrl = WEBSOCKET_SERVER_URL
 
 // const antVariablesPath = require.resolve(
 //   path.join(antPath, 'lib/style/themes/default.less'),
@@ -143,6 +165,7 @@ logStatus(`Page title set to`, pageTitle)
 logStatus(`Language set to`, language || `${defaultLanguage} (default)`)
 isEnvDevelopment && logStatus(`Dev server will run at port`, devServerPort)
 logStatus(`Server will be requested at`, serverUrl)
+logStatus(`Websocket server will be requested at`, websocketServerUrl)
 logStatus(`React fast-refresh is`, useFastRefresh ? 'on' : 'off')
 
 logStatus(
