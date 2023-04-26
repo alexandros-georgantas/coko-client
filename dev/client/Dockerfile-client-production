@@ -17,8 +17,6 @@ COPY ./scripts/coko-client-build.sh ./scripts/coko-client-build.sh
 COPY ./src ./src
 COPY ./webpack ./webpack
 
-ARG server_url
-ENV SERVER_URL=$server_url
 
 ENV WEBPACK_CONFIG_PATH=./webpack/webpack.config.js
 ENV NODE_ENV='production'
