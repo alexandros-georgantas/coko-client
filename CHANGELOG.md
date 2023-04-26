@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.39](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.38...v0.0.39) (2023-04-26)
+
+
+### Features
+
+* **webpack:** add websocket server url as predefined variable ([0220ba9](https://gitlab.coko.foundation/cokoapps/client/commit/0220ba93058efe49fadbbf5722ba329fc6f6b1d6))
+
 ### [0.0.38](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.37...v0.0.38) (2023-04-25)
 
 
