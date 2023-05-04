@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.40](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.39...v0.0.40) (2023-05-04)
+
+
+### Bug Fixes
+
+* **components:** expose websocket server url via getUrl ([6c88af7](https://gitlab.coko.foundation/cokoapps/client/commit/6c88af7851cc80a2f3dc719ce587d28d3b915f01))
+
 ### [0.0.39](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.38...v0.0.39) (2023-04-26)
 
 
