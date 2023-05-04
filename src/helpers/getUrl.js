@@ -14,7 +14,11 @@ const makeUrl = type => {
 const clientUrl = makeUrl('client')
 const serverUrl = window.env?.serverUrl || process.env.SERVER_URL
 
+const webSocketServerUrl =
+  window.env?.websocketServerUrl || process.env.WEBSOCKET_SERVER_URL
+
 module.exports = {
   clientUrl,
   serverUrl,
+  webSocketServerUrl,
 }
