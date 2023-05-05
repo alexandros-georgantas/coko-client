@@ -33,7 +33,7 @@ const RequireAuth = props => {
 
   const client = useApolloClient()
   const location = useLocation()
-  const { currentUser } = useCurrentUser()
+  const { currentUser, setCurrentUser } = useCurrentUser()
 
   useEffect(() => {
     if (currentUser) {
@@ -57,9 +57,22 @@ const RequireAuth = props => {
     return <Redirect to={redirectUrl} />
   }
 
-  // render where setCurrentUser has been triggered but the context has not been updated yet
-  if (!currentUser) {
+  // if currentUser is undefined the context hasn't been set yet
+  if (currentUser === undefined) {
     return null
+  }
+
+  // if currentUser is null it was set as a result of a failed authentication attempt (invalid token)
+  if (currentUser === null) {
+    setCurrentUser(null)
+    client.cache.reset()
+    localStorage.removeItem('token')
+
+    return (
+      <Redirect
+        to={`${notAuthenticatedRedirectTo}?next=${location.pathname}`}
+      />
+    )
   }
 
   if (requireIdentityVerification) {

@@ -19,7 +19,7 @@ const AuthWrapper = props => {
 
   // update context when data arrives
   useEffect(() => {
-    if (data && data.currentUser) {
+    if (data && 'currentUser' in data) {
       setCurrentUser(data.currentUser)
     }
   }, [data])
