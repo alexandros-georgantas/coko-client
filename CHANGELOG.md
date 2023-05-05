@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.41](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.40...v0.0.41) (2023-05-05)
+
+
+### Bug Fixes
+
+* **components:** handle expired tokens ([3517121](https://gitlab.coko.foundation/cokoapps/client/commit/3517121f6771d7ce0211e61e612f843aa1fdc808))
+
 ### [0.0.40](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.39...v0.0.40) (2023-05-04)
 
 
