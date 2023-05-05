@@ -35,7 +35,6 @@ const NavigationBarPage = () => {
     client.cache.reset()
 
     localStorage.removeItem('token')
-    localStorage.removeItem('dashboardLastUsedTab')
   }
 
   return (

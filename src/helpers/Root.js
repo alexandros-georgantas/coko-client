@@ -124,7 +124,7 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
 
 const Root = props => {
   const { makeApolloConfig, routes, theme, connectToWebSocket } = props
-  const [currentUser, setCurrentUser] = useState(null)
+  const [currentUser, setCurrentUser] = useState()
 
   const mapper = {
     borderRadius: pxToNumConverter(theme.borderRadius),

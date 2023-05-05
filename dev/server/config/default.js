@@ -12,6 +12,7 @@ module.exports = {
     host: 'localhost',
     port: 3000,
     secret: 'test',
+    // tokenExpiresIn: '5 seconds',
   },
   teams: {
     global: [],
