@@ -93,11 +93,16 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
   let link = ApolloLink.from([removeTypename, authLink, uploadLink])
 
   if (connectToWebSocket) {
-    const serverProtocol = serverUrl.split(':')[0]
-    const wsProtocol = serverProtocol === 'https' ? 'wss' : 'ws'
+    const serverURL = new URL(serverUrl)
+    const serverProtocol = serverURL.protocol
+    const wsProtocol = serverProtocol === 'https:' ? 'wss' : 'ws'
+    const serverHostname = serverURL.hostname
+    const serverPort = serverURL.port
 
     const wsLink = new WebSocketLink({
-      uri: `${wsProtocol}://${serverUrl}/subscriptions`,
+      uri: `${wsProtocol}://${serverHostname}${
+        serverPort ? `:${serverPort}` : ''
+      }/subscriptions`,
       options: {
         reconnect: true,
         connectionParams: () => ({ authToken: localStorage.getItem('token') }),
