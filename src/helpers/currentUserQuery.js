@@ -7,7 +7,13 @@ export default gql`
       displayName
       username
       # roles
-
+      teams {
+        id
+        role
+        objectId
+        global
+      }
+      isActive
       defaultIdentity {
         id
         isVerified
