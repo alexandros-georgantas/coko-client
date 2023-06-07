@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.42](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.41...v0.0.42) (2023-06-07)
+
+
+### Features
+
+* **components:** add user subscription ([43d2c40](https://gitlab.coko.foundation/cokoapps/client/commit/43d2c404788329ba5bf3b1ffacedda8d2c6cd8d8))
+* **components:** additional properties for the currentUser query ([2870c3c](https://gitlab.coko.foundation/cokoapps/client/commit/2870c3c8ad9653e2b684f0f1afc2c620480673ec))
+
+
+### Bug Fixes
+
+* **components:** graphql subscriptions url fix ([79fdecb](https://gitlab.coko.foundation/cokoapps/client/commit/79fdecb24f8cdfae239503d15180caa028dbecb8))
+
 ### [0.0.41](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.40...v0.0.41) (2023-05-05)
 
 
