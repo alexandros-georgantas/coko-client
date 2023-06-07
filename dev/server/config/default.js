@@ -15,7 +15,20 @@ module.exports = {
     // tokenExpiresIn: '5 seconds',
   },
   teams: {
-    global: [],
+    global: {
+      editor: {
+        displayName: 'Editor',
+        role: 'editor',
+      },
+      reviewer: {
+        displayName: 'Reviewer',
+        role: 'reviewer',
+      },
+      admin: {
+        displayName: 'Admin',
+        role: 'admin',
+      },
+    },
     nonGlobal: [],
   },
 }

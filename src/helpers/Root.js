@@ -67,7 +67,7 @@ export function stripTypenames(obj) {
 // Construct an ApolloClient. If a function is passed as the first argument,
 // it will be called with the default client config as an argument, and should
 // return the desired config.
-const makeApolloClient = (makeConfig, connectToWebSocket) => {
+const makeApolloClient = makeConfig => {
   const uploadLink = createUploadLink({
     uri: `${serverUrl}/graphql`,
   })
@@ -92,32 +92,30 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
 
   let link = ApolloLink.from([removeTypename, authLink, uploadLink])
 
-  if (connectToWebSocket) {
-    const serverURL = new URL(serverUrl)
-    const serverProtocol = serverURL.protocol
-    const wsProtocol = serverProtocol === 'https:' ? 'wss' : 'ws'
-    const serverHostname = serverURL.hostname
-    const serverPort = serverURL.port
+  const serverURL = new URL(serverUrl)
+  const serverProtocol = serverURL.protocol
+  const wsProtocol = serverProtocol === 'https:' ? 'wss' : 'ws'
+  const serverHostname = serverURL.hostname
+  const serverPort = serverURL.port
 
-    const wsLink = new WebSocketLink({
-      uri: `${wsProtocol}://${serverHostname}${
-        serverPort ? `:${serverPort}` : ''
-      }/subscriptions`,
-      options: {
-        reconnect: true,
-        connectionParams: () => ({ authToken: localStorage.getItem('token') }),
-      },
-    })
+  const wsLink = new WebSocketLink({
+    uri: `${wsProtocol}://${serverHostname}${
+      serverPort ? `:${serverPort}` : ''
+    }/subscriptions`,
+    options: {
+      reconnect: true,
+      connectionParams: () => ({ authToken: localStorage.getItem('token') }),
+    },
+  })
 
-    link = split(
-      ({ query }) => {
-        const { kind, operation } = getMainDefinition(query)
-        return kind === 'OperationDefinition' && operation === 'subscription'
-      },
-      wsLink,
-      link,
-    )
-  }
+  link = split(
+    ({ query }) => {
+      const { kind, operation } = getMainDefinition(query)
+      return kind === 'OperationDefinition' && operation === 'subscription'
+    },
+    wsLink,
+    link,
+  )
 
   const config = {
     link,
@@ -128,7 +126,7 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
 }
 
 const Root = props => {
-  const { makeApolloConfig, routes, theme, connectToWebSocket } = props
+  const { makeApolloConfig, routes, theme } = props
   const [currentUser, setCurrentUser] = useState()
 
   const mapper = {
@@ -158,7 +156,7 @@ const Root = props => {
     },
   }
 
-  const client = makeApolloClient(makeApolloConfig, connectToWebSocket)
+  const client = makeApolloClient(makeApolloConfig)
 
   return (
     <ApolloProvider client={client}>
@@ -182,7 +180,6 @@ const Root = props => {
 }
 
 Root.propTypes = {
-  connectToWebSocket: PropTypes.bool,
   makeApolloConfig: PropTypes.func,
   routes: PropTypes.node.isRequired,
   /* eslint-disable-next-line react/forbid-prop-types */
@@ -190,7 +187,6 @@ Root.propTypes = {
 }
 
 Root.defaultProps = {
-  connectToWebSocket: true,
   makeApolloConfig: null,
 }
 

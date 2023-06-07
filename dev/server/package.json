@@ -9,8 +9,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@coko/server": "^3.0.0-beta.9",
+    "@coko/server": "^3.0.0-beta.12",
     "@faker-js/faker": "^7.6.0",
+    "config": "^3.3.9",
     "lodash": "^4.17.21",
     "nodemon": "^2.0.22"
   },

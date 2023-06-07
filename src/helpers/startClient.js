@@ -13,12 +13,10 @@ const history = createBrowserHistory()
 const rootEl = document.getElementById('root')
 
 const startClient = (routes, theme, options = {}) => {
-  const connectToWebSocket = options.connectToWebSocket || false
   const { makeApolloConfig } = options
 
   ReactDOM.render(
     <Root
-      connectToWebSocket={connectToWebSocket}
       history={history}
       makeApolloConfig={makeApolloConfig}
       routes={routes}

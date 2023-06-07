@@ -2,6 +2,7 @@ const { logger, useTransaction } = require('@coko/server')
 
 const User = require('@coko/server/src/models/user/user.model')
 const Identity = require('@coko/server/src/models/identity/identity.model')
+const Team = require('@coko/server/src/models/team/team.model')
 
 const info = msg => {
   const prefix = `--- Seed scripts =>`
@@ -50,6 +51,8 @@ const seedAdminUser = async () => {
         },
         { trx: tr },
       )
+
+      await Team.addMemberToGlobalTeam(newUser.id, 'admin', { trx: tr })
 
       info(`Admin user with id ${newUser.id} successfully created`)
     })
