@@ -53,10 +53,10 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
-"@coko/server@^3.0.0-beta.9":
-  version "3.0.0-beta.9"
-  resolved "https://registry.yarnpkg.com/@coko/server/-/server-3.0.0-beta.9.tgz#f7010840028a5d11f6d8928848d2d960c557d110"
-  integrity sha512-I92QWs+2kFiYwvL+aS5QBv8zRiGJEb0H2hnP4is8W5nxSZR6wGbGwyXnOasB5OSqoB9HyvQoVy/Xnn9r7cGyVA==
+"@coko/server@^3.0.0-beta.12":
+  version "3.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@coko/server/-/server-3.0.0-beta.12.tgz#08a187542abb4db9cb2c2561c43b5e91916d8a54"
+  integrity sha512-GyKMAaRCTxb1pL7ystM2BgA/G1iOjCayKs0v8jl5+A2lcdF6ocUmqXeDUOZ6Tmm7OLoRD4KT+CgnMavI7jVkrQ==
   dependencies:
     "@pubsweet/base-model" "^4.0.10"
     "@pubsweet/component-send-email" "^0.4.13"
@@ -77,6 +77,7 @@
     fs-extra "^10.0.0"
     graphql-middleware "^4.0.2"
     graphql-shield "^7.4.1"
+    graphql-subscriptions "1.2.1"
     graphql-upload "^13.0.0"
     helmet "^3.22.1"
     http-status-codes "^1.4.0"
@@ -1665,7 +1666,7 @@ concat-stream@^1.5.0, concat-stream@^1.5.2:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
-config@^3.0.1, config@^3.3.2:
+config@^3.0.1, config@^3.3.2, config@^3.3.9:
   version "3.3.9"
   resolved "https://registry.yarnpkg.com/config/-/config-3.3.9.tgz#27fae95b43e0e1d5723e54143c090954d8e49572"
   integrity sha512-G17nfe+cY7kR0wVpc49NCYvNtelm/pPy8czHoFkAgtV1lkmcp7DHtWCdDu+C9Z7gb2WVqa9Tm3uF9aKaPbCfhg==
@@ -2991,19 +2992,19 @@ graphql-shield@^7.4.1:
     tslib "^2.4.0"
     yup "^0.32.0"
 
+graphql-subscriptions@1.2.1, graphql-subscriptions@^1.0.0:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-1.2.1.tgz#2142b2d729661ddf967b7388f7cf1dd4cf2e061d"
+  integrity sha512-95yD/tKi24q8xYa7Q9rhQN16AYj5wPbrb8tmHGM3WRc9EBmWrG/0kkMl+tQG8wcEuE9ibR4zyOM31p5Sdr2v4g==
+  dependencies:
+    iterall "^1.3.0"
+
 graphql-subscriptions@^0.5.8:
   version "0.5.8"
   resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.5.8.tgz#13a6143c546bce390404657dc73ca501def30aa7"
   integrity sha512-0CaZnXKBw2pwnIbvmVckby5Ge5e2ecmjofhYCdyeACbCly2j3WXDP/pl+s+Dqd2GQFC7y99NB+53jrt55CKxYQ==
   dependencies:
     iterall "^1.2.1"
-
-graphql-subscriptions@^1.0.0:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-1.2.1.tgz#2142b2d729661ddf967b7388f7cf1dd4cf2e061d"
-  integrity sha512-95yD/tKi24q8xYa7Q9rhQN16AYj5wPbrb8tmHGM3WRc9EBmWrG/0kkMl+tQG8wcEuE9ibR4zyOM31p5Sdr2v4g==
-  dependencies:
-    iterall "^1.3.0"
 
 graphql-tag@^2.11.0:
   version "2.12.6"

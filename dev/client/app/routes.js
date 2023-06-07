@@ -3,7 +3,14 @@ import { Route, Switch } from 'react-router-dom'
 
 import { PageLayout, RequireAuth, Authenticate } from '../../../src'
 
-import { NavigationBar, Root, ImageDemo, AntDemo, Protected } from './pages'
+import {
+  NavigationBar,
+  Root,
+  ImageDemo,
+  AntDemo,
+  Protected,
+  Teams,
+} from './pages'
 
 const routes = (
   <Authenticate>
@@ -12,6 +19,7 @@ const routes = (
         <Route component={Root} exact path="/" />
         <Route component={ImageDemo} exact path="/imagedemo" />
         <Route component={AntDemo} exact path="/ant" />
+        <Route component={Teams} exact path="/teams" />
 
         <Route
           exact

@@ -1,8 +1,10 @@
-import { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useQuery } from '@apollo/client'
+import { useQuery, useSubscription } from '@apollo/client'
 import { useCurrentUser } from '../helpers/currentUserContext'
-import CURRENT_USER from '../helpers/currentUserQuery'
+import {
+  CURRENT_USER,
+  USER_UPDATED_SUBSCRIPTION,
+} from '../helpers/currentUserQuery'
 
 const AuthWrapper = props => {
   const {
@@ -13,16 +15,18 @@ const AuthWrapper = props => {
 
   const { currentUser, setCurrentUser } = useCurrentUser()
 
-  const { data, loading, error } = useQuery(currentUserQuery, {
+  const { loading, error } = useQuery(currentUserQuery, {
     skip: currentUser,
+    onCompleted: ({ currentUser: fetchedUser }) => setCurrentUser(fetchedUser),
   })
 
-  // update context when data arrives
-  useEffect(() => {
-    if (data && 'currentUser' in data) {
-      setCurrentUser(data.currentUser)
-    }
-  }, [data])
+  useSubscription(USER_UPDATED_SUBSCRIPTION, {
+    skip: !currentUser,
+    variables: { userId: currentUser?.id },
+    onData: ({ userUpdated }) => {
+      setCurrentUser(userUpdated)
+    },
+  })
 
   if (error) console.error(error)
 
