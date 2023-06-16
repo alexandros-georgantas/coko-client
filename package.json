@@ -29,12 +29,17 @@
     "cz": "git-cz",
     "prepare": "husky install",
     "prepublishOnly": "yarn run build",
-    "release": "standard-version"
+    "release": "standard-version",
+    "storybook": "STORYBOOK_THEME_PATH='src/theme/index.js' coko-storybook"
   },
   "config": {
     "commitizen": {
       "path": "cz-customizable"
     }
+  },
+  "resolutions": {
+    "postcss": "8",
+    "prettier": "2.8.8"
   },
   "dependencies": {
     "@babel/cli": "^7.13.14",
@@ -45,7 +50,7 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.0-beta.6",
     "@pubsweet/client": "^11.0.13",
     "@pubsweet/ui-toolkit": "^2.3.17",
-    "antd": "^5.1.0",
+    "antd": "^5.6.1",
     "apollo-upload-client": "^11.0.0",
     "app-root-path": "^3.0.0",
     "babel-loader": "^8.2.2",
@@ -78,6 +83,8 @@
   },
   "devDependencies": {
     "@coko/lint": "^2.0.1",
+    "@coko/storybook": "^2.0.0",
+    "@faker-js/faker": "^8.0.2",
     "fontsource-advent-pro": "^4.0.0",
     "nodemon": "^2.0.7",
     "standard-version": "^9.2.0"

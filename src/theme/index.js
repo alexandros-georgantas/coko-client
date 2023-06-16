@@ -73,7 +73,7 @@ const cokoTheme = {
   boxShadow: '0 2px 4px 0 rgba(51, 51, 51, 0.3)',
 
   /* Transition */
-  transitionDuration: '0.2s',
+  transitionDuration: 0.2,
   transitionTimingFunction: 'ease',
   transitionDelay: '0',
 
