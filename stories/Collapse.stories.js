@@ -1,7 +1,6 @@
 import React from 'react'
 import { faker } from '@faker-js/faker'
 import { range } from 'lodash'
-
 import { Collapse } from '../src/ui'
 
 export const Base = () => (
