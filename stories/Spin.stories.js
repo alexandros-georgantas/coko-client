@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-// import { lorem } from 'faker'
+// import { lorem } from '@faker-js/faker'
 
 import { Spin, Switch as UISwitch, Text } from '../src/ui'
 import { Filler } from '../src/ui/_helpers'
@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   height: 300px;
 `
 
-export const Base = () => <Spin />
+export const Base = () => <Spin spinning />
 
 export const Wrap = () => {
   const [spinning, setSpinning] = useState(true)

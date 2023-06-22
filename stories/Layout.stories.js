@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
-// import { lorem } from 'faker'
+// import { lorem } from '@faker-js/faker'
 
 import { Layout, Paragraph, Switch } from '../src/ui'
 

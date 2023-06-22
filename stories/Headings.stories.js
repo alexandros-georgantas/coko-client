@@ -1,5 +1,5 @@
 import React from 'react'
-// import { lorem } from 'faker'
+// import { lorem } from '@faker-js/faker'
 
 import { H1, H2, H3, H4, H5 } from '../src/ui'
 
