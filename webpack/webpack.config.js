@@ -11,6 +11,7 @@ const CopyPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const {
   NODE_ENV,
@@ -335,7 +336,11 @@ const webpackConfig = {
       title: pageTitle,
       language: language || defaultLanguage,
     }),
-
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'server',
+      generateStatsFile: true,
+      statsOptions: { source: false },
+    }),
     // DEV-ONLY
     // React fast-refresh
     isEnvDevelopment &&

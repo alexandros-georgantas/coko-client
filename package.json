@@ -24,6 +24,7 @@
     "webpack"
   ],
   "scripts": {
+    "analyze": "webpack --profile --json > stats.json && yarn webpack-bundle-analyzer ./stats.json ./dist -m server",
     "build": "npx babel --delete-dir-on-start src --out-dir dist",
     "clean": "rm -rf node_modules && rm -rf dist && rm -rf dev/server/node_modules",
     "cz": "git-cz",
@@ -90,7 +91,8 @@
     "@faker-js/faker": "^8.0.2",
     "fontsource-advent-pro": "^4.0.0",
     "nodemon": "^2.0.7",
-    "standard-version": "^9.2.0"
+    "standard-version": "^9.2.0",
+    "webpack-bundle-analyzer": "^4.9.0"
   },
   "peerDependencies": {
     "@apollo/client": "^3.3.13",
