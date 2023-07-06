@@ -1,6 +1,6 @@
 import React from 'react'
 import { faker } from '@faker-js/faker'
-import Button from '../src/ui/Button'
+import { Button } from '../src/ui'
 
 export const Base = () => <Button>{faker.lorem.words(2)}</Button>
 export const Primary = () => (
