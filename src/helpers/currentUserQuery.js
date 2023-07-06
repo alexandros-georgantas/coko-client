@@ -12,6 +12,13 @@ const CURRENT_USER = gql`
         role
         objectId
         global
+        members(currentUserOnly: true) {
+          id
+          user {
+            id
+          }
+          status
+        }
       }
       isActive
       defaultIdentity {
@@ -34,6 +41,13 @@ const USER_UPDATED_SUBSCRIPTION = gql`
         role
         objectId
         global
+        members(currentUserOnly: true) {
+          id
+          user {
+            id
+          }
+          status
+        }
       }
       isActive
       defaultIdentity {
