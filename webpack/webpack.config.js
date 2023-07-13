@@ -338,8 +338,8 @@ const webpackConfig = {
     }),
     new BundleAnalyzerPlugin({
       analyzerMode: 'server',
-      generateStatsFile: true,
-      statsOptions: { source: false },
+      openAnalyzer: true,
+      analyzerHost: '0.0.0.0',
     }),
     // DEV-ONLY
     // React fast-refresh

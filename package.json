@@ -24,7 +24,6 @@
     "webpack"
   ],
   "scripts": {
-    "analyze": "webpack --profile --json > stats.json && yarn webpack-bundle-analyzer ./stats.json ./dist -m server",
     "build": "npx babel --delete-dir-on-start src --out-dir dist",
     "clean": "rm -rf node_modules && rm -rf dist && rm -rf dev/server/node_modules",
     "cz": "git-cz",
