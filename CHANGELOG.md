@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.43](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.42...v0.0.43) (2023-07-14)
+
+
+### Features
+
+* members attribute added in current user query ([f496e02](https://gitlab.coko.foundation/cokoapps/client/commit/f496e02fcf85b82dfe5ec1de89a693c9cb559cd1))
+* **ui:** add button component & story ([b87a64d](https://gitlab.coko.foundation/cokoapps/client/commit/b87a64d201a520e8a0481aba38b2417137c20f44))
+* **ui:** add new components and stories to the ui library ([d10437d](https://gitlab.coko.foundation/cokoapps/client/commit/d10437d61e9b0e01bba26267f267462d2fbfcb82))
+
 ### [0.0.42](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.41...v0.0.42) (2023-06-07)
 
 
