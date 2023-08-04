@@ -8,6 +8,7 @@ services:
     command: ['./scripts/coko-client-dev.sh']
     ports:
       - ${CLIENT_PORT:-4000}:${CLIENT_PORT:-4000}
+      - ${WEBPACK_ANALYZER_PORT:-8888}:8888
     environment:
       - NODE_ENV=development
       - WEBPACK_CONFIG_PATH=./webpack/webpack.config.js
@@ -74,12 +75,12 @@ services:
       - SERVER_PORT=${SERVER_PORT:-3000}
       - CLIENT_URL=${CLIENT_URL:-http://0.0.0.0:4000}
     volumes:
-      - ./dev/server/api:/home/node/hhmi/api
-      - ./dev/server/config:/home/node/hhmi/config
-      - ./dev/server/controllers:/home/node/hhmi/controllers
-      - ./dev/server/models:/home/node/hhmi/models
-      - ./dev/server/scripts:/home/node/hhmi/scripts
-      - ./dev/server/services:/home/node/hhmi/services
+      - ./dev/server/api:/home/node/app/api
+      - ./dev/server/config:/home/node/app/config
+      - ./dev/server/controllers:/home/node/app/controllers
+      - ./dev/server/models:/home/node/app/models
+      - ./dev/server/scripts:/home/node/app/scripts
+      - ./dev/server/services:/home/node/app/services
 
   db:
     image: postgres:15

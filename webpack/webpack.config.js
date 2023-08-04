@@ -11,6 +11,7 @@ const CopyPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const {
   NODE_ENV,
@@ -342,6 +343,12 @@ const webpackConfig = {
       useFastRefresh &&
       new webpack.HotModuleReplacementPlugin(),
     isEnvDevelopment && useFastRefresh && new ReactRefreshWebpackPlugin(),
+
+    isEnvDevelopment &&
+      new BundleAnalyzerPlugin({
+        openAnalyzer: false,
+        analyzerHost: '0.0.0.0',
+      }),
 
     // PROD-ONLY
     isEnvProduction &&
