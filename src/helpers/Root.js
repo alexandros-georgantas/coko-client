@@ -18,6 +18,7 @@ import {
 import { getMainDefinition } from '@apollo/client/utilities'
 import { setContext } from '@apollo/client/link/context'
 import { WebSocketLink } from '@apollo/client/link/ws'
+import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { createUploadLink } from 'apollo-upload-client'
 
 import { CurrentUserContext } from './currentUserContext'
@@ -98,15 +99,24 @@ const makeApolloClient = makeConfig => {
   const serverHostname = serverURL.hostname
   const serverPort = serverURL.port
 
-  const wsLink = new WebSocketLink({
-    uri: `${wsProtocol}://${serverHostname}${
-      serverPort ? `:${serverPort}` : ''
-    }/subscriptions`,
-    options: {
-      reconnect: true,
-      connectionParams: () => ({ authToken: localStorage.getItem('token') }),
-    },
-  })
+  const wsMinTimeout = process.env.CLIENT_WS_MIN_TIMEOUT
+  const wsTimeout = process.env.CLIENT_WS_TIMEOUT
+
+  const wsLink = new WebSocketLink(
+    new SubscriptionClient(
+      `${wsProtocol}://${serverHostname}${
+        serverPort ? `:${serverPort}` : ''
+      }/subscriptions`,
+      {
+        reconnect: true,
+        minTimeout: wsMinTimeout,
+        timeout: wsTimeout,
+        connectionParams: {
+          authToken: localStorage.getItem('token'),
+        },
+      },
+    ),
+  )
 
   link = split(
     ({ query }) => {

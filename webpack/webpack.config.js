@@ -27,6 +27,8 @@ const {
   CLIENT_PORT,
   CLIENT_UI_FOLDER_PATH,
   CLIENT_LANGUAGE,
+  CLIENT_WS_MIN_TIMEOUT,
+  CLIENT_WS_TIMEOUT,
 
   SERVER_URL,
   WEBSOCKET_SERVER_URL,
@@ -59,11 +61,16 @@ const variablesForWebpackConfig = [
  * but at runtime with our dynamic url mechanism
  */
 
+const DEFAULT_CLIENT_WS_MIN_TIMEOUT = 5000
+const DEFAULT_CLIENT_WS_TIMEOUT = 60000
+
 // Environment variables that will be passed down to the build
 const variablesForBuild = {
   NODE_ENV: undefined,
   SERVER_URL: null,
   WEBSOCKET_SERVER_URL: null,
+  CLIENT_WS_MIN_TIMEOUT: DEFAULT_CLIENT_WS_MIN_TIMEOUT,
+  CLIENT_WS_TIMEOUT: DEFAULT_CLIENT_WS_TIMEOUT,
 }
 
 // Allow custom variables that start with CLIENT_ to pass into the build
@@ -127,6 +134,9 @@ const defaultLanguage = 'en-US'
 const serverUrl = SERVER_URL
 const websocketServerUrl = WEBSOCKET_SERVER_URL
 
+const WSLinkMinTimeout = CLIENT_WS_MIN_TIMEOUT || DEFAULT_CLIENT_WS_MIN_TIMEOUT
+const WSLinkTimeout = CLIENT_WS_TIMEOUT || DEFAULT_CLIENT_WS_TIMEOUT
+
 // const antVariablesPath = require.resolve(
 //   path.join(antPath, 'lib/style/themes/default.less'),
 // )
@@ -167,6 +177,8 @@ logStatus(`Language set to`, language || `${defaultLanguage} (default)`)
 isEnvDevelopment && logStatus(`Dev server will run at port`, devServerPort)
 logStatus(`Server will be requested at`, serverUrl)
 logStatus(`Websocket server will be requested at`, websocketServerUrl)
+logStatus(`Websocket link min timeout will be `, WSLinkMinTimeout)
+logStatus(`Websocket link timeout will be `, WSLinkTimeout)
 logStatus(`React fast-refresh is`, useFastRefresh ? 'on' : 'off')
 
 logStatus(
