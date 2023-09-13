@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.44](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.43...v0.0.44) (2023-09-13)
+
+
+### Features
+
+* **ui:** add the rest of the components and stories from HHMI ([7b31a2f](https://gitlab.coko.foundation/cokoapps/client/commit/7b31a2f72e9cb951a7920d3dfa54bdd2209d77b1))
+* **webpack:** add bundle analyzer ([0ebbf90](https://gitlab.coko.foundation/cokoapps/client/commit/0ebbf909eca296a09b04768a7ea3720b60c11f13))
+
+
+### Bug Fixes
+
+* **components:** fix websocket timeouts ([474c6e4](https://gitlab.coko.foundation/cokoapps/client/commit/474c6e48a8fa2c012cef90e2c4167de8a9f7a77d))
+
 ### [0.0.43](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.42...v0.0.43) (2023-07-14)
 
 
