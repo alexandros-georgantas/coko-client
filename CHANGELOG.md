@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.45](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.44...v0.0.45) (2023-09-14)
+
+
+### Bug Fixes
+
+* **components:** fix memory leak in ws link ([d003805](https://gitlab.coko.foundation/cokoapps/client/commit/d0038056e3439bd9d30024b79079babf38494107))
+
 ### [0.0.44](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.43...v0.0.44) (2023-09-13)
 
 
