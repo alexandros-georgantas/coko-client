@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { ConfigProvider as AntConfigProvider } from 'antd'
@@ -24,6 +24,18 @@ import { createUploadLink } from 'apollo-upload-client'
 import { CurrentUserContext } from './currentUserContext'
 // import AuthWrapper from '../components/AuthWrapper'
 import { serverUrl } from './getUrl'
+
+const serverURL = new URL(serverUrl)
+const serverProtocol = serverURL.protocol
+const wsProtocol = serverProtocol === 'https:' ? 'wss' : 'ws'
+const serverHostname = serverURL.hostname
+const serverPort = serverURL.port
+
+const wsMinTimeout = process.env.CLIENT_WS_MIN_TIMEOUT
+const wsTimeout = process.env.CLIENT_WS_TIMEOUT
+
+let wsLink
+let webSocketClient
 
 const pxToNumConverter = value => {
   if (typeof value === 'string') {
@@ -93,39 +105,40 @@ const makeApolloClient = makeConfig => {
 
   let link = ApolloLink.from([removeTypename, authLink, uploadLink])
 
-  const serverURL = new URL(serverUrl)
-  const serverProtocol = serverURL.protocol
-  const wsProtocol = serverProtocol === 'https:' ? 'wss' : 'ws'
-  const serverHostname = serverURL.hostname
-  const serverPort = serverURL.port
-
-  const wsMinTimeout = process.env.CLIENT_WS_MIN_TIMEOUT
-  const wsTimeout = process.env.CLIENT_WS_TIMEOUT
-
-  const wsLink = new WebSocketLink(
-    new SubscriptionClient(
-      `${wsProtocol}://${serverHostname}${
-        serverPort ? `:${serverPort}` : ''
-      }/subscriptions`,
-      {
-        reconnect: true,
-        minTimeout: wsMinTimeout,
-        timeout: wsTimeout,
-        connectionParams: {
-          authToken: localStorage.getItem('token'),
+  if (localStorage.getItem('token')) {
+    if (!webSocketClient) {
+      webSocketClient = new SubscriptionClient(
+        `${wsProtocol}://${serverHostname}${
+          serverPort ? `:${serverPort}` : ''
+        }/subscriptions`,
+        {
+          reconnect: true,
+          lazy: true,
+          inactivityTimeout: 3000,
+          minTimeout: wsMinTimeout,
+          timeout: wsTimeout,
+          connectionParams: {
+            authToken: localStorage.getItem('token'),
+          },
         },
-      },
-    ),
-  )
+      )
+    }
 
-  link = split(
-    ({ query }) => {
-      const { kind, operation } = getMainDefinition(query)
-      return kind === 'OperationDefinition' && operation === 'subscription'
-    },
-    wsLink,
-    link,
-  )
+    if (!wsLink) {
+      wsLink = new WebSocketLink(webSocketClient)
+    }
+  }
+
+  if (wsLink) {
+    link = split(
+      ({ query }) => {
+        const { kind, operation } = getMainDefinition(query)
+        return kind === 'OperationDefinition' && operation === 'subscription'
+      },
+      wsLink,
+      link,
+    )
+  }
 
   const config = {
     link,
@@ -138,6 +151,7 @@ const makeApolloClient = makeConfig => {
 const Root = props => {
   const { makeApolloConfig, routes, theme } = props
   const [currentUser, setCurrentUser] = useState()
+  let client = makeApolloClient(makeApolloConfig)
 
   const mapper = {
     borderRadius: pxToNumConverter(theme.borderRadius),
@@ -166,7 +180,16 @@ const Root = props => {
     },
   }
 
-  const client = makeApolloClient(makeApolloConfig)
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      client = makeApolloClient(makeApolloConfig)
+    }
+
+    if (!localStorage.getItem('token') && webSocketClient) {
+      webSocketClient.unsubscribeAll()
+      webSocketClient.close()
+    }
+  }, [localStorage.getItem('token')])
 
   return (
     <ApolloProvider client={client}>
