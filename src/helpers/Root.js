@@ -25,12 +25,6 @@ import { CurrentUserContext } from './currentUserContext'
 // import AuthWrapper from '../components/AuthWrapper'
 import { serverUrl } from './getUrl'
 
-const serverURL = new URL(serverUrl)
-const serverProtocol = serverURL.protocol
-const wsProtocol = serverProtocol === 'https:' ? 'wss' : 'ws'
-const serverHostname = serverURL.hostname
-const serverPort = serverURL.port
-
 const wsMinTimeout = process.env.CLIENT_WS_MIN_TIMEOUT
 const wsTimeout = process.env.CLIENT_WS_TIMEOUT
 
@@ -81,6 +75,12 @@ export function stripTypenames(obj) {
 // it will be called with the default client config as an argument, and should
 // return the desired config.
 const makeApolloClient = makeConfig => {
+  const serverURL = new URL(serverUrl)
+  const serverProtocol = serverURL.protocol
+  const wsProtocol = serverProtocol === 'https:' ? 'wss' : 'ws'
+  const serverHostname = serverURL.hostname
+  const serverPort = serverURL.port
+
   const uploadLink = createUploadLink({
     uri: `${serverUrl}/graphql`,
   })
