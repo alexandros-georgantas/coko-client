@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.46](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.45...v0.0.46) (2023-10-03)
+
+
+### Bug Fixes
+
+* **components:** fix storybook crashing because server url is undefined ([066eb4d](https://gitlab.coko.foundation/cokoapps/client/commit/066eb4d06814663d0eed1599ac3d6a4c3253f5f4))
+
 ### [0.0.45](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.44...v0.0.45) (2023-09-14)
 
 
