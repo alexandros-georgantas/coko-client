@@ -55,6 +55,7 @@ const StyledRibbon = styled(Ribbon)`
 const AssignReviewers = props => {
   const {
     additionalReviewerColumns,
+    additionalSearchFields,
     amountOfReviewers,
     automate,
     canInviteMore,
@@ -100,7 +101,11 @@ const AssignReviewers = props => {
         </Top>
       )}
 
-      <Search onAdd={onAddReviewers} onSearch={onSearch} />
+      <Search
+        additionalSearchFields={additionalSearchFields}
+        onAdd={onAddReviewers}
+        onSearch={onSearch}
+      />
 
       <Head>
         <StyledRibbon status={automate ? 'success' : null}>
@@ -159,6 +164,14 @@ AssignReviewers.propTypes = {
       dataIndex: PropTypes.string.isRequired,
     }),
   ),
+  /** Additional search fields definitions to display on search */
+  additionalSearchFields: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+      items: PropTypes.arrayOf(PropTypes.string),
+    }),
+  ),
   /** Maximum amount of reviewers that can be invited at the same time */
   amountOfReviewers: PropTypes.number.isRequired,
   /** Whether reviewer invitation automation is on for this manuscript version */
@@ -208,6 +221,7 @@ AssignReviewers.propTypes = {
 
 AssignReviewers.defaultProps = {
   additionalReviewerColumns: [],
+  additionalSearchFields: [],
   onAddExternalReviewer: () => {},
   reviewerPool: [],
   suggestedReviewerName: null,

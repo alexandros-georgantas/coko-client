@@ -39,6 +39,7 @@ const StyledStatus = styled.span`
   font-size: ${th('fontSizeBaseSmall')};
   justify-content: space-around;
   line-height: ${th('lineHeightBaseSmall')};
+  max-width: ${grid(24)};
   min-width: ${grid(12)};
   padding: ${props => props.reverseColors && '4px 8px'};
   text-transform: uppercase;

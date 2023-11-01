@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { range } from 'lodash'
+import { range, uniq } from 'lodash'
 import { faker } from '@faker-js/faker'
 import { grid } from '@pubsweet/ui-toolkit'
 
@@ -49,6 +49,8 @@ const isActive = r => r.invited && !r.invitationRevoked && !r.rejectedInvitation
 
 const isAvailable = r => !r.invited
 
+const topics = uniq(range(20).map(() => faker.animal.type()))
+
 const additionalColumns = [
   {
     title: 'Topics',
@@ -77,6 +79,22 @@ const additionalColumns = [
     ),
     sorter: (a, b) => a.lastUpdated.getTime() - b.lastUpdated.getTime(),
     align: 'right',
+  },
+]
+
+const additionalSearchFields = [
+  {
+    label: 'Assessment Training',
+    value: 'assessmentTraining',
+  },
+  {
+    label: 'Language Training',
+    value: 'languageTraining',
+  },
+  {
+    label: 'Topics',
+    value: 'topics',
+    items: topics,
   },
 ]
 
@@ -246,6 +264,7 @@ export const Base = () => {
   }
 
   const reviewerDataToOption = reviewer => ({
+    ...reviewer,
     label: reviewer.displayName,
     value: reviewer.id,
   })
@@ -254,21 +273,48 @@ export const Base = () => {
     reviewers.filter(r => options.includes(r.id))
 
   const handleSearch = input =>
-    new Promise(resolve =>
-      // eslint-disable-next-line no-promise-executor-return
+    new Promise(resolve => {
       setTimeout(() => {
-        const typed = input && input.toLowerCase()
+        if (!input) {
+          resolve([])
+        }
 
-        const found = reviewers.filter(person => {
-          const fullName = person.displayName.toLowerCase()
-          return fullName.includes(typed)
-        })
+        const lowerCaseInput = input.toLowerCase()
 
-        const results = found.map(item => reviewerDataToOption(item))
+        const results = reviewers
+          .filter(person => {
+            if (person.displayName.toLowerCase().includes(lowerCaseInput)) {
+              return true
+            }
+
+            let foundMatchingField = false
+
+            additionalSearchFields.forEach(field => {
+              if (
+                field.label.toLocaleLowerCase().includes(lowerCaseInput) &&
+                typeof person[field.value] === 'boolean' &&
+                person[field.value]
+              ) {
+                foundMatchingField = true
+              } else if (
+                person[field.value] &&
+                Array.isArray(person[field.value])
+              ) {
+                person[field.value].forEach(entry => {
+                  if (entry.toLowerCase().includes(lowerCaseInput)) {
+                    foundMatchingField = true
+                  }
+                })
+              }
+            })
+
+            return foundMatchingField
+          })
+          .map(reviewer => reviewerDataToOption(reviewer))
 
         resolve(results)
-      }, 1000),
-    )
+      }, 1000)
+    })
 
   return (
     <Wrapper>
@@ -307,6 +353,7 @@ export const Base = () => {
 
       <AssignReviewers
         additionalReviewerColumns={additionalColumns}
+        additionalSearchFields={additionalSearchFields}
         amountOfReviewers={amountOfReviewers}
         automate={automation}
         canInviteMore={canInviteMore()}

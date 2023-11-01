@@ -39,7 +39,7 @@ const AddButton = styled(Button)`
 `
 
 const SearchBox = props => {
-  const { className, onAdd, onSearch } = props
+  const { additionalSearchFields, className, onAdd, onSearch } = props
 
   const [selection, setSelection] = useState([])
   const [loadingSearchResults, setLoadingSearchResults] = useState(false)
@@ -50,7 +50,58 @@ const SearchBox = props => {
 
     onSearch(searchValue)
       .then(data => {
-        setSearchResults(data)
+        if (!additionalSearchFields.length || !data.length) {
+          setSearchResults(data)
+          return
+        }
+
+        const parsedData = []
+
+        additionalSearchFields.forEach(field => {
+          if (field.items && Array.isArray(field.items)) {
+            field.items.forEach(item => {
+              if (!item.toLowerCase().includes(searchValue.toLowerCase()))
+                return
+
+              const group = {
+                label: `${field.label}: ${item}`,
+                options: [],
+              }
+
+              const filteredData = data.filter(
+                d =>
+                  d[field.value] !== undefined && d[field.value].includes(item),
+              )
+
+              group.options = filteredData.map(f => ({
+                ...f,
+                key: `${field.value}-${item}-${f.value}`,
+              }))
+
+              parsedData.push(group)
+            })
+          } else {
+            const group = {
+              label: field.label,
+              options: [],
+            }
+
+            const filteredData = data.filter(
+              d => d[field.value] !== undefined && d[field.value] !== false,
+            )
+
+            if (!filteredData.length) return
+
+            group.options = filteredData.map(f => ({
+              ...f,
+              key: `${field.value}-${f.value}`,
+            }))
+
+            parsedData.push(group)
+          }
+        })
+
+        setSearchResults(parsedData)
       })
       .finally(() => {
         setLoadingSearchResults(false)
@@ -58,7 +109,7 @@ const SearchBox = props => {
   }
 
   const handleAdd = () => {
-    onAdd(selection.map(s => s.key)).finally(() => {
+    onAdd(selection.map(s => s.value)).finally(() => {
       setSearchResults([])
       setSelection([])
     })
@@ -91,6 +142,14 @@ const SearchBox = props => {
 }
 
 SearchBox.propTypes = {
+  /** Additional search fields definitions to display on search */
+  additionalSearchFields: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+      items: PropTypes.arrayOf(PropTypes.string),
+    }),
+  ),
   /** Function to run when "Add user(s)" is clicked */
   onAdd: PropTypes.func,
   /** Function to run when typing into the search field */
@@ -98,6 +157,7 @@ SearchBox.propTypes = {
 }
 
 SearchBox.defaultProps = {
+  additionalSearchFields: [],
   onAdd: () => {},
   onSearch: () => {},
 }
