@@ -98,7 +98,7 @@ const additionalSearchFields = [
   },
 ]
 
-export const Base = () => {
+const Template = args => {
   const [reviewers, setReviewers] = useState(makeReviewers(40))
   const [pool, setPool] = useState(makeReviewers(8))
   const [sortedPool, setSortedPool] = useState([])
@@ -352,8 +352,7 @@ export const Base = () => {
       <Separator />
 
       <AssignReviewers
-        additionalReviewerColumns={additionalColumns}
-        additionalSearchFields={additionalSearchFields}
+        {...args}
         amountOfReviewers={amountOfReviewers}
         automate={automation}
         canInviteMore={canInviteMore()}
@@ -367,12 +366,29 @@ export const Base = () => {
         onSearch={handleSearch}
         onTableChange={handleTableChange}
         reviewerPool={pool}
-        suggestedReviewerName={suggestedReviewer}
-        useInviteExternalReviewer
-        useShowEmail
       />
     </Wrapper>
   )
+}
+
+const commonArgs = {
+  useInviteExternalReviewer: true,
+  useShowEmail: true,
+  suggestedReviewerName: suggestedReviewer,
+}
+
+export const Base = Template.bind({})
+
+Base.args = {
+  ...commonArgs,
+}
+
+export const AdditionalFields = Template.bind({})
+
+AdditionalFields.args = {
+  ...commonArgs,
+  additionalReviewerColumns: additionalColumns,
+  additionalSearchFields,
 }
 
 export default {
