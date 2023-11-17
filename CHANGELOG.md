@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.47](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.46...v0.0.47) (2023-11-17)
+
+
+### Features
+
+* **client:** integration login redirect page ([deeefa4](https://gitlab.coko.foundation/cokoapps/client/commit/deeefa476298614c520eee4e3b75b86dcd3cb3be))
+
 ### [0.0.46](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.45...v0.0.46) (2023-10-03)
 
 
