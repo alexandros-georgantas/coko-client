@@ -31,4 +31,11 @@ module.exports = {
     },
     nonGlobal: [],
   },
+  integrations: {
+    lulu: {
+      tokenUrl:
+        'https://api.sandbox.lulu.com/auth/realms/glasstree/protocol/openid-connect/token',
+      clientId: 'ketida-editor',
+    },
+  },
 }

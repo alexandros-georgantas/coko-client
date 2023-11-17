@@ -20,7 +20,6 @@ const NavigationBarPage = () => {
   const client = useApolloClient()
   const [login, { data, loading }] = useMutation(LOGIN)
   const { currentUser, setCurrentUser } = useCurrentUser()
-  // console.log(currentUser)
 
   React.useEffect(() => {
     if (data) {
@@ -43,6 +42,7 @@ const NavigationBarPage = () => {
       login={login}
       loginLoading={loading}
       logout={logout}
+      lulu={currentUser?.identities?.find(id => id.provider === 'lulu')}
     />
   )
 }

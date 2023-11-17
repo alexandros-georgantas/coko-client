@@ -25,6 +25,10 @@ const CURRENT_USER = gql`
         id
         isVerified
       }
+      identities {
+        id
+        provider
+      }
     }
   }
 `
@@ -53,6 +57,10 @@ const USER_UPDATED_SUBSCRIPTION = gql`
       defaultIdentity {
         id
         isVerified
+      }
+      identities {
+        id
+        provider
       }
     }
   }

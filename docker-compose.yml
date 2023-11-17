@@ -81,6 +81,8 @@ services:
       - ./dev/server/models:/home/node/app/models
       - ./dev/server/scripts:/home/node/app/scripts
       - ./dev/server/services:/home/node/app/services
+      # - ./dev/server/node_modules/@coko/server:/home/node/app/node_modules/@coko/server
+      # - ./dev/server/node_modules/pubsweet-server:/home/node/app/node_modules/pubsweet-server
 
   db:
     image: postgres:15

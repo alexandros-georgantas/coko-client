@@ -3,6 +3,8 @@ import { Route, Switch } from 'react-router-dom'
 
 import { PageLayout, RequireAuth, Authenticate } from '../../../src'
 
+import { ProviderConnectionPage } from '../../../src/pages'
+
 import {
   NavigationBar,
   Root,
@@ -12,7 +14,7 @@ import {
   Teams,
 } from './pages'
 
-const routes = (
+const Routes = (
   <Authenticate>
     <PageLayout fadeInPages navComponent={NavigationBar} padPages>
       <Switch>
@@ -33,9 +35,14 @@ const routes = (
             </RequireAuth>
           )}
         />
+
+        <Route exact path="/provider-connection-popup/:provider">
+          {/* <ProviderConnectionPage closeOnSuccess /> */}
+          <ProviderConnectionPage redirectOnSuccess />
+        </Route>
       </Switch>
     </PageLayout>
   </Authenticate>
 )
 
-export default routes
+export default Routes

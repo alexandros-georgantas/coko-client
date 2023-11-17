@@ -24,7 +24,7 @@ const RightSide = styled.div`
 `
 
 const NavigationBar = props => {
-  const { login, loginLoading, logout, currentUsername } = props
+  const { login, loginLoading, lulu, logout, currentUsername } = props
 
   const onClickBtn = () => {
     if (currentUsername) {
@@ -39,6 +39,8 @@ const NavigationBar = props => {
   return (
     <StyledNavigationBar>
       <div>This is the navigation bar</div>
+
+      <div>Connected to lulu? {lulu ? 'yes' : 'no'}</div>
 
       <RightSide>
         <Username>
