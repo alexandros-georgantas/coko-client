@@ -1,3 +1,4 @@
+import React from 'react'
 import PropTypes from 'prop-types'
 import { useQuery, useSubscription } from '@apollo/client'
 import { useCurrentUser } from '../helpers/currentUserContext'
@@ -5,6 +6,8 @@ import {
   CURRENT_USER,
   USER_UPDATED_SUBSCRIPTION,
 } from '../helpers/currentUserQuery'
+
+import Spin from '../ui/common/Spin'
 
 const AuthWrapper = props => {
   const {
@@ -17,33 +20,31 @@ const AuthWrapper = props => {
 
   const { loading, error } = useQuery(currentUserQuery, {
     skip: currentUser,
-    onCompleted: ({ currentUser: fetchedUser }) => setCurrentUser(fetchedUser),
+    onCompleted: ({ currentUser: fetchedUser }) => {
+      setCurrentUser(fetchedUser)
+    },
   })
 
   useSubscription(USER_UPDATED_SUBSCRIPTION, {
     skip: !currentUser,
     variables: { userId: currentUser?.id },
-    onData: ({ userUpdated }) => {
+    onData: ({ userUpdated, client }) => {
       setCurrentUser(userUpdated)
     },
   })
 
   if (error) console.error(error)
 
-  if (loading) {
-    return LoadingComponent
-  }
-
-  return children
+  return <LoadingComponent spinning={loading}>{children}</LoadingComponent>
 }
 
 AuthWrapper.propTypes = {
-  loadingComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  loadingComponent: PropTypes.func,
   currentUserQuery: PropTypes.shape(),
 }
 
 AuthWrapper.defaultProps = {
-  loadingComponent: 'Loading...',
+  loadingComponent: Spin,
   currentUserQuery: CURRENT_USER,
 }
 
