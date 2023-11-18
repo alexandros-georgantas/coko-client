@@ -33,6 +33,8 @@ module.exports = {
   },
   integrations: {
     lulu: {
+      redirectUri:
+        'http://localhost:4000/provider-connection-popup/lulu?next=/',
       tokenUrl:
         'https://api.sandbox.lulu.com/auth/realms/glasstree/protocol/openid-connect/token',
       clientId: 'ketida-editor',
