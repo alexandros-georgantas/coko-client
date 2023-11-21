@@ -4,7 +4,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { CREATE_OAUTH_IDENTITY } from './ProviderConnection.queries'
 import { useCurrentUser } from '../helpers/currentUserContext'
-import { ProviderConnection } from '../ui'
+import ProviderConnection from '../ui/authentication/ProviderConnection'
 
 const ProviderConnectionPage = props => {
   const {
