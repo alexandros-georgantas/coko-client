@@ -28,7 +28,8 @@ const AuthWrapper = props => {
   useSubscription(USER_UPDATED_SUBSCRIPTION, {
     skip: !currentUser,
     variables: { userId: currentUser?.id },
-    onData: ({ userUpdated, client }) => {
+    onData: ({ data }) => {
+      const { userUpdated } = data.data
       setCurrentUser(userUpdated)
     },
   })
