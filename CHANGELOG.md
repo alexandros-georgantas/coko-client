@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.49](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.48...v0.0.49) (2023-11-22)
+
+
+### Bug Fixes
+
+* fix user subscription data in context ([26ddb6e](https://gitlab.coko.foundation/cokoapps/client/commit/26ddb6e53e5b20c520ac17d67b1787743db472bb))
+
 ### [0.0.48](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.47...v0.0.48) (2023-11-21)
 
 
