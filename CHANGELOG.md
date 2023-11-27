@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.51](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.50...v0.0.51) (2023-11-27)
+
+
+### Bug Fixes
+
+* fix provider connection page prop type ([ced283b](https://gitlab.coko.foundation/cokoapps/client/commit/ced283bdd16821047052203fbc7882d528365121))
+
 ### [0.0.50](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.49...v0.0.50) (2023-11-27)
 
 
