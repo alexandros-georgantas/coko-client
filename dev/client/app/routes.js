@@ -37,8 +37,7 @@ const Routes = (
         />
 
         <Route exact path="/provider-connection-popup/:provider">
-          {/* <ProviderConnectionPage closeOnSuccess /> */}
-          <ProviderConnectionPage redirectOnSuccess />
+          <ProviderConnectionPage closeOnSuccess />
         </Route>
       </Switch>
     </PageLayout>

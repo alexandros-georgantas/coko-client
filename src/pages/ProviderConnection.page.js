@@ -3,21 +3,23 @@ import PropTypes from 'prop-types'
 import { useHistory, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { CREATE_OAUTH_IDENTITY } from './ProviderConnection.queries'
-import { useCurrentUser } from '../helpers/currentUserContext'
+// import { useCurrentUser } from '../helpers/currentUserContext'
 import ProviderConnection from '../ui/authentication/ProviderConnection'
 
 const ProviderConnectionPage = props => {
   const {
     closeOnSuccess,
     delayOnSuccess,
+    loadingMinimumTime,
     redirectOnSuccess,
     redirectUrlLabel,
   } = props
 
   const { provider } = useParams()
   const history = useHistory()
-  const { currentUser } = useCurrentUser()
+  // const { currentUser } = useCurrentUser()
   const [successfullyConnected, setSuccessfullyConnected] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   // Get query string arguments
   const {
@@ -26,7 +28,7 @@ const ProviderConnectionPage = props => {
     next,
   } = Object.fromEntries(new URL(window.location).searchParams)
 
-  const [createOAuthIdentity, { called: createOAuthIdentityCalled, loading }] =
+  const [createOAuthIdentity, { called: createOAuthIdentityCalled }] =
     useMutation(CREATE_OAUTH_IDENTITY, {
       variables: {
         provider,
@@ -34,25 +36,29 @@ const ProviderConnectionPage = props => {
         code,
       },
       onCompleted: () => {
-        setSuccessfullyConnected(true)
-
         setTimeout(() => {
-          if (closeOnSuccess) window.close()
+          setLoading(false)
+          setSuccessfullyConnected(true)
 
-          if (!closeOnSuccess && redirectOnSuccess && next) {
-            // console.log()
-            history.push(next)
-          }
-        }, delayOnSuccess)
+          setTimeout(() => {
+            if (closeOnSuccess) window.close()
+
+            if (!closeOnSuccess && redirectOnSuccess && next) {
+              history.push(next)
+            }
+          }, delayOnSuccess)
+        }, loadingMinimumTime)
       },
       onError: err => {
-        if (err) console.error(err.stack)
+        if (err) console.error(err)
 
+        setLoading(false)
         setSuccessfullyConnected(false)
       },
     })
 
-  if (currentUser && !createOAuthIdentityCalled) {
+  // if (currentUser && !createOAuthIdentityCalled) {
+  if (!createOAuthIdentityCalled) {
     createOAuthIdentity()
   }
 
@@ -69,6 +75,7 @@ const ProviderConnectionPage = props => {
 ProviderConnectionPage.propTypes = {
   closeOnSuccess: PropTypes.bool,
   delayOnSuccess: PropTypes.number,
+  loadingMinimumTime: PropTypes.bool,
   redirectOnSuccess: PropTypes.bool,
   redirectUrlLabel: PropTypes.string,
 }
@@ -76,6 +83,7 @@ ProviderConnectionPage.propTypes = {
 ProviderConnectionPage.defaultProps = {
   closeOnSuccess: false,
   delayOnSuccess: 1000,
+  loadingMinimumTime: 1000,
   redirectOnSuccess: false,
   redirectUrlLabel: null,
 }

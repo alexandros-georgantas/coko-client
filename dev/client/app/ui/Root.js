@@ -24,13 +24,13 @@ const Root = props => {
     const baseLuluUrl =
       'https://api.sandbox.lulu.com/auth/realms/glasstree/protocol/openid-connect/auth'
 
-    // window.open(
-    //   `${baseLuluUrl}?response_type=code&client_id=ketida-editor&redirect_uri=${redirectURL}`,
-    //   'Connect',
-    //   'width=600, height=600',
-    // )
+    window.open(
+      `${baseLuluUrl}?response_type=code&client_id=ketida-editor&redirect_uri=${redirectURL}`,
+      null,
+      'width=600, height=600',
+    )
 
-    window.location = `${baseLuluUrl}?response_type=code&client_id=ketida-editor&redirect_uri=${redirectURL}`
+    // window.location = `${baseLuluUrl}?response_type=code&client_id=ketida-editor&redirect_uri=${redirectURL}`
   }
 
   return (
