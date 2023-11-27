@@ -75,7 +75,7 @@ const ProviderConnectionPage = props => {
 ProviderConnectionPage.propTypes = {
   closeOnSuccess: PropTypes.bool,
   delayOnSuccess: PropTypes.number,
-  loadingMinimumTime: PropTypes.bool,
+  loadingMinimumTime: PropTypes.number,
   redirectOnSuccess: PropTypes.bool,
   redirectUrlLabel: PropTypes.string,
 }
