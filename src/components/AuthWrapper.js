@@ -36,7 +36,11 @@ const AuthWrapper = props => {
 
   if (error) console.error(error)
 
-  return <LoadingComponent spinning={loading}>{children}</LoadingComponent>
+  return (
+    <LoadingComponent spinning={loading && !currentUser}>
+      {children}
+    </LoadingComponent>
+  )
 }
 
 AuthWrapper.propTypes = {
