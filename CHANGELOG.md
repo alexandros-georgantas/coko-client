@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.50](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.49...v0.0.50) (2023-11-27)
+
+
+### Bug Fixes
+
+* smooth loading on provider connect page ([ba31ff3](https://gitlab.coko.foundation/cokoapps/client/commit/ba31ff37557856f679c887aa0f94e2a8e4dbeae0))
+
 ### [0.0.49](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.48...v0.0.49) (2023-11-22)
 
 
