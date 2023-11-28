@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.52](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.51...v0.0.52) (2023-11-28)
+
+
+### Bug Fixes
+
+* correct redirect when authentication call fails ([cabd314](https://gitlab.coko.foundation/cokoapps/client/commit/cabd314683425e3244de70c274d092b4dbdf41a6))
+
 ### [0.0.51](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.50...v0.0.51) (2023-11-27)
 
 
