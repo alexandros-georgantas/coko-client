@@ -18,10 +18,19 @@ const AuthWrapper = props => {
 
   const { currentUser, setCurrentUser } = useCurrentUser()
 
-  const { loading, error } = useQuery(currentUserQuery, {
+  const { loading } = useQuery(currentUserQuery, {
     skip: currentUser,
     onCompleted: ({ currentUser: fetchedUser }) => {
       setCurrentUser(fetchedUser)
+    },
+    onError: error => {
+      // Make sure 'currentUser' is defined and null so that RequireAuth knows
+      // to clear the current (corrupted) token.
+      // Note on session states:
+      //  * undefined: current user remains unresolved
+      //  * null: current user is resolved but unauthorised or token invalid
+      setCurrentUser(null)
+      console.error(error)
     },
   })
 
@@ -33,8 +42,6 @@ const AuthWrapper = props => {
       setCurrentUser(userUpdated)
     },
   })
-
-  if (error) console.error(error)
 
   return (
     <LoadingComponent spinning={loading && !currentUser}>
