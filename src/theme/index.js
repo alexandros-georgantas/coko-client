@@ -11,6 +11,9 @@ import {
   Logo,
 } from './elements'
 
+const defaultFont =
+  '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+
 const cokoTheme = {
   /* Colors */
   colorBackground: 'white',
@@ -33,10 +36,10 @@ const cokoTheme = {
   /* Text variables */
 
   // fonts
-  fontInterface: '',
-  fontHeading: '',
-  fontReading: '',
-  fontWriting: '', // deprecate
+  fontInterface: defaultFont,
+  fontHeading: defaultFont,
+  fontReading: defaultFont,
+  fontWriting: defaultFont, // deprecate
 
   // font sizes
   fontSizeBase: '16px',
