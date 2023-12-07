@@ -248,6 +248,7 @@ const ReviewerTable = props => {
               },
             }}
             dataSource={rows}
+            key={`manual-sorting-${manualSorting}`}
             onChange={handleChange}
             pagination={false}
             rowKey="key"
