@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker'
 import { grid } from '@pubsweet/ui-toolkit'
 
 import AssignReviewers from '../../src/ui/assignReviewers/AssignReviewers'
-import { DateParser, Note } from '../../src/ui'
+import { Note } from '../../src/ui'
 
 const Wrapper = styled.div`
   margin-bottom: 100px;
@@ -50,37 +50,6 @@ const isActive = r => r.invited && !r.invitationRevoked && !r.rejectedInvitation
 const isAvailable = r => !r.invited
 
 const topics = uniq(range(20).map(() => faker.animal.type()))
-
-const additionalColumns = [
-  {
-    title: 'Topics',
-    dataIndex: 'topics',
-  },
-  {
-    title: 'Assessment Training',
-    dataIndex: 'assessmentTraining',
-    render: val => (val ? 'Yes' : ''),
-    sorter: (a, b) =>
-      Number(a.assessmentTraining) - Number(b.assessmentTraining),
-  },
-  {
-    title: 'Language Training',
-    dataIndex: 'languageTraining',
-    render: val => (val ? 'Yes' : ''),
-    sorter: (a, b) => Number(a.languageTraining) - Number(b.languageTraining),
-  },
-  {
-    title: 'Last Updated',
-    dataIndex: 'lastUpdated',
-    render: val => (
-      <DateParser dateFormat="ddd D MMM | HH:mm" timestamp={val.getTime()}>
-        {timestamp => timestamp}
-      </DateParser>
-    ),
-    sorter: (a, b) => a.lastUpdated.getTime() - b.lastUpdated.getTime(),
-    align: 'right',
-  },
-]
 
 const additionalSearchFields = [
   {
@@ -248,19 +217,12 @@ const Template = args => {
     setAutomation(false)
   }
 
-  const handleClickStart = () => {
-    if (automation) return // already on
+  const handleAutomationChange = toAutomate => {
+    setAutomation(toAutomate)
 
-    setAutomation(true)
-    runAutomation()
-  }
-
-  const handleClickStop = () => {
-    setAutomation(false)
-  }
-
-  const handleTableChange = sortedData => {
-    setSortedPool(sortedData)
+    if (toAutomate) {
+      runAutomation()
+    }
   }
 
   const reviewerDataToOption = reviewer => ({
@@ -358,13 +320,12 @@ const Template = args => {
         canInviteMore={canInviteMore()}
         onAddReviewers={handleAddReviewers}
         onAmountOfReviewersChange={handleAmountOfReviewersChange}
+        onAutomationChange={handleAutomationChange}
         onClickInvite={handleClickInvite}
         onClickRemoveRow={handleClickRemoveRow}
         onClickRevokeInvitation={handleClickRevokeInvitation}
-        onClickStart={handleClickStart}
-        onClickStop={handleClickStop}
         onSearch={handleSearch}
-        onTableChange={handleTableChange}
+        onTableChange={setPool}
         reviewerPool={pool}
       />
     </Wrapper>
@@ -381,14 +342,6 @@ export const Base = Template.bind({})
 
 Base.args = {
   ...commonArgs,
-}
-
-export const AdditionalFields = Template.bind({})
-
-AdditionalFields.args = {
-  ...commonArgs,
-  additionalReviewerColumns: additionalColumns,
-  additionalSearchFields,
 }
 
 export default {

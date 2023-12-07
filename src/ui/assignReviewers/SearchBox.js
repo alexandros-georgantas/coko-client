@@ -7,6 +7,7 @@ import { Button, Select } from '../common'
 
 const Wrapper = styled.div`
   display: flex;
+  gap: ${grid(1)};
   margin: 0 auto;
   width: 100%;
 

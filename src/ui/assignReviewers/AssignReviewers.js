@@ -6,7 +6,7 @@ import { grid, th } from '@pubsweet/ui-toolkit'
 import InviteExternalReviewer from './InviteExternalReviewer'
 import SearchBox from './SearchBox'
 import SuggestedReviewer from './SuggestedReviewer'
-import { Button, Checkbox, NumberInput, Ribbon } from '../common'
+import { NumberInput, Ribbon, Switch } from '../common'
 import ReviewerTable from './ReviewerTable'
 
 const Wrapper = styled.div``
@@ -63,11 +63,10 @@ const AssignReviewers = props => {
     onAddExternalReviewer,
     onAddReviewers,
     onAmountOfReviewersChange,
+    onAutomationChange,
     onClickInvite,
     onClickRemoveRow,
     onClickRevokeInvitation,
-    onClickStart,
-    onClickStop,
     onSearch,
     onTableChange,
     reviewerPool,
@@ -77,25 +76,16 @@ const AssignReviewers = props => {
   } = props
 
   const [showEmails, setShowEmails] = useState(false)
+  const [manualSorting, setManualSorting] = useState(false)
 
   // Explainer text: Adding reviewers to the list won't send them an invite yet
   return (
     <Wrapper className={className}>
-      {(suggestedReviewerName || useShowEmail) && (
+      {suggestedReviewerName && (
         <Top>
           <ItemWrapper>
             {suggestedReviewerName && (
               <SuggestedReviewer name={suggestedReviewerName} />
-            )}
-          </ItemWrapper>
-          <ItemWrapper>
-            {useShowEmail && (
-              <Checkbox
-                checked={showEmails}
-                onChange={() => setShowEmails(!showEmails)}
-              >
-                Show reviewer emails
-              </Checkbox>
             )}
           </ItemWrapper>
         </Top>
@@ -114,13 +104,31 @@ const AssignReviewers = props => {
 
         <HeadSecondRow>
           <ItemWrapper>
-            <Button disabled={automate} onClick={onClickStart} type="primary">
-              Start
-            </Button>
-            <Button disabled={!automate} onClick={onClickStop} type="primary">
-              Stop
-            </Button>
+            <Switch
+              checked={automate}
+              label="Automate invites"
+              labelPosition="left"
+              onChange={onAutomationChange}
+            />
           </ItemWrapper>
+          <ItemWrapper>
+            <Switch
+              checked={manualSorting}
+              label="Sort reviewers manually"
+              labelPosition="left"
+              onChange={setManualSorting}
+            />
+          </ItemWrapper>
+          {useShowEmail && (
+            <ItemWrapper>
+              <Switch
+                checked={showEmails}
+                label="Show reviewer emails"
+                labelPosition="left"
+                onChange={() => setShowEmails(!showEmails)}
+              />
+            </ItemWrapper>
+          )}
 
           <NumberInput
             disabled={automate}
@@ -134,6 +142,7 @@ const AssignReviewers = props => {
       <ReviewerTable
         additionalColumns={additionalReviewerColumns}
         canInviteMore={canInviteMore}
+        manualSorting={manualSorting}
         onChange={onTableChange}
         onInvite={onClickInvite}
         onRemoveRow={onClickRemoveRow}
@@ -184,16 +193,14 @@ AssignReviewers.propTypes = {
   onAddReviewers: PropTypes.func.isRequired,
   /** Handle change in amount of reviewers input */
   onAmountOfReviewersChange: PropTypes.func.isRequired,
+  /** Function to run when "Automate invites" is toggled */
+  onAutomationChange: PropTypes.func.isRequired,
   /** Function to run when "invite" is clicked on a row from the pool */
   onClickInvite: PropTypes.func.isRequired,
   /** Function to run when the "X" button is clicked on a row from the pool */
   onClickRemoveRow: PropTypes.func.isRequired,
   /** Function to run when "revoke invitation" is clicked on a row from the pool */
   onClickRevokeInvitation: PropTypes.func.isRequired,
-  /** Function to run when "start automation" is clicked */
-  onClickStart: PropTypes.func.isRequired,
-  /** Function to run when "stop automation" is clicked */
-  onClickStop: PropTypes.func.isRequired,
   /** Function that returns a promise. Must resolve to an array objects, each with shape `{ value: <String>, label: <String>, isDisabled: <Boolean>, status: <String>}` */
   onSearch: PropTypes.func.isRequired,
   /** Function to run when data is filtered/sorted */

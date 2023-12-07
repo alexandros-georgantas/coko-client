@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker'
 import { range } from 'lodash'
 
 import ReviewerTable from '../../src/ui/assignReviewers/ReviewerTable'
-import { DateParser } from '../../src/ui'
+import { DateParser, Switch } from '../../src/ui'
 
 const emptyFunc = () => {}
 
@@ -29,7 +29,7 @@ export const Base = () => {
   return (
     <ReviewerTable
       canInviteMore={false}
-      onChange={emptyFunc}
+      onChange={setReviewers}
       onInvite={emptyFunc}
       onRemoveRow={onClickRemoveRow}
       onRevokeInvitation={emptyFunc}
@@ -60,7 +60,7 @@ export const ShowEmails = () => {
   return (
     <ReviewerTable
       canInviteMore={false}
-      onChange={emptyFunc}
+      onChange={setReviewers}
       onInvite={emptyFunc}
       onRemoveRow={onClickRemoveRow}
       onRevokeInvitation={emptyFunc}
@@ -72,6 +72,7 @@ export const ShowEmails = () => {
 
 export const AdditionalColumns = () => {
   const [reviewers, setReviewers] = useState(makeReviewers(8))
+  const [manualSorting, setManualSorting] = useState(false)
 
   const onClickRemoveRow = rowId => {
     setReviewers(reviewers.filter(r => r.id !== rowId))
@@ -109,15 +110,24 @@ export const AdditionalColumns = () => {
   ]
 
   return (
-    <ReviewerTable
-      additionalColumns={additionalColumns}
-      canInviteMore={false}
-      onChange={emptyFunc}
-      onInvite={emptyFunc}
-      onRemoveRow={onClickRemoveRow}
-      onRevokeInvitation={emptyFunc}
-      reviewers={reviewers}
-    />
+    <div>
+      <Switch
+        checked={manualSorting}
+        label="Manual sorting"
+        labelPosition="left"
+        onChange={setManualSorting}
+      />
+      <ReviewerTable
+        additionalColumns={additionalColumns}
+        canInviteMore={false}
+        manualSorting={manualSorting}
+        onChange={setReviewers}
+        onInvite={emptyFunc}
+        onRemoveRow={onClickRemoveRow}
+        onRevokeInvitation={emptyFunc}
+        reviewers={reviewers}
+      />
+    </div>
   )
 }
 
