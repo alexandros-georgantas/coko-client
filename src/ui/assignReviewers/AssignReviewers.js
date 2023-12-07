@@ -1,20 +1,14 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { grid, th } from '@pubsweet/ui-toolkit'
+import { grid } from '@pubsweet/ui-toolkit'
 
-import InviteExternalReviewer from './InviteExternalReviewer'
 import SearchBox from './SearchBox'
 import SuggestedReviewer from './SuggestedReviewer'
 import { NumberInput, Ribbon, Switch } from '../common'
 import ReviewerTable from './ReviewerTable'
 
 const Wrapper = styled.div``
-
-const Separator = styled.div`
-  border-bottom: 2px solid ${th('colorPrimary')};
-  margin: ${grid(5)} ${grid(3)};
-`
 
 const Top = styled.div`
   display: flex;
@@ -27,8 +21,6 @@ const Top = styled.div`
 `
 
 const ItemWrapper = styled.div``
-
-const InviteExternalReviewerWrapper = styled.div``
 
 const Head = styled.div`
   margin-bottom: ${grid(1)};
@@ -60,7 +52,6 @@ const AssignReviewers = props => {
     automate,
     canInviteMore,
     className,
-    onAddExternalReviewer,
     onAddReviewers,
     onAmountOfReviewersChange,
     onAutomationChange,
@@ -71,7 +62,6 @@ const AssignReviewers = props => {
     onTableChange,
     reviewerPool,
     suggestedReviewerName,
-    useInviteExternalReviewer,
     useShowEmail,
   } = props
 
@@ -150,17 +140,6 @@ const AssignReviewers = props => {
         reviewers={reviewerPool}
         showEmails={showEmails}
       />
-
-      {useInviteExternalReviewer && (
-        <InviteExternalReviewerWrapper>
-          <Separator />
-
-          <InviteExternalReviewer
-            disabled={!canInviteMore}
-            onSendInvitation={onAddExternalReviewer}
-          />
-        </InviteExternalReviewerWrapper>
-      )}
     </Wrapper>
   )
 }
@@ -187,8 +166,6 @@ AssignReviewers.propTypes = {
   automate: PropTypes.bool.isRequired,
   /** Whether more reviewers can be invited */
   canInviteMore: PropTypes.bool.isRequired,
-  /** Function that sends invitation to non-signed up users. Must return a promise. */
-  onAddExternalReviewer: PropTypes.func,
   /** Function to run on selecting a reviewer in the search box */
   onAddReviewers: PropTypes.func.isRequired,
   /** Handle change in amount of reviewers input */
@@ -222,18 +199,14 @@ AssignReviewers.propTypes = {
   /** Whether to display the option to show `Show reviewer emails` checkbox.
    * Alternatively, the email renders can be customised using `additionalReviewerColumns`  */
   useShowEmail: PropTypes.bool,
-  /** Whether to display the `InviteExternalReviewer` functionality */
-  useInviteExternalReviewer: PropTypes.bool,
 }
 
 AssignReviewers.defaultProps = {
   additionalReviewerColumns: [],
   additionalSearchFields: [],
-  onAddExternalReviewer: () => {},
   reviewerPool: [],
   suggestedReviewerName: null,
   useShowEmail: false,
-  useInviteExternalReviewer: false,
 }
 
 export default AssignReviewers

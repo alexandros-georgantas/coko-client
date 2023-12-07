@@ -333,7 +333,6 @@ const Template = args => {
 }
 
 const commonArgs = {
-  useInviteExternalReviewer: true,
   useShowEmail: true,
   suggestedReviewerName: suggestedReviewer,
 }
