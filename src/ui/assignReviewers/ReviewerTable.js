@@ -219,7 +219,7 @@ const ReviewerTable = props => {
       const { sorter, ...rest } = col
       return {
         ...rest,
-        sorter,
+        // sorter,
         sortOrder: false,
         // sortOrder: tableSorter.columnKey === col.dataIndex && tableSorter.order,
       }

@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
+import { InputNumber } from 'antd'
 import { grid } from '@pubsweet/ui-toolkit'
 
 const Wrapper = styled.div`
@@ -19,14 +20,12 @@ const Label = styled.span`
   margin-right: ${grid(1)};
 `
 
-const Input = styled.input`
-  width: ${grid(5)};
+const Input = styled(InputNumber)`
+  width: ${grid(8)};
 `
 
 const NumberInput = props => {
   const { className, disabled, label, max, min, name, onChange, value } = props
-
-  const handleChange = e => onChange(Number(e.target.value))
 
   return (
     <Wrapper className={className} isDisabled={disabled}>
@@ -39,7 +38,7 @@ const NumberInput = props => {
           max={max}
           min={min}
           name={name}
-          onChange={handleChange}
+          onChange={onChange}
           type="number"
           value={value}
         />

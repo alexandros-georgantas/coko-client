@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 import { range, uniq } from 'lodash'
 import { faker } from '@faker-js/faker'
 import { grid } from '@pubsweet/ui-toolkit'
 
 import AssignReviewers from '../../src/ui/assignReviewers/AssignReviewers'
-import { Note } from '../../src/ui'
+import { DateParser, Note } from '../../src/ui'
 
 const Wrapper = styled.div`
   margin-bottom: 100px;
 `
+
+const InteractiveWrapper = styled.div``
 
 const StyledNote = styled(Note)`
   margin-bottom: ${grid(2)};
@@ -51,6 +54,37 @@ const isAvailable = r => !r.invited
 
 const topics = uniq(range(20).map(() => faker.animal.type()))
 
+const additionalColumns = [
+  {
+    title: 'Topics',
+    dataIndex: 'topics',
+  },
+  {
+    title: 'Assessment Training',
+    dataIndex: 'assessmentTraining',
+    render: val => (val ? 'Yes' : ''),
+    sorter: (a, b) =>
+      Number(a.assessmentTraining) - Number(b.assessmentTraining),
+  },
+  {
+    title: 'Language Training',
+    dataIndex: 'languageTraining',
+    render: val => (val ? 'Yes' : ''),
+    sorter: (a, b) => Number(a.languageTraining) - Number(b.languageTraining),
+  },
+  {
+    title: 'Last Updated',
+    dataIndex: 'lastUpdated',
+    render: val => (
+      <DateParser dateFormat="ddd D MMM | HH:mm" timestamp={val.getTime()}>
+        {timestamp => timestamp}
+      </DateParser>
+    ),
+    sorter: (a, b) => a.lastUpdated.getTime() - b.lastUpdated.getTime(),
+    align: 'right',
+  },
+]
+
 const additionalSearchFields = [
   {
     label: 'Assessment Training',
@@ -67,7 +101,7 @@ const additionalSearchFields = [
   },
 ]
 
-const Template = args => {
+const Template = ({ showInteractiveContent, ...args }) => {
   const [reviewers, setReviewers] = useState(makeReviewers(40))
   const [pool, setPool] = useState(makeReviewers(8))
   const [sortedPool, setSortedPool] = useState([])
@@ -280,38 +314,43 @@ const Template = args => {
 
   return (
     <Wrapper>
-      <StyledNote>
-        Add reviewers to the pool and order them by preference via drag and
-        drop. Starting the automation will invite the first {amountOfReviewers}{' '}
-        reviewers it finds from the top of the list that are available. While
-        automation is on, revoking or rejecting an invitation will move to find
-        a new reviewer. You can also invite or revoke invitations manually, as
-        long as you are allowed to (eg. cannot invite more than{' '}
-        {amountOfReviewers} reviewers). Automation can be turned off at any
-        point. The buttons below simulate what would happen for certain events
-        that would be triggered server-side. The reset button will bring this
-        demo to its original state with new data.
-      </StyledNote>
+      {showInteractiveContent && (
+        <InteractiveWrapper>
+          <StyledNote>
+            Add reviewers to the pool and order them by preference via drag and
+            drop. Starting the automation will invite the first{' '}
+            {amountOfReviewers} reviewers it finds from the top of the list that
+            are available. While automation is on, revoking or rejecting an
+            invitation will move to find a new reviewer. You can also invite or
+            revoke invitations manually, as long as you are allowed to (eg.
+            cannot invite more than {amountOfReviewers} reviewers). Automation
+            can be turned off at any point. The buttons below simulate what
+            would happen for certain events that would be triggered server-side.
+            The reset button will bring this demo to its original state with new
+            data.
+          </StyledNote>
 
-      <ButtonsWrapper>
-        <button onClick={handleAcceptInvitation} type="button">
-          Reviewer accepts invitation
-        </button>
+          <ButtonsWrapper>
+            <button onClick={handleAcceptInvitation} type="button">
+              Reviewer accepts invitation
+            </button>
 
-        <button onClick={handleRejectInvitation} type="button">
-          Reviewer rejects invitation
-        </button>
+            <button onClick={handleRejectInvitation} type="button">
+              Reviewer rejects invitation
+            </button>
 
-        <button onClick={handleSubmitReview} type="button">
-          Reviewer submits review
-        </button>
+            <button onClick={handleSubmitReview} type="button">
+              Reviewer submits review
+            </button>
 
-        <button onClick={resetState} type="button">
-          Reset state
-        </button>
-      </ButtonsWrapper>
+            <button onClick={resetState} type="button">
+              Reset state
+            </button>
+          </ButtonsWrapper>
 
-      <Separator />
+          <Separator />
+        </InteractiveWrapper>
+      )}
 
       <AssignReviewers
         {...args}
@@ -332,6 +371,14 @@ const Template = args => {
   )
 }
 
+Template.propTypes = {
+  showInteractiveContent: PropTypes.bool,
+}
+
+Template.defaultProps = {
+  showInteractiveContent: false,
+}
+
 const commonArgs = {
   useShowEmail: true,
   suggestedReviewerName: suggestedReviewer,
@@ -341,6 +388,15 @@ export const Base = Template.bind({})
 
 Base.args = {
   ...commonArgs,
+  showInteractiveContent: true,
+}
+
+export const AdditionalFields = Template.bind({})
+
+AdditionalFields.args = {
+  ...commonArgs,
+  additionalReviewerColumns: additionalColumns,
+  additionalSearchFields,
 }
 
 export default {
