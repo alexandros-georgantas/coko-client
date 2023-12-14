@@ -2,19 +2,9 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Table as AntTable } from 'antd'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import { MenuOutlined } from '@ant-design/icons'
-import { DndContext } from '@dnd-kit/core'
-import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
-
-import {
-  arrayMove,
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
-
-import { CSS } from '@dnd-kit/utilities'
 
 import { th } from '@pubsweet/ui-toolkit'
 
@@ -33,62 +23,65 @@ const EmptyMessage = styled.div`
 
 const StyledTable = styled(AntTable)``
 
-const Row = ({ children, ...props }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    setActivatorNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
-    id: props['data-row-key'],
-  })
+const StyledMenuOutlined = styled(MenuOutlined)`
+  cursor: move;
+  touch-action: none;
+`
 
-  const style = {
-    ...props.style,
-    transform: CSS.Transform.toString(
-      transform && {
-        ...transform,
-        scaleY: 1,
-      },
-    ),
-    transition,
-    ...(isDragging
-      ? {
-          position: 'relative',
-          zIndex: 9999,
-        }
-      : {}),
-  }
-
+const TableBody = ({ children, className, ...props }) => {
   return (
-    <tr {...props} ref={setNodeRef} style={style} {...attributes}>
-      {React.Children.map(children, child => {
-        if (child.key === 'sort') {
-          return React.cloneElement(child, {
-            children: (
-              <MenuOutlined
-                ref={setActivatorNodeRef}
-                style={{
-                  touchAction: 'none',
-                  cursor: 'move',
-                }}
-                {...listeners}
-              />
-            ),
-          })
-        }
-
-        return child
-      })}
-    </tr>
+    <Droppable droppableId="droppable-table">
+      {(provided, snapshot) => (
+        <tbody
+          className={className}
+          ref={provided.innerRef}
+          {...props}
+          {...provided.droppableProps}
+        >
+          {children}
+          {provided.placeholder}
+        </tbody>
+      )}
+    </Droppable>
   )
 }
 
-Row.propTypes = {
+const TableRow = ({ children, index, manualSorting, ...props }) => {
+  return manualSorting ? (
+    <Draggable
+      draggableId={props['data-row-key'].toString()}
+      index={index}
+      key={props['data-row-key']}
+    >
+      {(provided, snapshot) => (
+        <tr
+          ref={provided.innerRef}
+          {...props}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          {React.Children.map(children, child => {
+            if (child.key === 'sort') {
+              return React.cloneElement(child, {
+                children: <StyledMenuOutlined />,
+              })
+            }
+
+            return child
+          })}
+        </tr>
+      )}
+    </Draggable>
+  ) : (
+    <tr {...props}>{children}</tr>
+  )
+}
+
+TableRow.propTypes = {
   'data-row-key': PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
+  manualSorting: PropTypes.bool.isRequired,
+  record: PropTypes.shape({ id: PropTypes.string }).isRequired,
   style: PropTypes.shape().isRequired,
 }
 
@@ -112,8 +105,6 @@ const ReviewerTable = props => {
     setTableSorter(manualSorting ? {} : tableSorter)
   }, [manualSorting])
 
-  useEffect(() => {}, [tableSorter])
-
   if (reviewers.length === 0) {
     return (
       <Wrapper className={className}>
@@ -127,14 +118,22 @@ const ReviewerTable = props => {
     setTableSorter(manualSorting ? {} : sorter)
   }
 
-  const onDragEnd = ({ active, over }) => {
-    if (active.id !== over?.id) {
-      onChange(previous => {
-        const activeIndex = previous.findIndex(i => i.id === active.id)
-        const overIndex = previous.findIndex(i => i.id === over?.id)
-        return arrayMove(previous, activeIndex, overIndex)
-      })
-    }
+  const onDragEnd = result => {
+    const { destination, source } = result
+
+    if (!destination) return
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    )
+      return
+
+    const newDataSource = [...reviewers]
+    const draggedElement = newDataSource.splice(source.index, 1)
+    newDataSource.splice(destination.index, 0, ...draggedElement)
+
+    onChange(newDataSource)
   }
 
   const columns = [
@@ -205,23 +204,11 @@ const ReviewerTable = props => {
       ),
     },
   ].map(col => {
-    // if (manualSorting) {
-    //   //   const { sorter, ...rest } = col
-    //   return {
-    //     ...col,
-    //     sortOrder: tableSorter.columnKey === col.dataIndex && tableSorter.order,
-    //   }
-    // }
-
-    // return col
-
     if (manualSorting) {
       const { sorter, ...rest } = col
       return {
         ...rest,
-        // sorter,
         sortOrder: false,
-        // sortOrder: tableSorter.columnKey === col.dataIndex && tableSorter.order,
       }
     }
 
@@ -235,26 +222,23 @@ const ReviewerTable = props => {
 
   return (
     <Wrapper className={className}>
-      <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
-        <SortableContext
-          items={rows.map(r => r.key)}
-          strategy={verticalListSortingStrategy}
-        >
-          <StyledTable
-            columns={columns}
-            components={{
-              body: {
-                row: Row,
-              },
-            }}
-            dataSource={rows}
-            key={`manual-sorting-${manualSorting}`}
-            onChange={handleChange}
-            pagination={false}
-            rowKey="key"
-          />
-        </SortableContext>
-      </DndContext>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <StyledTable
+          columns={columns}
+          components={{
+            body: {
+              row: TableRow,
+              wrapper: TableBody,
+            },
+          }}
+          dataSource={rows}
+          key={`manual-sorting-${manualSorting}`}
+          onChange={handleChange}
+          onRow={(record, index) => ({ record, index, manualSorting })}
+          pagination={false}
+          rowKey="id"
+        />
+      </DragDropContext>
     </Wrapper>
   )
 }
