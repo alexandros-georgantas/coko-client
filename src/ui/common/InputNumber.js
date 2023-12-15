@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-import { InputNumber } from 'antd'
+import { InputNumber as AntInputNumber } from 'antd'
 import { grid } from '@pubsweet/ui-toolkit'
 
 const Wrapper = styled.div`
@@ -20,49 +20,33 @@ const Label = styled.span`
   margin-right: ${grid(1)};
 `
 
-const Input = styled(InputNumber)`
+const Input = styled(AntInputNumber)`
   width: ${grid(8)};
 `
 
-const NumberInput = props => {
-  const { className, disabled, label, max, min, name, onChange, value } = props
+const InputNumber = props => {
+  const { className, disabled, label, name, ...rest } = props
 
   return (
     <Wrapper className={className} isDisabled={disabled}>
-      {/* eslint-disable-next-line jsx-a11y/label-has-for */}
       <label htmlFor={name}>
         <Label>{label}</Label>
-
-        <Input
-          disabled={disabled}
-          max={max}
-          min={min}
-          name={name}
-          onChange={onChange}
-          type="number"
-          value={value}
-        />
+        <Input disabled={disabled} name={name} {...rest} />
       </label>
     </Wrapper>
   )
 }
 
-NumberInput.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.number.isRequired,
+InputNumber.propTypes = {
   disabled: PropTypes.bool,
   label: PropTypes.string,
-  max: PropTypes.number,
-  min: PropTypes.number,
   name: PropTypes.string,
 }
 
-NumberInput.defaultProps = {
+InputNumber.defaultProps = {
   disabled: false,
   label: null,
-  max: null,
-  min: 1,
   name: 'number-input',
 }
 
-export default NumberInput
+export default InputNumber

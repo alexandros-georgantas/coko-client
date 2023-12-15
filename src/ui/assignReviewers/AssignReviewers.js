@@ -5,7 +5,7 @@ import { grid } from '@pubsweet/ui-toolkit'
 
 import SearchBox from './SearchBox'
 import SuggestedReviewer from './SuggestedReviewer'
-import { NumberInput, Ribbon, Switch } from '../common'
+import { InputNumber, Ribbon, Switch } from '../common'
 import ReviewerTable from './ReviewerTable'
 
 const Wrapper = styled.div``
@@ -120,7 +120,7 @@ const AssignReviewers = props => {
             </ItemWrapper>
           )}
 
-          <NumberInput
+          <InputNumber
             disabled={automate}
             label="Maximum reviewers from pool"
             onChange={onAmountOfReviewersChange}

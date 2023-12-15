@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 // import { lorem } from 'faker'
 
-import { NumberInput } from '../../src/ui'
+import { InputNumber } from '../../src/ui'
 
 export const Base = () => {
   const [value, setValue] = useState(2)
 
   return (
-    <NumberInput
+    <InputNumber
       label="Choose a number"
       onChange={val => setValue(val)}
       value={value}
@@ -16,10 +16,10 @@ export const Base = () => {
 }
 
 export const Disabled = () => (
-  <NumberInput disabled label="Choose a number" onChange={() => {}} value={3} />
+  <InputNumber disabled label="Choose a number" onChange={() => {}} value={3} />
 )
 
 export default {
-  component: NumberInput,
-  title: 'Common/NumberInput',
+  component: InputNumber,
+  title: 'Common/InputNumber',
 }
