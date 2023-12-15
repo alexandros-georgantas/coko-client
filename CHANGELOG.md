@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.53](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.52...v0.0.53) (2023-12-15)
+
+
+### Features
+
+* **components:** add assign reviewers ui ([1a10507](https://gitlab.coko.foundation/cokoapps/client/commit/1a105075eba2feebd3cc6220d7e78f1b259acacc))
+* **components:** disable assign reviewer automation if manual sorting is off ([64026e0](https://gitlab.coko.foundation/cokoapps/client/commit/64026e00a654a0e96c117d7026a22dee64c7e525))
+
 ### [0.0.52](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.51...v0.0.52) (2023-11-28)
 
 
