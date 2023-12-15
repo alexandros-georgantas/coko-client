@@ -130,6 +130,7 @@ const SearchBox = props => {
         placeholder="Add a reviewer to the list"
         value={selection}
       />
+
       <AddButton
         aria-labelledby="reviewer-team"
         disabled={selection.length === 0}

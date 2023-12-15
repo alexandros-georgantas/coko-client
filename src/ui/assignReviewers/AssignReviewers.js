@@ -96,6 +96,7 @@ const AssignReviewers = props => {
           <ItemWrapper>
             <Switch
               checked={automate}
+              disabled={!manualSorting}
               label="Automate invites"
               labelPosition="left"
               onChange={onAutomationChange}
