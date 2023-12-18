@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.54](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.53...v0.0.54) (2023-12-18)
+
+
+### Bug Fixes
+
+* **components:** export `assignReviewers` ([4c10882](https://gitlab.coko.foundation/cokoapps/client/commit/4c10882a9e922fc1ddaf66035d786f49363e6752))
+
 ### [0.0.53](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.52...v0.0.53) (2023-12-15)
 
 
