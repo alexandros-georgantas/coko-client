@@ -6,7 +6,6 @@ const CURRENT_USER = gql`
       id
       displayName
       username
-      # roles
       teams {
         id
         role
@@ -28,6 +27,7 @@ const CURRENT_USER = gql`
       identities {
         id
         provider
+        hasValidRefreshToken
       }
     }
   }
@@ -61,6 +61,7 @@ const USER_UPDATED_SUBSCRIPTION = gql`
       identities {
         id
         provider
+        hasValidRefreshToken
       }
     }
   }
