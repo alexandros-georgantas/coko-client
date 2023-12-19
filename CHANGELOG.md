@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.55](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.54...v0.0.55) (2023-12-19)
+
+
+### Features
+
+* add validRefreshToken to current user query ([6826914](https://gitlab.coko.foundation/cokoapps/client/commit/68269144cb9c432f8a076c112f618ba5d7612ab6))
+
 ### [0.0.54](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.53...v0.0.54) (2023-12-18)
 
 
