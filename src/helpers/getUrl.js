@@ -6,16 +6,26 @@ const mapper = {
   },
 }
 
+const removeTrailingSlashes = url => url.replace(/\/+$/, '')
+
+const sanitizeUrl = url => {
+  if (!url) return null
+  return removeTrailingSlashes(url)
+}
+
 const makeUrl = type => {
   const { protocol, host, port } = mapper[type]
-  return `${protocol}://${host}${port ? `:${port}` : ''}`
+  if (!protocol || !host || !port) return null
+  const url = `${protocol}://${host}${port ? `:${port}` : ''}`
+  return sanitizeUrl(url)
 }
 
 const clientUrl = makeUrl('client')
-const serverUrl = window.env?.serverUrl || process.env.SERVER_URL
+const serverUrl = sanitizeUrl(window.env?.serverUrl || process.env.SERVER_URL)
 
-const webSocketServerUrl =
-  window.env?.websocketServerUrl || process.env.WEBSOCKET_SERVER_URL
+const webSocketServerUrl = sanitizeUrl(
+  window.env?.websocketServerUrl || process.env.WEBSOCKET_SERVER_URL,
+)
 
 module.exports = {
   clientUrl,
