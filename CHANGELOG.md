@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.56](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.55...v0.0.56) (2023-12-20)
+
+
+### Features
+
+* remove trailing slashes from urls ([df60841](https://gitlab.coko.foundation/cokoapps/client/commit/df6084122adb351149d731216d92a6e257c82e90))
+
 ### [0.0.55](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.54...v0.0.55) (2023-12-19)
 
 
