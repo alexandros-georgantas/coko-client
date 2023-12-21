@@ -53,10 +53,10 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
-"@coko/server@^3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@coko/server/-/server-3.2.1.tgz#d9a9ad53694e9301b5d8ac7b61aa671ef9542eef"
-  integrity sha512-nek6iSB8MdNT2P/Pv54cq0Um3q3hv7QvJEBbM9eK2fDiMiOEtRf8/Rumf9sneY7KuXYQR7NZup/TU4f3zhIQPQ==
+"@coko/server@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@coko/server/-/server-3.7.0.tgz#9ad6fcf35cd325b0485fd8d50388896528b490f3"
+  integrity sha512-N5Hipg0rDrwzdXpd/uDsBHXxZYNvQWgo1s+GLOSxcyWRqYGkkjWi4FGBSlb8sIgYImgIePA66QNiGTTsY1u8Sg==
   dependencies:
     "@pubsweet/base-model" "^4.0.10"
     "@pubsweet/component-send-email" "^0.4.13"
