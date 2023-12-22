@@ -31,6 +31,12 @@ const wsTimeout = process.env.CLIENT_WS_TIMEOUT
 let wsLink
 let webSocketClient
 
+const replaceHttpWithWs = url => {
+  let wsUrl = url.replace(/^http:/, 'ws:')
+  wsUrl = wsUrl.replace(/^https:/, 'wss:')
+  return wsUrl
+}
+
 const pxToNumConverter = value => {
   if (typeof value === 'string') {
     if (value.slice(-2) === 'px') return parseInt(value.slice(0, -2), 10)
@@ -75,11 +81,7 @@ export function stripTypenames(obj) {
 // it will be called with the default client config as an argument, and should
 // return the desired config.
 const makeApolloClient = makeConfig => {
-  const serverURL = new URL(serverUrl)
-  const serverProtocol = serverURL.protocol
-  const wsProtocol = serverProtocol === 'https:' ? 'wss' : 'ws'
-  const serverHostname = serverURL.hostname
-  const serverPort = serverURL.port
+  const webSocketUrl = `${replaceHttpWithWs(serverUrl)}/subscriptions`
 
   const uploadLink = createUploadLink({
     uri: `${serverUrl}/graphql`,
@@ -107,21 +109,16 @@ const makeApolloClient = makeConfig => {
 
   if (localStorage.getItem('token')) {
     if (!webSocketClient) {
-      webSocketClient = new SubscriptionClient(
-        `${wsProtocol}://${serverHostname}${
-          serverPort ? `:${serverPort}` : ''
-        }/subscriptions`,
-        {
-          reconnect: true,
-          lazy: true,
-          inactivityTimeout: 3000,
-          minTimeout: wsMinTimeout,
-          timeout: wsTimeout,
-          connectionParams: {
-            authToken: localStorage.getItem('token'),
-          },
+      webSocketClient = new SubscriptionClient(webSocketUrl, {
+        reconnect: true,
+        lazy: true,
+        inactivityTimeout: 3000,
+        minTimeout: wsMinTimeout,
+        timeout: wsTimeout,
+        connectionParams: {
+          authToken: localStorage.getItem('token'),
         },
-      )
+      })
     }
 
     if (!wsLink) {
