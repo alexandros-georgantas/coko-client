@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 
-import { grid } from '@pubsweet/ui-toolkit'
+import { grid, override } from '@pubsweet/ui-toolkit'
 
 const Wrapper = styled.div`
   background: ${props => {
@@ -27,6 +27,8 @@ const Wrapper = styled.div`
     css`
       visibility: hidden;
     `}
+
+  ${override('ui.Ribbon')};
 `
 
 const Ribbon = props => {

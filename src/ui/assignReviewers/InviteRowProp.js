@@ -2,13 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { CloseOutlined } from '@ant-design/icons'
+import { grid } from '@pubsweet/ui-toolkit'
 
 import { Button, InviteStatus } from '../common'
 
 const StyledInviteStatus = styled(InviteStatus)`
   font-size: 12px;
-  margin: 0 4px;
-  max-width: 32px;
+  margin: 0 ${grid(1)};
 `
 
 const InviteStatusWrapper = styled.div`

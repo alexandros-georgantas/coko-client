@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   width: 100%;
 
   @media (min-width: ${th('mediaQueries.small')}) {
-    padding: ${grid(8)};
+    padding: ${grid(4)};
   }
 `
 
@@ -36,7 +36,7 @@ const StyledSelect = styled(Select)`
 `
 
 const AddButton = styled(Button)`
-  height: ${grid(4)};
+  height: 100%;
 `
 
 const SearchBox = props => {
@@ -56,7 +56,24 @@ const SearchBox = props => {
           return
         }
 
+        const nameMatchData = data.filter(d =>
+          d.displayName.toLowerCase().includes(searchValue.toLowerCase()),
+        )
+
+        const otherData = data.filter(
+          d => !d.displayName.toLowerCase().includes(searchValue.toLowerCase()),
+        )
+
         const parsedData = []
+
+        nameMatchData.length &&
+          parsedData.push({
+            label: 'Reviewer Name',
+            options: nameMatchData.map(n => ({
+              ...n,
+              key: `displayName-${n.id}`,
+            })),
+          })
 
         additionalSearchFields.forEach(field => {
           if (field.items && Array.isArray(field.items)) {
@@ -69,10 +86,12 @@ const SearchBox = props => {
                 options: [],
               }
 
-              const filteredData = data.filter(
+              const filteredData = otherData.filter(
                 d =>
                   d[field.value] !== undefined && d[field.value].includes(item),
               )
+
+              if (!filteredData.length) return
 
               group.options = filteredData.map(f => ({
                 ...f,
@@ -87,7 +106,7 @@ const SearchBox = props => {
               options: [],
             }
 
-            const filteredData = data.filter(
+            const filteredData = otherData.filter(
               d => d[field.value] !== undefined && d[field.value] !== false,
             )
 
