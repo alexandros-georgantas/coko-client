@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.59](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.58...v0.0.59) (2024-01-09)
+
+
+### Bug Fixes
+
+* **ui:** fix search results for assign reviewers component ([4f313ac](https://gitlab.coko.foundation/cokoapps/client/commit/4f313ac0dfceea8e9534a00d442e09afc3e94f05))
+
 ### [0.0.58](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.57...v0.0.58) (2023-12-22)
 
 
