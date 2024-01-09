@@ -30,6 +30,7 @@ const HeadSecondRow = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
+  margin: ${grid(2)} ${grid(4)};
 
   > div > button:not(:last-child) {
     margin-right: ${grid(1)};
@@ -124,6 +125,7 @@ const AssignReviewers = props => {
           <InputNumber
             disabled={automate}
             label="Maximum reviewers from pool"
+            min={1}
             onChange={onAmountOfReviewersChange}
             value={amountOfReviewers}
           />

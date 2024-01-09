@@ -301,6 +301,14 @@ const Template = ({ showInteractiveContent, ...args }) => {
                     foundMatchingField = true
                   }
                 })
+              } else if (field.items && person[field.value]) {
+                field.items.forEach(item => {
+                  if (
+                    person[field.value].toLowerCase().includes(lowerCaseInput)
+                  ) {
+                    foundMatchingField = true
+                  }
+                })
               }
             })
 
