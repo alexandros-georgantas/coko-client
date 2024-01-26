@@ -40,7 +40,13 @@ const AddButton = styled(Button)`
 `
 
 const SearchBox = props => {
-  const { additionalSearchFields, className, onAdd, onSearch } = props
+  const {
+    additionalSearchFields,
+    className,
+    searchPlaceholder,
+    onAdd,
+    onSearch,
+  } = props
 
   const [selection, setSelection] = useState([])
   const [loadingSearchResults, setLoadingSearchResults] = useState(false)
@@ -146,7 +152,7 @@ const SearchBox = props => {
         onChange={setSelection}
         onSearch={handleSearch}
         options={searchResults}
-        placeholder="Add a reviewer to the list"
+        placeholder={searchPlaceholder}
         value={selection}
       />
 
@@ -175,12 +181,15 @@ SearchBox.propTypes = {
   onAdd: PropTypes.func,
   /** Function to run when typing into the search field */
   onSearch: PropTypes.func,
+  /** Placeholder for the search bar */
+  searchPlaceholder: PropTypes.string,
 }
 
 SearchBox.defaultProps = {
   additionalSearchFields: [],
   onAdd: () => {},
   onSearch: () => {},
+  searchPlaceholder: 'Add a reviewer to the list',
 }
 
 export default SearchBox

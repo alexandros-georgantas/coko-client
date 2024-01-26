@@ -62,6 +62,7 @@ const AssignReviewers = props => {
     onSearch,
     onTableChange,
     reviewerPool,
+    searchPlaceholder,
     suggestedReviewerName,
     useShowEmail,
   } = props
@@ -86,6 +87,7 @@ const AssignReviewers = props => {
         additionalSearchFields={additionalSearchFields}
         onAdd={onAddReviewers}
         onSearch={onSearch}
+        searchPlaceholder={searchPlaceholder}
       />
 
       <Head>
@@ -197,6 +199,8 @@ AssignReviewers.propTypes = {
       reviewSubmitted: PropTypes.bool,
     }),
   ),
+  /** Placeholder for the search bar */
+  searchPlaceholder: PropTypes.string,
   /** Display name of suggested reviewer */
   suggestedReviewerName: PropTypes.string,
   /** Whether to display the option to show `Show reviewer emails` checkbox.
@@ -208,6 +212,7 @@ AssignReviewers.defaultProps = {
   additionalReviewerColumns: [],
   additionalSearchFields: [],
   reviewerPool: [],
+  searchPlaceholder: undefined,
   suggestedReviewerName: null,
   useShowEmail: false,
 }
