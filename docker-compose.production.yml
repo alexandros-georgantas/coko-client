@@ -12,6 +12,8 @@ services:
     environment:
       - SERVER_URL='http://localhost:3000'
       - WEBSOCKET_SERVER_URL='http://localhost:3001'
+    volumes:
+      - ./dev/themeOverrides.js:/home/node/app/themeOverrides.js
 
   server:
     build:

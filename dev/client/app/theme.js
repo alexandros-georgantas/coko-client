@@ -11,6 +11,8 @@ const theme = {
   lineHeight: '1.618',
 
   gridUnit: '8px',
+
+  ...window.env?.themeOverrides,
 }
 
 export default theme
