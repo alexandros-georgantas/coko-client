@@ -18,12 +18,16 @@ const Global = createGlobalStyle`
 /* stylelint-enable indentation */
 `
 
+const settings = {
+  advancedTools: true,
+}
+
 export const AiAssistantStory = () => {
   return (
     <CssAssistantProvider>
       <Global />
       <Wrapper>
-        <AiPDFDesigner />
+        <AiPDFDesigner settings={settings} />
       </Wrapper>
     </CssAssistantProvider>
   )

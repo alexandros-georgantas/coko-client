@@ -159,8 +159,9 @@ const CssAssistant = ({
           )
         }
       } else {
-        setFeedback(chatGPTContent)
-        selectedCtx.history.push({ role: 'assistant', content: chatGPTContent })
+        setFeedback(
+          'There was an error generating the response\n Please, try again in a few seconds',
+        )
       }
 
       setUserPrompt('')

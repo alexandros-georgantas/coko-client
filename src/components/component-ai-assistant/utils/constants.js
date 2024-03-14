@@ -1348,26 +1348,28 @@ const SELECTOR_SHAPE = ({
 ["validSelector"] also can be followed by nth-of-type(n) or nth-child(n) or any other pseudo-selectors, but ONLY if 'user' specifies a number for the element,
 `
 
-const CSS_FORMAT = `A well formed valid CSS string that will be the complete provided context stylesheet with the following: 
+const RULES_SHAPE = `If user wants to apply styles to the element: {"validCSSProperty": "validCSSValue", ...moreValidCssPropertiesAndValues}, otherwise: {}`
+
+const CSS_SHAPE = `A well formed valid CSS string that will be the complete provided context stylesheet with the following: 
     - You must add, to the provided stylesheet, the required changes that 'user' requested.
     - if a declaration exists on the provided stylesheet apply the changes on that declaration, instead of creating a new one.
     - With this guides in mind you will always return a well formed valid CSS string including line breaks (/n) and indentation (/t)
 `
 
-const TEXT_CONTENT_FORMAT = `Only in case that user request a change on the content : 
+const TEXT_CONTENT_SHAPE = `Only in case that user request a change, improvement or replacement on element's content: 
 - A string with the text/html of the element in context with the modifications user requested
-- You must resolve the user request through html, eg: if user request: "paint [x] word/s into a yellow background" you must wrap those words in a span and add the inline styles.
-- NEVER remove elements or text parts from the original text/html unless 'user' requested to do that.
+- In some cases, you must resolve the user request through html, eg: if user request: "paint [x] word/s into a yellow background" you must wrap those words in a span and add the inline styles.
+- NEVER remove/add elements or text parts from the original text/html unless 'user' requested to do that.
 - You must be precise and carefully with this, if you remove content from the original it may not be recoverable
 
-Otherwise a empty string
+Otherwise: ''
 `
 
-const ADD_ELEMENT_SHAPE = ` if user request to create or add a new element, here you must return: 
-{ 
-  "position": - if you could interpret where 'user' wants to create the new dom element this property will be present and its value can be one of the following strings: "beforebegin","afterbegin","beforeend" or "afterend". If user didn't specify a position just dont return this property,
-  "content": if you could interpret what type of element or elements 'user' wants to create or add; a string containing the html; otherwise omit this property
-}`
+const ADD_ELEMENT_SHAPE = `if user request to create or add a new element here you must return: 
+"{ 
+  "position": - if you could interpret where 'user' wants to create the new dom element this property will be present and its value can be one of the following strings: ["beforebegin","afterbegin","beforeend" or "afterend"]. If user didn't specify a position just dont return this property,
+  "html": if you could interpret what type of element or elements 'user' wants to create or add; a valid html string; otherwise omit this property
+}"`
 
 const CSS_LIMITS = `Use hex for colors. 'user' can request to mix colors: for example if the color is #000000 and 'user' asks for a litle more of blue you have to mix the hex values acordingly
 
@@ -1382,11 +1384,11 @@ const JSON_FORMAT = (
 ) => `The output must be always in the following JSON format: {
   ${
     isSingleElement
-      ? `"rules": {"validCSSProperty": "validCSSValue", ...moreValidCssPropertiesAndValues},
-}, insertHtml: ${ADD_ELEMENT_SHAPE}`
-      : `"css": "${CSS_FORMAT}",`
+      ? `"rules": ${RULES_SHAPE},
+}, insertHtml: ${ADD_ELEMENT_SHAPE},`
+      : `"css": "${CSS_SHAPE}",`
   }
-${providedText ? `\n"textContent": ${TEXT_CONTENT_FORMAT},` : ''}
+${providedText ? `\n"textContent": ${TEXT_CONTENT_SHAPE},` : ''}
 "feedback": you must provide here a string with the feedback: 
 this string can contain:
 

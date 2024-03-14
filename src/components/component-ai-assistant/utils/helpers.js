@@ -94,9 +94,9 @@ export const setImagesDefaultStyles = node => {
     })
 }
 
-export const addElement = ({ parentElement, options }) => {
-  const { position = 'afterend', content } = options
-  parentElement.insertAdjacentHtml(position, content)
+export const addElement = (parentElement, options) => {
+  const { position = 'afterend', html } = options
+  parentElement.insertAdjacentHTML(position, html)
 }
 
 export const getScrollPercent = node =>

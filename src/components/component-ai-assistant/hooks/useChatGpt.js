@@ -25,7 +25,7 @@ export default function useChatGpt({ onCompleted }) {
           Authorization: `Bearer ${CHAT_GPT_KEY}`,
         },
         body: JSON.stringify({
-          model: 'gpt-4',
+          model: 'gpt-4-1106-preview',
           messages: [
             ...history,
             {
@@ -34,6 +34,7 @@ export default function useChatGpt({ onCompleted }) {
             },
           ],
           temperature: 0,
+          response_format: { type: 'json_object' },
         }),
       })
 
