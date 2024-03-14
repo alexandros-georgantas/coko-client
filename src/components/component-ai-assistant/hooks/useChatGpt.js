@@ -5,7 +5,7 @@ export default function useChatGpt({ onCompleted }) {
   const [error, setError] = useState(null)
   const [data, setData] = useState(null)
 
-  const chatGPT = async ({ input, history = [] }) => {
+  const callOpenAi = async ({ input, history = [] }) => {
     setLoading(true)
     setError(null)
 
@@ -49,5 +49,5 @@ export default function useChatGpt({ onCompleted }) {
     }
   }
 
-  return { chatGPT, loading, error, data }
+  return { callOpenAi, loading, error, data }
 }

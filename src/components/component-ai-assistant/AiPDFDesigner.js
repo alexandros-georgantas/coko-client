@@ -12,12 +12,15 @@ import {
   cssTemplate3,
   setScrollFromPercent,
   getScrollPercent,
+  setInlineStyle,
+  addElement,
 } from './utils'
 import SelectionBox from './SelectionBox'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
 import ChatBubble from './ChatBubble'
 import ChatHistory from './ChatHistory'
 import Checkbox from './components/Checkbox'
+import useChatGpt from './hooks/useChatGpt'
 
 const Assistant = styled(CssAssistant)`
   margin: 10px 0;
@@ -38,6 +41,7 @@ const StyledHeading = styled.div`
   border-bottom: 1px solid #0004;
   display: flex;
   flex-direction: row;
+  height: fit-content;
   justify-content: space-between;
   padding: 0 0 0 10px;
   scrollbar-color: #00495c;
@@ -190,6 +194,13 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
     context,
     selectedCtx,
     passedContent,
+    updateSelectionBoxPosition,
+    styleSheetRef,
+    setCss,
+    selectedNode,
+    setFeedback,
+    setUserPrompt,
+    addRules,
   } = useContext(CssAssistantContext)
 
   const previewScrollTopRef = useRef(0)
@@ -199,6 +210,85 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
   const [showEditor, setShowEditor] = useState(true)
   const [showPreview, setShowPreview] = useState(true)
   const [showChat, setShowChat] = useState(false)
+
+  const { callOpenAi, loading, error } = useChatGpt({
+    onCompleted: chatGPTContent => {
+      if (chatGPTContent.startsWith('{')) {
+        try {
+          const response = JSON.parse(chatGPTContent)
+
+          const {
+            css: resCss,
+            rules,
+            feedback,
+            textContent = '',
+            insertHtml,
+          } = response
+
+          const ctxIsHtmlSrc = selectedCtx.node === htmlSrc
+
+          if (rules && !ctxIsHtmlSrc) {
+            addRules(selectedCtx, rules)
+            setInlineStyle(selectedCtx.node, rules)
+          } else if (resCss) {
+            styleSheetRef.current.textContent = resCss
+            setCss(styleSheetRef.current.textContent)
+          }
+
+          insertHtml && addElement(selectedNode, insertHtml)
+          textContent && (selectedCtx.node.innerHTML = textContent)
+          feedback && setFeedback(feedback)
+          feedback &&
+            selectedCtx.history.push({ role: 'assistant', content: feedback })
+          updatePreview()
+        } catch (err) {
+          setFeedback(
+            'There was an error generating the response\n Please, try again in a few seconds',
+          )
+        }
+      } else {
+        setFeedback(
+          'There was an error generating the response\n Please, try again in a few seconds',
+        )
+      }
+
+      setUserPrompt('')
+    },
+  })
+  // const [callOpenAi, { loading }] = useLazyQuery(CALL_OPEN_AI, {
+  //   onCompleted: ({ openAi }) => {
+  //     if (openAi.startsWith('{')) {
+  //       try {
+  //         const response = JSON.parse(openAi)
+  //         const { css, rules, feedback, textContent = '' } = response
+  //         const ctxIsHtmlSrc = selectedCtx.node === htmlSrc
+
+  //         if (rules && !ctxIsHtmlSrc) {
+  //           addRules(selectedCtx, rules)
+  //           setInlineStyle(selectedCtx.node, rules)
+  //         } else if (css) {
+  //           styleSheetRef.current.textContent = css
+  //           setCss(styleSheetRef.current.textContent)
+  //         }
+
+  //         textContent && (selectedCtx.node.innerHTML = textContent)
+  //         feedback && setFeedback(feedback)
+  //         feedback &&
+  //           selectedCtx.history.push({ role: 'assistant', content: feedback })
+  //         updatePreview()
+  //       } catch (err) {
+  //         setFeedback(
+  //           'There was an error generating the response\n Please, try again in a few seconds',
+  //         )
+  //       }
+  //     } else {
+  //       setFeedback(openAi)
+  //       selectedCtx.history.push({ role: 'assistant', content: openAi })
+  //     }
+
+  //     setUserPrompt('')
+  //   },
+  // })
 
   useEffect(() => {
     showPreview && livePreview && updatePreview()
@@ -218,6 +308,10 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
 
     updatePreview()
   }, [showEditor])
+
+  useEffect(() => {
+    error && setFeedback(JSON.stringify(error))
+  }, [error])
 
   const handleScroll = e => {
     const iframeElement = previewRef?.current?.contentDocument?.documentElement
@@ -242,6 +336,7 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
           previewScrollTopRef.current,
         ),
       )
+    updateSelectionBoxPosition()
   }
 
   return (
@@ -250,10 +345,10 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
         <CssAssistantUi>
           <ChatBubble forceHide={showChat} onRight />
           <Assistant
+            callOpenAi={callOpenAi}
             enabled
+            loading={loading}
             placeholder="Type here how your book should look..."
-            stylesFromSource={initialPagedJSCSS}
-            updatePreview={updatePreview}
           />
         </CssAssistantUi>
         <CheckBoxes>
@@ -306,7 +401,10 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
           <EditorContainer onScroll={handleScroll}>
             <Editor
               passedContent={passedContent}
+              stylesFromSource={initialPagedJSCSS}
               updatePreview={updatePreview}
+              // eslint-disable-next-line react/prop-types
+              {...settings?.editor}
             />
             <SelectionBox
               // eslint-disable-next-line react/prop-types

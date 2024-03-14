@@ -1250,10 +1250,10 @@ export const initialPagedJSCSS = /* css */ `
       margin-right:  2cm;
     }
     
-    div#assistant-ctx > div.chapter {
+    div#assistant-ctx section {
 	    break-after: always;
     }
-    div#assistant-ctx > div.chapter > h1{
+    div#assistant-ctx section > h1{
 	    string-set: title content(text);
       margin-bottom: 10mm;
     }
@@ -1350,7 +1350,7 @@ const SELECTOR_SHAPE = ({
 
 const RULES_SHAPE = `If user wants to apply styles to the element: {"validCSSProperty": "validCSSValue", ...moreValidCssPropertiesAndValues}, otherwise: {}`
 
-const CSS_SHAPE = `A well formed valid CSS string that will be the complete provided context stylesheet with the following: 
+const CSS_SHAPE = `If user requested a change on the css: A well formed valid CSS string that will be the complete provided context stylesheet with the following: 
     - You must add, to the provided stylesheet, the required changes that 'user' requested.
     - if a declaration exists on the provided stylesheet apply the changes on that declaration, instead of creating a new one.
     - With this guides in mind you will always return a well formed valid CSS string including line breaks (/n) and indentation (/t)
@@ -1369,7 +1369,8 @@ const ADD_ELEMENT_SHAPE = `if user request to create or add a new element here y
 "{ 
   "position": - if you could interpret where 'user' wants to create the new dom element this property will be present and its value can be one of the following strings: ["beforebegin","afterbegin","beforeend" or "afterend"]. If user didn't specify a position just dont return this property,
   "html": if you could interpret what type of element or elements 'user' wants to create or add; a valid html string; otherwise omit this property
-}"`
+}" 
+Otherwise, omit this property`
 
 const CSS_LIMITS = `Use hex for colors. 'user' can request to mix colors: for example if the color is #000000 and 'user' asks for a litle more of blue you have to mix the hex values acordingly
 

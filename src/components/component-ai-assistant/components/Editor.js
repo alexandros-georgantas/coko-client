@@ -16,9 +16,23 @@ const StyledEditor = styled.div`
 `
 
 // eslint-disable-next-line react/prop-types
-const Editor = ({ updatePreview }) => {
-  const { setHtmlSrc, getValidSelectors, passedContent, setPassedContent } =
-    useContext(CssAssistantContext)
+const Editor = ({ stylesFromSource, contentEditable, enablePaste }) => {
+  const {
+    setHtmlSrc,
+    htmlSrc,
+    getValidSelectors,
+    passedContent,
+    setPassedContent,
+    setSelectedCtx,
+    addToCtx,
+    newCtx,
+    styleSheetRef,
+    getCtxBy,
+    setSelectedNode,
+    setCss,
+    promptRef,
+    createStyleSheet,
+  } = useContext(CssAssistantContext)
 
   const editorRef = useRef(null)
 
@@ -30,6 +44,44 @@ const Editor = ({ updatePreview }) => {
 
     setPassedContent(pastedData)
   }
+
+  useEffect(() => {
+    if (htmlSrc) {
+      const tempScope = htmlSrc
+      !tempScope.id && (tempScope.id = 'assistant-ctx')
+      const allChilds = [...htmlSrc.children]
+
+      styleSheetRef.current = createStyleSheet(styleTag =>
+        htmlSrc.parentNode.insertBefore(styleTag, htmlSrc),
+      )
+      stylesFromSource && (styleSheetRef.current.textContent = stylesFromSource)
+
+      addToCtx(newCtx(htmlSrc))
+      setSelectedCtx(getCtxBy('node', htmlSrc))
+      setSelectedNode(htmlSrc)
+      setCss(styleSheetRef.current.textContent)
+      allChilds.forEach(child => {
+        child.addEventListener('click', handleSelection)
+      })
+      getValidSelectors(htmlSrc)
+
+      htmlSrc.parentNode.parentNode.addEventListener('click', handleSelection)
+    }
+  }, [htmlSrc])
+
+  useEffect(() => {
+    return () => {
+      if (htmlSrc) {
+        ;[...htmlSrc.children].forEach(child =>
+          child.removeEventListener('click', handleSelection),
+        )
+        htmlSrc.parentNode.parentNode.removeEventListener(
+          'click',
+          handleSelection,
+        )
+      }
+    }
+  }, [])
 
   useEffect(() => {
     !passedContent &&
@@ -45,11 +97,35 @@ const Editor = ({ updatePreview }) => {
     setImagesDefaultStyles(editorRef.current)
   }, [passedContent])
 
+  const handleSelection = e => {
+    if (
+      e.target.className === 'element-options' ||
+      (contentEditable && e.detail === 3)
+    )
+      return
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (htmlSrc.contains(e.target)) {
+      const ctx =
+        getCtxBy('node', e.target) ||
+        addToCtx(newCtx(e.target, null, {}, false))
+
+      setSelectedCtx(ctx)
+      setSelectedNode(e.target)
+    } else {
+      setSelectedCtx(getCtxBy('node', htmlSrc))
+      setSelectedNode(htmlSrc)
+    }
+
+    promptRef.current.focus()
+  }
+
   return (
     <StyledEditor
-      contentEditable
+      contentEditable={contentEditable}
       dangerouslySetInnerHTML={{ __html: passedContent }}
-      onPaste={handlePaste}
+      onPaste={enablePaste ? handlePaste : () => {}}
       ref={editorRef}
     />
   )

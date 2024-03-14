@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import styled from 'styled-components'
 import { CopyOutlined, DeleteOutlined, DiffOutlined } from '@ant-design/icons'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
@@ -60,37 +60,17 @@ const SelectionBox = ({
   advancedTools,
   ...rest
 }) => {
-  const { selectedNode, htmlSrc, selectedCtx, setCopiedStyles, copiedStyles } =
-    useContext(CssAssistantContext)
-
-  const selectionBoxRef = useRef(null)
-  const [selectedNodeTagName, setSelectedNodeTagName] = useState(null)
+  const {
+    selectedNode,
+    selectionBoxRef,
+    selectedCtx,
+    setCopiedStyles,
+    copiedStyles,
+    updateSelectionBoxPosition,
+  } = useContext(CssAssistantContext)
 
   useEffect(() => {
-    const updateSelectionBoxPosition = () => {
-      if (selectedNode !== htmlSrc) {
-        if (selectedNode && selectionBoxRef.current) {
-          const { top, left, height, width } =
-            selectedNode.getBoundingClientRect()
-
-          const parent = selectionBoxRef?.current?.parentNode
-          const { left: pLeft, top: pTop } = parent.getBoundingClientRect()
-
-          setInlineStyle(selectionBoxRef.current, {
-            opacity: 1,
-            left: `${left - pLeft - xOffset}px`,
-            top: `${Math.floor(parent.scrollTop + top - pTop - yOffset)}px`,
-            width: `${width + xOffset * 2}px`,
-            height: `${height + yOffset * 2}px`,
-            zIndex: '9',
-          })
-          selectedNode.tagName.length >= 1 &&
-            setSelectedNodeTagName(htmlTagNames[selectedCtx.tagName])
-        }
-      } else selectionBoxRef.current.style.opacity = 0
-    }
-
-    updateSelectionBoxPosition()
+    updateSelectionBoxPosition(yOffset, xOffset)
 
     selectionBoxRef?.current &&
       selectionBoxRef.current.parentNode.addEventListener(
@@ -121,7 +101,7 @@ const SelectionBox = ({
     <AbsoluteContainer ref={selectionBoxRef} {...rest}>
       {advancedTools && (
         <RelativeContainer>
-          {selectedNodeTagName && <small>{selectedNodeTagName}</small>}
+          <small>{htmlTagNames[selectedCtx.tagName] || 'element'}</small>
           {selectedCtx?.node?.hasAttribute('style') ? (
             <>
               <button

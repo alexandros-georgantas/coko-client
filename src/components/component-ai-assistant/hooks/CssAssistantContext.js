@@ -1,7 +1,13 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 /* eslint-disable no-param-reassign */
 import React, { createContext, useMemo, useRef, useState } from 'react'
-import { callOn, htmlTagNames, onEntries, safeCall } from '../utils'
+import {
+  callOn,
+  htmlTagNames,
+  onEntries,
+  safeCall,
+  setInlineStyle,
+} from '../utils'
 
 export const CssAssistantContext = createContext()
 
@@ -11,6 +17,7 @@ export const CssAssistantProvider = ({ children }) => {
   const validSelectors = useRef(null)
   const styleSheetRef = useRef(null)
   const history = useRef({ active: true, index: 0 })
+  const selectionBoxRef = useRef(null)
 
   const [selectedCtx, setSelectedCtx] = useState([])
   const [selectedNode, setSelectedNode] = useState(null)
@@ -125,6 +132,27 @@ export const CssAssistantProvider = ({ children }) => {
     return rules
   }
 
+  const updateSelectionBoxPosition = (yOffset = 5, xOffset = 10) => {
+    if (selectedNode !== htmlSrc) {
+      if (selectedNode && selectionBoxRef?.current) {
+        const { top, left, height, width } =
+          selectedNode.getBoundingClientRect()
+
+        const parent = selectionBoxRef?.current?.parentNode
+        const { left: pLeft, top: pTop } = parent.getBoundingClientRect()
+
+        setInlineStyle(selectionBoxRef.current, {
+          opacity: 1,
+          left: `${left - pLeft - xOffset}px`,
+          top: `${Math.floor(parent.scrollTop + top - pTop - yOffset)}px`,
+          width: `${width + xOffset * 2}px`,
+          height: `${height + yOffset * 2}px`,
+          zIndex: '9',
+        })
+      }
+    } else selectionBoxRef.current.style.opacity = 0
+  }
+
   const dom = useMemo(() => {
     return {
       promptRef,
@@ -147,21 +175,16 @@ export const CssAssistantProvider = ({ children }) => {
 
   const chatGpt = useMemo(() => {
     return {
+      css,
+      htmlSrc,
+      setCss,
+      setHtmlSrc,
       feedback,
       userPrompt,
       setFeedback,
       setUserPrompt,
     }
-  }, [feedback, userPrompt])
-
-  const htmlAndCss = useMemo(() => {
-    return {
-      css,
-      htmlSrc,
-      setCss,
-      setHtmlSrc,
-    }
-  }, [css, htmlSrc])
+  }, [css, htmlSrc, feedback, userPrompt])
 
   const nodeOptions = useMemo(() => {
     return {
@@ -173,7 +196,6 @@ export const CssAssistantProvider = ({ children }) => {
   return (
     <CssAssistantContext.Provider
       value={{
-        ...htmlAndCss,
         ...dom,
         ...ctx,
         ...chatGpt,
@@ -185,7 +207,9 @@ export const CssAssistantProvider = ({ children }) => {
         newCtx,
         addRules,
         passedContent,
+        selectionBoxRef,
         setPassedContent,
+        updateSelectionBoxPosition,
       }}
     >
       {children}

@@ -20,6 +20,10 @@ const Global = createGlobalStyle`
 
 const settings = {
   advancedTools: true,
+  editor: {
+    contentEditable: true,
+    enablePaste: true,
+  },
 }
 
 export const AiAssistantStory = () => {

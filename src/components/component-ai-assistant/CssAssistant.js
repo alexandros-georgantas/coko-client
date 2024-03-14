@@ -1,17 +1,11 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import { debounce, takeRight } from 'lodash'
 import { rotate360 } from '@pubsweet/ui-toolkit'
 import PropTypes from 'prop-types'
-import useChatGpt from './hooks/useChatGpt'
 // import { gql, useLazyQuery } from '@apollo/client'
-import {
-  addElement,
-  autoResize,
-  callOn,
-  setInlineStyle,
-  systemGuidelinesV2,
-} from './utils'
+import { autoResize, callOn, systemGuidelinesV2 } from './utils'
 import SendIcon from './SendButton'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
 
@@ -89,189 +83,30 @@ const SendButton = styled.button`
   }
 `
 
-const CssAssistant = ({
-  enabled,
-  className,
-  stylesFromSource,
-  updatePreview,
-  ...rest
-}) => {
+const CssAssistant = ({ enabled, className, loading, callOpenAi, ...rest }) => {
   // #region HOOKS ---------------------------------------------------------------------
   const {
     styleSheetRef,
-    setCss,
     htmlSrc,
     selectedCtx,
-    setSelectedCtx,
-    setSelectedNode,
     selectedNode,
     setFeedback,
     history,
     userPrompt,
     setUserPrompt,
     promptRef,
-    createStyleSheet,
     validSelectors,
-    addRules,
-    newCtx,
     getCtxBy,
-    addToCtx,
-    getValidSelectors,
   } = useContext(CssAssistantContext)
-
-  const {
-    chatGPT: callOpenAi,
-    loading,
-    error,
-  } = useChatGpt({
-    onCompleted: chatGPTContent => {
-      if (chatGPTContent.startsWith('{')) {
-        try {
-          const response = JSON.parse(chatGPTContent)
-
-          const {
-            css,
-            rules,
-            feedback,
-            textContent = '',
-            insertHtml,
-          } = response
-
-          const ctxIsHtmlSrc = selectedCtx.node === htmlSrc
-
-          if (rules && !ctxIsHtmlSrc) {
-            addRules(selectedCtx, rules)
-            setInlineStyle(selectedCtx.node, rules)
-          } else if (css) {
-            styleSheetRef.current.textContent = css
-            setCss(styleSheetRef.current.textContent)
-          }
-
-          insertHtml && addElement(selectedNode, insertHtml)
-          textContent && (selectedCtx.node.innerHTML = textContent)
-          updatePreview()
-          feedback && setFeedback(feedback)
-          feedback &&
-            selectedCtx.history.push({ role: 'assistant', content: feedback })
-        } catch (err) {
-          setFeedback(
-            'There was an error generating the response\n Please, try again in a few seconds',
-          )
-        }
-      } else {
-        setFeedback(
-          'There was an error generating the response\n Please, try again in a few seconds',
-        )
-      }
-
-      setUserPrompt('')
-    },
-  })
-  // const [callOpenAi, { loading }] = useLazyQuery(CALL_OPEN_AI, {
-  //   onCompleted: ({ openAi }) => {
-  //     if (openAi.startsWith('{')) {
-  //       try {
-  //         const response = JSON.parse(openAi)
-  //         const { css, rules, feedback, textContent = '' } = response
-  //         const ctxIsHtmlSrc = selectedCtx.node === htmlSrc
-
-  //         if (rules && !ctxIsHtmlSrc) {
-  //           addRules(selectedCtx, rules)
-  //           setInlineStyle(selectedCtx.node, rules)
-  //         } else if (css) {
-  //           styleSheetRef.current.textContent = css
-  //           setCss(styleSheetRef.current.textContent)
-  //         }
-
-  //         textContent && (selectedCtx.node.innerHTML = textContent)
-  //         feedback && setFeedback(feedback)
-  //         feedback &&
-  //           selectedCtx.history.push({ role: 'assistant', content: feedback })
-  //         updatePreview()
-  //       } catch (err) {
-  //         setFeedback(
-  //           'There was an error generating the response\n Please, try again in a few seconds',
-  //         )
-  //       }
-  //     } else {
-  //       setFeedback(openAi)
-  //       selectedCtx.history.push({ role: 'assistant', content: openAi })
-  //     }
-
-  //     setUserPrompt('')
-  //   },
-  // })
-
-  useEffect(() => {
-    if (htmlSrc) {
-      const tempScope = htmlSrc
-      !tempScope.id && (tempScope.id = 'assistant-ctx')
-      const allChilds = [...htmlSrc.children]
-
-      styleSheetRef.current = createStyleSheet(styleTag =>
-        htmlSrc.parentNode.insertBefore(styleTag, htmlSrc),
-      )
-      stylesFromSource && (styleSheetRef.current.textContent = stylesFromSource)
-
-      addToCtx(newCtx(htmlSrc))
-      setSelectedCtx(getCtxBy('node', htmlSrc))
-      setSelectedNode(htmlSrc)
-      setCss(styleSheetRef.current.textContent)
-      allChilds.forEach(child => {
-        child.addEventListener('click', handleSelection)
-      })
-      getValidSelectors(htmlSrc)
-
-      htmlSrc.parentNode.parentNode.addEventListener('click', handleSelection)
-    }
-  }, [htmlSrc])
-
-  useEffect(() => {
-    return () => {
-      if (htmlSrc) {
-        ;[...htmlSrc.children].forEach(child =>
-          child.removeEventListener('click', handleSelection),
-        )
-        htmlSrc.parentNode.parentNode.removeEventListener(
-          'click',
-          handleSelection,
-        )
-      }
-    }
-  }, [])
 
   useEffect(() => {
     debouncedResize()
   }, [userPrompt])
 
-  useEffect(() => {
-    error && setFeedback(JSON.stringify(error))
-  }, [error])
-
   const handleChange = ({ target }) => {
     if (loading) return
     setUserPrompt(target.value)
     debouncedResize()
-  }
-
-  const handleSelection = e => {
-    if (e.target.className === 'element-options') return
-    e.preventDefault()
-    e.stopPropagation()
-
-    if (htmlSrc.contains(e.target)) {
-      const ctx =
-        getCtxBy('node', e.target) ||
-        addToCtx(newCtx(e.target, null, {}, false))
-
-      setSelectedCtx(ctx)
-      setSelectedNode(e.target)
-    } else {
-      setSelectedCtx(getCtxBy('node', htmlSrc))
-      setSelectedNode(htmlSrc)
-    }
-
-    promptRef.current.focus()
   }
 
   const handleSend = async e => {
@@ -350,14 +185,11 @@ const CssAssistant = ({
 CssAssistant.propTypes = {
   enabled: PropTypes.bool,
   className: PropTypes.string,
-  stylesFromSource: PropTypes.string,
-  updatePreview: PropTypes.func.isRequired,
 }
 
 CssAssistant.defaultProps = {
   enabled: true,
   className: '',
-  stylesFromSource: '',
 }
 
 export default CssAssistant
