@@ -108,6 +108,11 @@ const Editor = ({ stylesFromSource, contentEditable, enablePaste }) => {
     e.stopPropagation()
 
     if (htmlSrc.contains(e.target)) {
+      // update the node in ctx as it was recreated
+      !getCtxBy('node', e.target) &&
+        getCtxBy('dataRef', e.target.dataset.ref) &&
+        (getCtxBy('dataRef', e.target.dataset.ref).node = e.target)
+
       const ctx =
         getCtxBy('node', e.target) ||
         getCtxBy('dataRef', e.target.dataset.ref) ||
