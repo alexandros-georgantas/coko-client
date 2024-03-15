@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 /* eslint-disable no-param-reassign */
 import React, { createContext, useMemo, useRef, useState } from 'react'
+import { takeRight } from 'lodash'
 import {
   callOn,
   htmlTagNames,
@@ -16,7 +17,12 @@ export const CssAssistantProvider = ({ children }) => {
   const context = useRef([])
   const validSelectors = useRef(null)
   const styleSheetRef = useRef(null)
-  const history = useRef({ active: true, index: 0 })
+
+  const history = useRef({
+    prompts: { active: true, index: 0 },
+    source: { redo: [], undo: [], limit: { undo: 20, redo: 20 } },
+  })
+
   const selectionBoxRef = useRef(null)
 
   const [selectedCtx, setSelectedCtx] = useState([])
@@ -32,17 +38,7 @@ export const CssAssistantProvider = ({ children }) => {
   const promptRef = useRef(null)
   const [userPrompt, setUserPrompt] = useState('')
 
-  const createStyleSheet = onCreate => {
-    if (!document.getElementById('css-assistant-scoped-styles')) {
-      const styleTag = document.createElement('style')
-      styleTag.id = 'css-assistant-scoped-styles'
-      safeCall(onCreate)(styleTag)
-      return styleTag
-    }
-
-    return document.getElementById('css-assistant-scoped-styles')
-  }
-
+  // #region CONTEXT ----------------------------------------------------------------
   const makeSelector = (node, parent) => {
     const tagName = node.tagName.toLowerCase()
 
@@ -132,6 +128,20 @@ export const CssAssistantProvider = ({ children }) => {
     return rules
   }
 
+  // #endregion CONTEXT -------------------------------------------------------------
+
+  // #region HELPERS -----------------------------------------------------------------
+  const createStyleSheet = onCreate => {
+    if (!document.getElementById('css-assistant-scoped-styles')) {
+      const styleTag = document.createElement('style')
+      styleTag.id = 'css-assistant-scoped-styles'
+      safeCall(onCreate)(styleTag)
+      return styleTag
+    }
+
+    return document.getElementById('css-assistant-scoped-styles')
+  }
+
   const updateSelectionBoxPosition = (yOffset = 5, xOffset = 10) => {
     if (selectedNode !== htmlSrc) {
       if (selectedNode && selectionBoxRef?.current) {
@@ -152,6 +162,38 @@ export const CssAssistantProvider = ({ children }) => {
       }
     } else selectionBoxRef.current.style.opacity = 0
   }
+
+  const onHistory = {
+    addRegistry: (regKey, registry) => {
+      if (!registry) return
+      const { source } = history.current
+
+      const newRegistry = {
+        undo: takeRight(source.undo.concat(registry), source.limit.undo),
+        redo: takeRight(source.redo.concat(registry), source.limit.redo),
+      }
+
+      history.current.source[regKey] = newRegistry[regKey]
+    },
+    modify: regKey => {
+      const { source } = history.current
+
+      if (source[regKey].length < 1) return
+      const lastRegistry = source[regKey].pop()
+
+      onHistory.addRegistry(regKey === 'undo' ? 'redo' : 'undo', {
+        css: styleSheetRef.current.textContent,
+        content: htmlSrc.innerHTML,
+      })
+
+      styleSheetRef.current.textContent = lastRegistry.css
+      setPassedContent(lastRegistry.content)
+      setCss(lastRegistry.css)
+      window.parent.console.log(history.current.source[regKey])
+    },
+  }
+
+  // #endregion HELPERS -----------------------------------------------------------------
 
   const dom = useMemo(() => {
     return {
@@ -177,10 +219,10 @@ export const CssAssistantProvider = ({ children }) => {
     return {
       css,
       htmlSrc,
-      setCss,
-      setHtmlSrc,
       feedback,
       userPrompt,
+      setCss,
+      setHtmlSrc,
       setFeedback,
       setUserPrompt,
     }
@@ -210,6 +252,7 @@ export const CssAssistantProvider = ({ children }) => {
         selectionBoxRef,
         setPassedContent,
         updateSelectionBoxPosition,
+        onHistory,
       }}
     >
       {children}

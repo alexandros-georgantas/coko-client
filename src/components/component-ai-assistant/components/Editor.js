@@ -1,13 +1,21 @@
 import React, { useContext, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { CssAssistantContext } from '../hooks/CssAssistantContext'
-import { removeStyleAttribute, setImagesDefaultStyles } from '../utils'
+import { setImagesDefaultStyles } from '../utils'
 
 const StyledEditor = styled.div`
   border: none;
   outline: none;
   width: 100%;
   z-index: 1;
+
+  section {
+    background: #fff;
+    box-shadow: 0 0 5px #0002;
+    margin-bottom: 20px;
+    min-height: 100%;
+    padding: 20px;
+  }
 
   &:hover {
     border: none;
@@ -47,8 +55,6 @@ const Editor = ({ stylesFromSource, contentEditable, enablePaste }) => {
 
   useEffect(() => {
     if (htmlSrc) {
-      const tempScope = htmlSrc
-      !tempScope.id && (tempScope.id = 'assistant-ctx')
       const allChilds = [...htmlSrc.children]
 
       styleSheetRef.current = createStyleSheet(styleTag =>
@@ -65,7 +71,7 @@ const Editor = ({ stylesFromSource, contentEditable, enablePaste }) => {
       })
       getValidSelectors(htmlSrc)
 
-      htmlSrc.parentNode.parentNode.addEventListener('click', handleSelection)
+      htmlSrc.parentNode.addEventListener('click', handleSelection)
     }
   }, [htmlSrc])
 
@@ -75,25 +81,20 @@ const Editor = ({ stylesFromSource, contentEditable, enablePaste }) => {
         ;[...htmlSrc.children].forEach(child =>
           child.removeEventListener('click', handleSelection),
         )
-        htmlSrc.parentNode.parentNode.removeEventListener(
-          'click',
-          handleSelection,
-        )
+        htmlSrc.parentNode.removeEventListener('click', handleSelection)
       }
     }
   }, [])
 
   useEffect(() => {
     !passedContent &&
-      setPassedContent(
-        '<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:3rem;color:#555;"><p>Paste the article here</p></div>',
-      )
+      setPassedContent('<section><p>Paste the article here</p></section>')
   }, [])
 
   useEffect(() => {
     editorRef?.current && setHtmlSrc(editorRef.current)
     editorRef?.current && getValidSelectors(editorRef.current)
-    ;[...editorRef.current.children].forEach(removeStyleAttribute)
+    // ;[...editorRef.current.children].forEach(removeStyleAttribute)
     setImagesDefaultStyles(editorRef.current)
   }, [passedContent])
 
@@ -125,6 +126,7 @@ const Editor = ({ stylesFromSource, contentEditable, enablePaste }) => {
     <StyledEditor
       contentEditable={contentEditable}
       dangerouslySetInnerHTML={{ __html: passedContent }}
+      id="assistant-ctx"
       onPaste={enablePaste ? handlePaste : () => {}}
       ref={editorRef}
     />

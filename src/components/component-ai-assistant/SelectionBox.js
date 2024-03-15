@@ -27,6 +27,7 @@ const RelativeContainer = styled.div`
   justify-content: flex-start;
   margin-top: -35px;
   position: relative;
+  white-space: nowrap;
   width: 100%;
   z-index: 999;
 
@@ -67,6 +68,9 @@ const SelectionBox = ({
     setCopiedStyles,
     copiedStyles,
     updateSelectionBoxPosition,
+    onHistory,
+    styleSheetRef,
+    htmlSrc,
   } = useContext(CssAssistantContext)
 
   useEffect(() => {
@@ -107,6 +111,10 @@ const SelectionBox = ({
               <button
                 className="element-options"
                 onClick={() => {
+                  onHistory.addRegistry('undo', {
+                    css: styleSheetRef.current.textContent,
+                    content: htmlSrc.innerHTML,
+                  })
                   removeStyleAttribute(selectedNode)
                   updatePreview()
                 }}

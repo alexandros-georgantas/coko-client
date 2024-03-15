@@ -111,252 +111,7 @@ export const htmlTagNames = {
   video: 'Video',
   wbr: 'Word Break Opportunity',
 }
-// export const cssTemplate2 = /* css */ `
-// :root {
-// 	--pagedjs-width: 8.5in;
-// 	--pagedjs-height: 11in;
-// 	--pagedjs-width-right: 8.5in;
-// 	--pagedjs-height-right: 11in;
-// 	--pagedjs-width-left: 8.5in;
-// 	--pagedjs-height-left: 11in;
-// 	--pagedjs-pagebox-width: 8.5in;
-// 	--pagedjs-pagebox-height: 11in;
-// 	--pagedjs-footnotes-height: 0mm;
-// 	--pagedjs-margin-top: 1in;
-// 	--pagedjs-margin-right: 1in;
-// 	--pagedjs-margin-bottom: 1in;
-// 	--pagedjs-margin-left: 1in;
-// 	--pagedjs-padding-top: 0mm;
-// 	--pagedjs-padding-right: 0mm;
-// 	--pagedjs-padding-bottom: 0mm;
-// 	--pagedjs-padding-left: 0mm;
-// 	--pagedjs-border-top: 0mm;
-// 	--pagedjs-border-right: 0mm;
-// 	--pagedjs-border-bottom: 0mm;
-// 	--pagedjs-border-left: 0mm;
-// 	--pagedjs-bleed-top: 0mm;
-// 	--pagedjs-bleed-right: 0mm;
-// 	--pagedjs-bleed-bottom: 0mm;
-// 	--pagedjs-bleed-left: 0mm;
-// 	--pagedjs-bleed-right-top: 0mm;
-// 	--pagedjs-bleed-right-right: 0mm;
-// 	--pagedjs-bleed-right-bottom: 0mm;
-// 	--pagedjs-bleed-right-left: 0mm;
-// 	--pagedjs-bleed-left-top: 0mm;
-// 	--pagedjs-bleed-left-right: 0mm;
-// 	--pagedjs-bleed-left-bottom: 0mm;
-// 	--pagedjs-bleed-left-left: 0mm;
-// 	--pagedjs-crop-color: black;
-// 	--pagedjs-crop-shadow: white;
-// 	--pagedjs-crop-offset: 2mm;
-// 	--pagedjs-crop-stroke: 1px;
-// 	--pagedjs-cross-size: 5mm;
-// 	--pagedjs-mark-cross-display: none;
-// 	--pagedjs-mark-crop-display: none;
-// 	--pagedjs-page-count: 0;
-// 	--pagedjs-page-counter-increment: 1;
-// 	--pagedjs-footnotes-count: 0;
-// 	--pagedjs-column-gap-offset: 1000px;
-// }
 
-// @page {
-// 	size: letter;
-// 	margin: 0;
-// }
-
-// .pagedjs_sheet {
-// 	box-sizing: border-box;
-// 	width: var(--pagedjs-width);
-// 	height: var(--pagedjs-height);
-// 	overflow: hidden;
-// 	position: relative;
-// 	display: grid;
-// 	grid-template-columns: [bleed-left] var(--pagedjs-bleed-left) [sheet-center] calc(var(--pagedjs-width) - var(--pagedjs-bleed-left) - var(--pagedjs-bleed-right)) [bleed-right] var(--pagedjs-bleed-right);
-// 	grid-template-rows: [bleed-top] var(--pagedjs-bleed-top) [sheet-middle] calc(var(--pagedjs-height) - var(--pagedjs-bleed-top) - var(--pagedjs-bleed-bottom)) [bleed-bottom] var(--pagedjs-bleed-bottom);
-// }
-
-// .pagedjs_right_page .pagedjs_sheet {
-// 	width: var(--pagedjs-width-right);
-// 	height: var(--pagedjs-height-right);
-// 	grid-template-columns: [bleed-left] var(--pagedjs-bleed-right-left) [sheet-center] calc(var(--pagedjs-width) - var(--pagedjs-bleed-right-left) - var(--pagedjs-bleed-right-right)) [bleed-right] var(--pagedjs-bleed-right-right);
-// 	grid-template-rows: [bleed-top] var(--pagedjs-bleed-right-top) [sheet-middle] calc(var(--pagedjs-height) - var(--pagedjs-bleed-right-top) - var(--pagedjs-bleed-right-bottom)) [bleed-bottom] var(--pagedjs-bleed-right-bottom);
-// }
-
-// .pagedjs_left_page .pagedjs_sheet {
-// 	width: var(--pagedjs-width-left);
-// 	height: var(--pagedjs-height-left);
-// 	grid-template-columns: [bleed-left] var(--pagedjs-bleed-left-left) [sheet-center] calc(var(--pagedjs-width) - var(--pagedjs-bleed-left-left) - var(--pagedjs-bleed-left-right)) [bleed-right] var(--pagedjs-bleed-left-right);
-// 	grid-template-rows: [bleed-top] var(--pagedjs-bleed-left-top) [sheet-middle] calc(var(--pagedjs-height) - var(--pagedjs-bleed-left-top) - var(--pagedjs-bleed-left-bottom)) [bleed-bottom] var(--pagedjs-bleed-left-bottom);
-// }
-
-// .pagedjs_bleed {
-// 	display: flex;
-// 	align-items: center;
-// 	justify-content: center;
-// 	flex-wrap: nowrap;
-// 	overflow: hidden;
-// }
-
-// .pagedjs_bleed-top {
-// 	grid-column: bleed-left / -1;
-// 	grid-row: bleed-top;
-// 	flex-direction: row;
-// }
-
-// .pagedjs_bleed-bottom {
-// 	grid-column: bleed-left / -1;
-// 	grid-row: bleed-bottom;
-// 	flex-direction: row;
-// }
-
-// .pagedjs_bleed-left {
-// 	grid-column: bleed-left;
-// 	grid-row: bleed-top / -1;
-// 	flex-direction: column;
-// }
-
-// .pagedjs_bleed-right {
-// 	grid-column: bleed-right;
-// 	grid-row: bleed-top / -1;
-// 	flex-direction: column;
-// }
-
-// .pagedjs_marks-crop {
-// 	display: var(--pagedjs-mark-crop-display);
-// 	flex-grow: 0;
-// 	flex-shrink: 0;
-// 	z-index: 9999999999;
-// }
-
-// .pagedjs_bleed-top .pagedjs_marks-crop:nth-child(1),
-// .pagedjs_bleed-bottom .pagedjs_marks-crop:nth-child(1) {
-// 	width: calc(var(--pagedjs-bleed-left) - var(--pagedjs-crop-stroke));
-// 	border-right: var(--pagedjs-crop-stroke) solid var(--pagedjs-crop-color);
-// 	box-shadow: 1px 0px 0px 0px var(--pagedjs-crop-shadow);
-// }
-
-// .pagedjs_right_page .pagedjs_bleed-top .pagedjs_marks-crop:nth-child(1),
-// .pagedjs_right_page .pagedjs_bleed-bottom .pagedjs_marks-crop:nth-child(1) {
-// 	width: calc(var(--pagedjs-bleed-right-left) - var(--pagedjs-crop-stroke));
-// }
-
-// .pagedjs_left_page .pagedjs_bleed-top .pagedjs_marks-crop:nth-child(1),
-// .pagedjs_left_page .pagedjs_bleed-bottom .pagedjs_marks-crop:nth-child(1) {
-// 	width: calc(var(--pagedjs-bleed-left-left) - var(--pagedjs-crop-stroke));
-// }
-
-// .pagedjs_bleed-top .pagedjs_marks-crop:nth-child(3),
-// .pagedjs_bleed-bottom .pagedjs_marks-crop:nth-child(3) {
-// 	width: calc(var(--pagedjs-bleed-right) - var(--pagedjs-crop-stroke));
-// 	border-left: var(--pagedjs-crop-stroke) solid var(--pagedjs-crop-color);
-// 	box-shadow: -1px 0px 0px 0px var(--pagedjs-crop-shadow);
-// }
-
-// .pagedjs_right_page .pagedjs_bleed-top .pagedjs_marks-crop:nth-child(3),
-// .pagedjs_right_page .pagedjs_bleed-bottom .pagedjs_marks-crop:nth-child(3) {
-// 	width: calc(var(--pagedjs-bleed-right-right) - var(--pagedjs-crop-stroke));
-// }
-
-// .pagedjs_left_page .pagedjs_bleed-top .pagedjs_marks-crop:nth-child(3),
-// .pagedjs_left_page .pagedjs_bleed-bottom .pagedjs_marks-crop:nth-child(3) {
-// 	width: calc(var(--pagedjs-bleed-left-right) - var(--pagedjs-crop-stroke));
-// }
-
-// .pagedjs_bleed-top .pagedjs_marks-crop {
-// 	align-self: flex-start;
-// 	height: calc(var(--pagedjs-bleed-top) - var(--pagedjs-crop-offset));
-// }
-
-// .pagedjs_right_page .pagedjs_bleed-top .pagedjs_marks-crop {
-// 	height: calc(var(--pagedjs-bleed-right-top) - var(--pagedjs-crop-offset));
-// }
-
-// .pagedjs_left_page .pagedjs_bleed-top .pagedjs_marks-crop {
-// 	height: calc(var(--pagedjs-bleed-left-top) - var(--pagedjs-crop-offset));
-// }
-
-// .pagedjs_bleed-bottom .pagedjs_marks-crop {
-// 	align-self: flex-end;
-// 	height: calc(var(--pagedjs-bleed-bottom) - var(--pagedjs-crop-offset));
-// }
-
-// .pagedjs_right_page .pagedjs_bleed-bottom .pagedjs_marks-crop {
-// 	height: calc(var(--pagedjs-bleed-right-bottom) - var(--pagedjs-crop-offset));
-// }
-
-// .pagedjs_left_page .pagedjs_bleed-bottom .pagedjs_marks-crop {
-// 	height: calc(var(--pagedjs-bleed-left-bottom) - var(--pagedjs-crop-offset));
-// }
-
-// .pagedjs_bleed-left .pagedjs_marks-crop:nth-child(1),
-// .pagedjs_bleed-right .pagedjs_marks-crop:nth-child(1) {
-// 	height: calc(var(--pagedjs-bleed-top) - var(--pagedjs-crop-stroke));
-// 	border-bottom: var(--pagedjs-crop-stroke) solid var(--pagedjs-crop-color);
-// 	box-shadow: 0px 1px 0px 0px var(--pagedjs-crop-shadow);
-// }
-
-// .pagedjs_right_page .pagedjs_bleed-left .pagedjs_marks-crop:nth-child(1),
-// .pagedjs_right_page .pagedjs_bleed-right .pagedjs_marks-crop:nth-child(1) {
-// 	height: calc(var(--pagedjs-bleed-right-top) - var(--pagedjs-crop-stroke));
-// }
-
-// .pagedjs_left_page .pagedjs_bleed-left .pagedjs_marks-crop:nth-child(1),
-// .pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-crop:nth-child(1) {
-// 	height: calc(var(--pagedjs-bleed-left-top) - var(--pagedjs-crop-stroke));
-// }
-
-// .pagedjs_bleed-left .pagedjs_marks-crop:nth-child(3),
-// .pagedjs_bleed-right .pagedjs_marks-crop:nth-child(3) {
-// 	height: calc(var(--pagedjs-bleed-bottom) - var(--pagedjs-crop-stroke));
-// 	border-top: var(--pagedjs-crop-stroke) solid var(--pagedjs-crop-color);
-// 	box-shadow: 0px -1px 0px 0px var(--pagedjs-crop-shadow);
-// }
-
-// .pagedjs_right_page .pagedjs_bleed-left .pagedjs_marks-crop:nth-child(3),
-// .pagedjs_right_page .pagedjs_bleed-right .pagedjs_marks-crop:nth-child(3) {
-// 	height: calc(var(--pagedjs-bleed-right-bottom) - var(--pagedjs-crop-stroke));
-// }
-
-// .pagedjs_left_page .pagedjs_bleed-left .pagedjs_marks-crop:nth-child(3),
-// .pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-crop:nth-child(3) {
-// 	height: calc(var(--pagedjs-bleed-left-bottom) - var(--pagedjs-crop-stroke));
-// }
-
-// .pagedjs_bleed-left .pagedjs_marks-crop {
-// 	width: calc(var(--pagedjs-bleed-left) - var(--pagedjs-crop-offset));
-// 	align-self: flex-start;
-// }
-
-// .pagedjs_right_page .pagedjs_bleed-left .pagedjs_marks-crop {
-// 	width: calc(var(--pagedjs-bleed-right-left) - var(--pagedjs-crop-offset));
-// }
-
-// .pagedjs_left_page .pagedjs_bleed-left .pagedjs_marks-crop {
-// 	width: calc(var(--pagedjs-bleed-left-left) - var(--pagedjs-crop-offset));
-// }
-
-// .pagedjs_bleed-right .pagedjs_marks-crop {
-// 	width: calc(var(--pagedjs-bleed-right) - var(--pagedjs-crop-offset));
-// 	align-self: flex-end;
-// }
-
-// .pagedjs_right_page .pagedjs_bleed-right .pagedjs_marks-crop {
-// 	width: calc(var(--pagedjs-bleed-right-right) - var(--pagedjs-crop-offset));
-// }
-
-// .pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-crop {
-// 	width: calc(var(--pagedjs-bleed-left-right) - var(--pagedjs-crop-offset));
-// }
-
-// .pagedjs_marks-middle {
-// 	display: flex;
-// 	flex-grow: 1;
-// 	flex-shrink: 0;
-// 	align-items: center;
-// 	justify-content: center;
-
-//   :root{--color-interface-pageSheet: #cfcfcf;--color-interface-pageBox: violet;--color-interface-paper: white;--color-interface-marginBox: transparent;--pagedjs-interface-crop-color: black;--pagedjs-interface-crop-shadow: white;--pagedjs-interface-crop-stroke: 1px}@media screen,pagedjs-ignore{body{background-color:var(--color-interface-background)}.pagedjs_pages{display:grid;margin:0 auto;padding-bottom:8px;grid-template-columns:1fr 1fr;width:calc(var(--pagedjs-width) * 2);gap:0 0}.pagedjs_page{background-color:var(--color-interface-paper);box-shadow:0 0 0 1px var(--color-interface-pageSheet);margin:0;flex-shrink:0;flex-grow:0;margin-top:10mm}.pagedjs_first_page{grid-column:2}.pagedjs_pagebox{box-shadow:0 0 0 1px var(--color-interface-pageBox)}.pagedjs_left_page{z-index:20;width:calc(var(--pagedjs-bleed-left) + var(--pagedjs-pagebox-width))!important}.pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-crop{border-color:transparent}.pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-middle{width:0}.pagedjs_right_page{z-index:10;position:relative;left:calc(var(--pagedjs-bleed-left) * -1)}.pagedjs_margin-top-left-corner-holder,.pagedjs_margin-top,.pagedjs_margin-top-left,.pagedjs_margin-top-center,.pagedjs_margin-top-right,.pagedjs_margin-top-right-corner-holder,.pagedjs_margin-bottom-left-corner-holder,.pagedjs_margin-bottom,.pagedjs_margin-bottom-left,.pagedjs_margin-bottom-center,.pagedjs_margin-bottom-right,.pagedjs_margin-bottom-right-corner-holder,.pagedjs_margin-right,.pagedjs_margin-right-top,.pagedjs_margin-right-middle,.pagedjs_margin-right-bottom,.pagedjs_margin-left,.pagedjs_margin-left-top,.pagedjs_margin-left-middle,.pagedjs_margin-left-bottom{box-shadow:0 0 0 1px inset var(--color-interface-marginBox)}}.pagedjs_marks-crop{z-index:999999999999}.pagedjs_bleed-top .pagedjs_marks-crop,.pagedjs_bleed-bottom .pagedjs_marks-crop{box-shadow:1px 0px 0px 0px var(--pagedjs-interface-crop-shadow)}.pagedjs_bleed-top .pagedjs_marks-crop:last-child,.pagedjs_bleed-bottom .pagedjs_marks-crop:last-child{box-shadow:-1px 0px 0px 0px var(--pagedjs-interface-crop-shadow)}.pagedjs_bleed-left .pagedjs_marks-crop,.pagedjs_bleed-right .pagedjs_marks-crop{box-shadow:0px 1px 0px 0px var(--pagedjs-interface-crop-shadow)}.pagedjs_bleed-left .pagedjs_marks-crop:last-child,.pagedjs_bleed-right .pagedjs_marks-crop:last-child{box-shadow:0px -1px 0px 0px var(--pagedjs-interface-crop-shadow)}
-// }`
 export const cssTemplate1 = /* css */ `
 @page {
   @bottom-center {
@@ -515,14 +270,6 @@ html {
 }
 body {
   margin: 0;
-}
-article,
-aside,
-footer,
-header,
-nav,
-section {
-  display: block;
 }
 h1 {
   font-size: 30px;
@@ -701,102 +448,92 @@ template,
   --color-body: #222222;
   --color-une: rgb(139, 139, 139);
   --color-deux: #0f0e0f;
-    --font-size: 13pt;
-    --font-lineHeight: 17pt;
+  --font-size: 13pt;
+  --font-lineHeight: 17pt;
   --indent-block: calc(var(--page-margin-left) * 0.3);
   --list-padding: 3mm;
   --page-margin-top: 12mm;
   --page-margin-bottom: 15mm;
   --page-margin-left: 15mm;
   --page-margin-right: 15mm;
-}
-:root {
-    --pagedjs-width: 216mm;
-    --pagedjs-height: 279mm;
-    --pagedjs-width-right: 216mm;
-    --pagedjs-height-right: 279mm;
-    --pagedjs-width-left: 216mm;
-    --pagedjs-height-left: 279mm;
-}
-:root {
-    --color-background: #b1b1b1;
-    --color-marginBox: transparent;
-    --color-pageBox: grey;
-    --color-paper: white;
-    --color-baseline: red;
-    --font-texte: "Crimson Text";
-    --font-titre: "Crimson Text";
-    --weight-titre: 300;
-    --color-body: #222;
-    --color-une: #8b8b8b;
-    --color-deux: #0f0e0f;
-    --font-size: 13pt;
-    --font-lineHeight: 17pt;
-    --indent-block: calc(var(--page-margin-left) * .3);
-    --list-padding: 3mm;
-    --page-margin-top: 28mm;
-    --page-margin-bottom: 30mm;
-    --page-margin-left: 30mm;
-    --page-margin-right: 30mm;
-}
-:root {
-    --color-interface-pageSheet: #cfcfcf;
-    --color-interface-pageBox: violet;
-    --color-interface-paper: white;
-    --color-interface-marginBox: transparent;
-    --pagedjs-interface-crop-color: black;
-    --pagedjs-interface-crop-shadow: white;
-    --pagedjs-interface-crop-stroke: 1px;
-}
-:root {
-    --color-interface-background: #DCDCDC;
-    --zoom-interface-factor: 1;
-}
-:root {
-    --pagedjs-width: 8.5in;
-    --pagedjs-height: 11in;
-    --pagedjs-width-right: 8.5in;
-    --pagedjs-height-right: 11in;
-    --pagedjs-width-left: 8.5in;
-    --pagedjs-height-left: 11in;
-    --pagedjs-pagebox-width: 8.5in;
-    --pagedjs-pagebox-height: 11in;
-    --pagedjs-footnotes-height: 0mm;
-    --pagedjs-margin-top: 1in;
-    --pagedjs-margin-right: 1in;
-    --pagedjs-margin-bottom: 1in;
-    --pagedjs-margin-left: 1in;
-    --pagedjs-padding-top: 0mm;
-    --pagedjs-padding-right: 0mm;
-    --pagedjs-padding-bottom: 0mm;
-    --pagedjs-padding-left: 0mm;
-    --pagedjs-border-top: 0mm;
-    --pagedjs-border-right: 0mm;
-    --pagedjs-border-bottom: 0mm;
-    --pagedjs-border-left: 0mm;
-    --pagedjs-bleed-top: 0mm;
-    --pagedjs-bleed-right: 0mm;
-    --pagedjs-bleed-bottom: 0mm;
-    --pagedjs-bleed-left: 0mm;
-    --pagedjs-bleed-right-top: 0mm;
-    --pagedjs-bleed-right-right: 0mm;
-    --pagedjs-bleed-right-bottom: 0mm;
-    --pagedjs-bleed-right-left: 0mm;
-    --pagedjs-bleed-left-top: 0mm;
-    --pagedjs-bleed-left-right: 0mm;
-    --pagedjs-bleed-left-bottom: 0mm;
-    --pagedjs-bleed-left-left: 0mm;
-    --pagedjs-crop-color: black;
-    --pagedjs-crop-shadow: white;
-    --pagedjs-crop-offset: 2mm;
-    --pagedjs-crop-stroke: 1px;
-    --pagedjs-cross-size: 5mm;
-    --pagedjs-mark-cross-display: none;
-    --pagedjs-mark-crop-display: none;
-    --pagedjs-page-count: 0;
-    --pagedjs-page-counter-increment: 1;
-    --pagedjs-footnotes-count: 0;
-    --pagedjs-column-gap-offset: 1000px;
+  --pagedjs-width: 216mm;
+  --pagedjs-height: 279mm;
+  --pagedjs-width-right: 216mm;
+  --pagedjs-height-right: 279mm;
+  --pagedjs-width-left: 216mm;
+  --pagedjs-height-left: 279mm;
+  --color-background: #b1b1b1;
+  --color-marginBox: transparent;
+  --color-pageBox: grey;
+  --color-paper: white;
+  --color-baseline: red;
+  --font-texte: "Crimson Text";
+  --font-titre: "Crimson Text";
+  --weight-titre: 300;
+  --color-body: #222;
+  --color-une: #8b8b8b;
+  --color-deux: #0f0e0f;
+  --font-size: 13pt;
+  --font-lineHeight: 17pt;
+  --indent-block: calc(var(--page-margin-left) * .3);
+  --list-padding: 3mm;
+  --page-margin-top: 28mm;
+  --page-margin-bottom: 30mm;
+  --page-margin-left: 30mm;
+  --page-margin-right: 30mm;
+  --color-interface-pageSheet: #cfcfcf;
+  --color-interface-pageBox: violet;
+  --color-interface-paper: white;
+  --color-interface-marginBox: transparent;
+  --pagedjs-interface-crop-color: black;
+  --pagedjs-interface-crop-shadow: white;
+  --pagedjs-interface-crop-stroke: 1px;
+  --color-interface-background: #DCDCDC;
+  --zoom-interface-factor: 1;
+  --pagedjs-width: 8.5in;
+  --pagedjs-height: 11in;
+  --pagedjs-width-right: 8.5in;
+  --pagedjs-height-right: 11in;
+  --pagedjs-width-left: 8.5in;
+  --pagedjs-height-left: 11in;
+  --pagedjs-pagebox-width: 8.5in;
+  --pagedjs-pagebox-height: 11in;
+  --pagedjs-footnotes-height: 0mm;
+  --pagedjs-margin-top: 1in;
+  --pagedjs-margin-right: 1in;
+  --pagedjs-margin-bottom: 1in;
+  --pagedjs-margin-left: 1in;
+  --pagedjs-padding-top: 0mm;
+  --pagedjs-padding-right: 0mm;
+  --pagedjs-padding-bottom: 0mm;
+  --pagedjs-padding-left: 0mm;
+  --pagedjs-border-top: 0mm;
+  --pagedjs-border-right: 0mm;
+  --pagedjs-border-bottom: 0mm;
+  --pagedjs-border-left: 0mm;
+  --pagedjs-bleed-top: 0mm;
+  --pagedjs-bleed-right: 0mm;
+  --pagedjs-bleed-bottom: 0mm;
+  --pagedjs-bleed-left: 0mm;
+  --pagedjs-bleed-right-top: 0mm;
+  --pagedjs-bleed-right-right: 0mm;
+  --pagedjs-bleed-right-bottom: 0mm;
+  --pagedjs-bleed-right-left: 0mm;
+  --pagedjs-bleed-left-top: 0mm;
+  --pagedjs-bleed-left-right: 0mm;
+  --pagedjs-bleed-left-bottom: 0mm;
+  --pagedjs-bleed-left-left: 0mm;
+  --pagedjs-crop-color: black;
+  --pagedjs-crop-shadow: white;
+  --pagedjs-crop-offset: 2mm;
+  --pagedjs-crop-stroke: 1px;
+  --pagedjs-cross-size: 5mm;
+  --pagedjs-mark-cross-display: none;
+  --pagedjs-mark-crop-display: none;
+  --pagedjs-page-count: 0;
+  --pagedjs-page-counter-increment: 1;
+  --pagedjs-footnotes-count: 0;
+  --pagedjs-column-gap-offset: 1000px;
 }
 
 html {
@@ -1348,7 +1085,7 @@ const SELECTOR_SHAPE = ({
 ["validSelector"] also can be followed by nth-of-type(n) or nth-child(n) or any other pseudo-selectors, but ONLY if 'user' specifies a number for the element,
 `
 
-const RULES_SHAPE = `If user wants to apply styles to the element: {"validCSSProperty": "validCSSValue", ...moreValidCssPropertiesAndValues}, otherwise: {}`
+const RULES_SHAPE = `If user wants to apply inline styles to the element: {"validCSSProperty": "validCSSValue", ...moreValidCssPropertiesAndValues}, otherwise: {}`
 
 const CSS_SHAPE = `If user requested a change on the css: A well formed valid CSS string that will be the complete provided context stylesheet with the following: 
     - You must add, to the provided stylesheet, the required changes that 'user' requested.
@@ -1360,9 +1097,9 @@ const TEXT_CONTENT_SHAPE = `Only in case that user request a change, improvement
 - A string with the text/html of the element in context with the modifications user requested
 - In some cases, you must resolve the user request through html, eg: if user request: "paint [x] word/s into a yellow background" you must wrap those words in a span and add the inline styles.
 - NEVER remove/add elements or text parts from the original text/html unless 'user' requested to do that.
-- You must be precise and carefully with this, if you remove content from the original it may not be recoverable
+- You must be precise and carefully with this, if you remove content from the original it may not be recoverable.
 
-Otherwise: ''
+Otherwise omit this property
 `
 
 const ADD_ELEMENT_SHAPE = `if user request to create or add a new element here you must return: 
@@ -1382,6 +1119,7 @@ font-family property values can never be with quotes, eg: don't use 'sans-serif'
 const JSON_FORMAT = (
   providedText,
   isSingleElement,
+  hasNoTextContent,
 ) => `The output must be always in the following JSON format: {
   ${
     isSingleElement
@@ -1389,7 +1127,11 @@ const JSON_FORMAT = (
 }, insertHtml: ${ADD_ELEMENT_SHAPE},`
       : `"css": "${CSS_SHAPE}",`
   }
-${providedText ? `\n"textContent": ${TEXT_CONTENT_SHAPE},` : ''}
+${
+  providedText || hasNoTextContent
+    ? `\n"textContent": ${TEXT_CONTENT_SHAPE},`
+    : ''
+}
 "feedback": you must provide here a string with the feedback: 
 this string can contain:
 
@@ -1440,7 +1182,7 @@ ${CONTEXT(sheet, ctx.node.getAttribute('style'), providedText, isSingleElement)}
 ${CSS_LIMITS}${
     !isSingleElement ? `\n${SELECTOR_SHAPE({ ...ctx, selectors })}` : ''
   }
-${JSON_FORMAT(providedText, isSingleElement)}
+${JSON_FORMAT(providedText, isSingleElement, ctx.node.textContent === '')}
 
 ${IMPORTANT_NOTES(isSingleElement)}
 `

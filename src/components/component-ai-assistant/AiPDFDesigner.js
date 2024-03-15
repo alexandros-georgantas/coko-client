@@ -1,6 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { InteractionOutlined, PrinterOutlined } from '@ant-design/icons'
+import {
+  InteractionOutlined,
+  PrinterOutlined,
+  RedoOutlined,
+  UndoOutlined,
+} from '@ant-design/icons'
 
 import Editor from './components/Editor'
 import CssAssistant from './CssAssistant'
@@ -33,6 +38,18 @@ const CssAssistantUi = styled.div`
   gap: 1rem;
   justify-content: space-between;
   padding: 0 5px;
+
+  > :last-child {
+    color: #00495c;
+    display: flex;
+    gap: 5px;
+
+    > * {
+      border: 1px solid #0004;
+      border-radius: 5px;
+      padding: 8px;
+    }
+  }
 `
 
 const StyledHeading = styled.div`
@@ -139,6 +156,11 @@ const WindowHeading = styled.div`
   white-space: nowrap;
   z-index: 99;
 
+  svg {
+    fill: #00495c;
+    stroke: #00495c;
+  }
+
   > :first-child {
     color: #aaa;
   }
@@ -201,6 +223,9 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
     setFeedback,
     setUserPrompt,
     addRules,
+    onHistory,
+    getValidSelectors,
+    history,
   } = useContext(CssAssistantContext)
 
   const previewScrollTopRef = useRef(0)
@@ -225,6 +250,14 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
             insertHtml,
           } = response
 
+          if (css || insertHtml || rules || textContent) {
+            onHistory.addRegistry('undo', {
+              css: styleSheetRef.current.textContent,
+              content: htmlSrc.innerHTML,
+            })
+            history.current.source.redo = []
+          }
+
           const ctxIsHtmlSrc = selectedCtx.node === htmlSrc
 
           if (rules && !ctxIsHtmlSrc) {
@@ -240,6 +273,7 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
           feedback && setFeedback(feedback)
           feedback &&
             selectedCtx.history.push({ role: 'assistant', content: feedback })
+
           updatePreview()
         } catch (err) {
           setFeedback(
@@ -337,6 +371,8 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
         ),
       )
     updateSelectionBoxPosition()
+
+    htmlSrc && getValidSelectors(htmlSrc)
   }
 
   return (
@@ -350,6 +386,10 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
             loading={loading}
             placeholder="Type here how your book should look..."
           />
+          <span>
+            <UndoOutlined onClick={() => onHistory.modify('undo')} />
+            <RedoOutlined onClick={() => onHistory.modify('redo')} />
+          </span>
         </CssAssistantUi>
         <CheckBoxes>
           <span>

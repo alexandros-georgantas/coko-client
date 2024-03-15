@@ -142,16 +142,18 @@ const CssAssistant = ({ enabled, className, loading, callOpenAi, ...rest }) => {
       ArrowDown: () => {
         const userHistory = selectedCtx.history.filter(v => v.role === 'user')
         if (userHistory.length < 1) return
-        history.current.index > 0
-          ? (history.current.index -= 1)
-          : (history.current.index = userHistory.length - 1)
+        history.current.prompts.index > 0
+          ? (history.current.prompts.index -= 1)
+          : (history.current.prompts.index = userHistory.length - 1)
 
-        history.current.active &&
-          setUserPrompt(userHistory[history.current.index].content)
-        history.current.active = true
+        history.current.prompts.active &&
+          setUserPrompt(userHistory[history.current.prompts.index].content)
+        history.current.prompts.active = true
       },
       ArrowUp: () => {},
-      default: () => history.current.active && (history.current.active = false),
+      default: () =>
+        history.current.prompts.active &&
+        (history.current.prompts.active = false),
     })
   }
 
