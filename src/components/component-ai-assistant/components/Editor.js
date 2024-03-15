@@ -110,6 +110,7 @@ const Editor = ({ stylesFromSource, contentEditable, enablePaste }) => {
     if (htmlSrc.contains(e.target)) {
       const ctx =
         getCtxBy('node', e.target) ||
+        getCtxBy('dataRef', e.target.dataset.ref) ||
         addToCtx(newCtx(e.target, null, {}, false))
 
       setSelectedCtx(ctx)

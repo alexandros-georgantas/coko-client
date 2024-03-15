@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 /* eslint-disable no-param-reassign */
 import React, { createContext, useMemo, useRef, useState } from 'react'
-import { takeRight } from 'lodash'
+import { takeRight, uniqueId } from 'lodash'
 import {
   callOn,
   htmlTagNames,
@@ -89,10 +89,12 @@ export const CssAssistantProvider = ({ children }) => {
 
   const newCtx = (node, parent, rules = {}, addSelector = true) => {
     const { selector, tagName } = makeSelector(node, parent)
-
+    const dataRef = `${tagName}-${uniqueId()}`
+    node.setAttribute('data-ref', dataRef)
     return {
       selector: addSelector ? selector : '',
       node,
+      dataRef,
       tagName,
       rules,
       history: [],
@@ -113,6 +115,7 @@ export const CssAssistantProvider = ({ children }) => {
       selector: selector =>
         context.current[method](ctx => ctx.selector === selector),
       tagName: tag => context.current[method](ctx => ctx.tagName === tag),
+      dataRef: data => context.current[method](ctx => ctx.dataRef === data),
       default: node => context.current[method](ctx => ctx.node === node),
     }
 
