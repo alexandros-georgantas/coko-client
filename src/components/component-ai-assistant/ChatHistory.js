@@ -30,6 +30,7 @@ const ChatHistoryContainer = styled.div`
   scroll-behavior: smooth;
   transition: width 0.5s;
   user-select: none;
+  white-space: pre-line;
 
   ::-webkit-scrollbar {
     height: 5px;

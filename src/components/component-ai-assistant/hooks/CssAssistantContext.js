@@ -1,12 +1,13 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 /* eslint-disable no-param-reassign */
 import React, { createContext, useMemo, useRef, useState } from 'react'
-import { takeRight, uniqueId } from 'lodash'
+import { takeRight } from 'lodash'
 import {
   callOn,
   htmlTagNames,
   onEntries,
   safeCall,
+  safeId,
   setInlineStyle,
 } from '../utils'
 
@@ -40,7 +41,7 @@ export const CssAssistantProvider = ({ children }) => {
 
   // #region CONTEXT ----------------------------------------------------------------
   const makeSelector = (node, parent) => {
-    const tagName = node.tagName.toLowerCase()
+    const tagName = node.localName || node.tagName.toLowerCase()
 
     const parentSelector = parent || ''
 
@@ -89,8 +90,13 @@ export const CssAssistantProvider = ({ children }) => {
 
   const newCtx = (node, parent, rules = {}, addSelector = true) => {
     const { selector, tagName } = makeSelector(node, parent)
-    const dataRef = `${tagName}-${uniqueId()}`
-    node.setAttribute('data-ref', dataRef)
+
+    const dataRef = safeId(
+      'aid-ctx',
+      context.current.map(ctx => ctx.dataRef),
+    )
+
+    node.setAttribute('data-aidctx', dataRef)
     return {
       selector: addSelector ? selector : '',
       node,
@@ -131,6 +137,23 @@ export const CssAssistantProvider = ({ children }) => {
     return rules
   }
 
+  const updateCtxNodes = () => {
+    htmlSrc &&
+      context.current.forEach(ctx => {
+        if (ctx.node !== htmlSrc && !ctx.node) {
+          const node = htmlSrc.querySelector(`[data-aidctx = ${ctx.dataRef}]`)
+          ctx.node = node
+          ctx.tagName = node.localName || node.tagName.toLowerCase()
+        }
+      })
+    window.parent.console.log(context.current)
+  }
+
+  const clearHistory = () => {
+    selectedCtx.history = []
+    setSelectedCtx({ ...selectedCtx })
+  }
+
   // #endregion CONTEXT -------------------------------------------------------------
 
   // #region HELPERS -----------------------------------------------------------------
@@ -145,7 +168,7 @@ export const CssAssistantProvider = ({ children }) => {
     return document.getElementById('css-assistant-scoped-styles')
   }
 
-  const updateSelectionBoxPosition = (yOffset = 5, xOffset = 10) => {
+  const updateSelectionBoxPosition = (yOffset = 10, xOffset = 10) => {
     if (selectedNode !== htmlSrc) {
       if (selectedNode && selectionBoxRef?.current) {
         const { top, left, height, width } =
@@ -167,7 +190,13 @@ export const CssAssistantProvider = ({ children }) => {
   }
 
   const onHistory = {
-    addRegistry: (regKey, registry) => {
+    addRegistry: (
+      regKey,
+      registry = {
+        css: styleSheetRef.current.textContent,
+        content: htmlSrc.innerHTML,
+      },
+    ) => {
       if (!registry) return
       const { source } = history.current
 
@@ -178,7 +207,7 @@ export const CssAssistantProvider = ({ children }) => {
 
       history.current.source[regKey] = newRegistry[regKey]
     },
-    modify: regKey => {
+    apply: regKey => {
       const { source } = history.current
 
       if (source[regKey].length < 1) return
@@ -192,7 +221,6 @@ export const CssAssistantProvider = ({ children }) => {
       styleSheetRef.current.textContent = lastRegistry.css
       setPassedContent(lastRegistry.content)
       setCss(lastRegistry.css)
-      window.parent.console.log(history.current.source[regKey])
     },
   }
 
@@ -251,6 +279,8 @@ export const CssAssistantProvider = ({ children }) => {
         getCtxBy,
         newCtx,
         addRules,
+        clearHistory,
+        updateCtxNodes,
         passedContent,
         selectionBoxRef,
         setPassedContent,

@@ -56,7 +56,7 @@ const RelativeContainer = styled.div`
 /* eslint-disable react/prop-types */
 const SelectionBox = ({
   updatePreview,
-  yOffset = 5,
+  yOffset = 10,
   xOffset = 10,
   advancedTools,
   ...rest
@@ -69,8 +69,6 @@ const SelectionBox = ({
     copiedStyles,
     updateSelectionBoxPosition,
     onHistory,
-    styleSheetRef,
-    htmlSrc,
   } = useContext(CssAssistantContext)
 
   useEffect(() => {
@@ -111,10 +109,7 @@ const SelectionBox = ({
               <button
                 className="element-options"
                 onClick={() => {
-                  onHistory.addRegistry('undo', {
-                    css: styleSheetRef.current.textContent,
-                    content: htmlSrc.innerHTML,
-                  })
+                  onHistory.addRegistry('undo')
                   removeStyleAttribute(selectedNode)
                   updatePreview()
                 }}
@@ -148,6 +143,7 @@ const SelectionBox = ({
             <button
               className="element-options"
               onClick={() => {
+                onHistory.addRegistry('undo')
                 setInlineStyle(selectedCtx.node, copiedStyles)
                 updatePreview()
               }}

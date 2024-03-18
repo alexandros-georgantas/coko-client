@@ -1,3 +1,6 @@
+import { values } from 'lodash'
+
+// IDEA:This could be used to limit the selectable nodes
 export const htmlTagNames = {
   a: 'Link',
   abbr: 'Shortened',
@@ -996,26 +999,37 @@ export const initialPagedJSCSS = /* css */ `
     }
 `
 
-// const PAGEDJS_GUIDELINES = {
-//   NamedString: `
-// The fastest way to create running headers/footers is to use what is already in your content. Named strings are used to create running headers and footers: they copy text for reuse in margin boxes.
+export const finishReasons = {
+  content_filter: 'The content was filtered due to violating content policies.',
+  length_limit: 'The content exceeded the maximum allowed length.',
+  stop_token:
+    'The completion was stopped by encountering a specified stop token.',
+  system_error:
+    'An unexpected system error occurred during the completion process.',
+  timeout: 'The completion process timed out before completion.',
+  unknown: 'An unknown error occurred during the completion process.',
+}
 
-// First, the text content of the selected element is cloned into a named string using string-set with a custom identifier (in the code below we call it “title”, but you can name it whatever makes sense as a variable). In the following example, each time a new <h2> appears in the HTML, the content of the named string gets updated with the text of that <h2>. (It also can be selected with a class if you prefer).
+const PAGEDJS_GUIDELINES = {
+  NamedString: `
+The fastest way to create running headers/footers is to use what is already in your content. Named strings are used to create running headers and footers: they copy text for reuse in margin boxes.
 
-// h2 {
-//   string-set: title content(text);
-// }
+First, the text content of the selected element is cloned into a named string using string-set with a custom identifier (in the code below we call it “title”, but you can name it whatever makes sense as a variable). In the following example, each time a new <h2> appears in the HTML, the content of the named string gets updated with the text of that <h2>. (It also can be selected with a class if you prefer).
 
-// Next, the string() function copies the value of a named string to the margin boxes, via the content property:
+h2 {
+  string-set: title content(text);
+}
 
-// @page {
-//   @bottom-center {
-//     content: string(title);
-//   }
-// }
-// The string property act like a variable. It read your DOM and each time a new title level 2 is encountered, it change the variable from the page where that title appears. This variable is passed into the margin boxes of the page and into all the following margin boxes until there is a new title.
-// `,
-// }
+Next, the string() function copies the value of a named string to the margin boxes, via the content property:
+
+@page {
+  @bottom-center {
+    content: string(title);
+  }
+}
+The string property act like a variable. It read your DOM and each time a new title level 2 is encountered, it change the variable from the page where that title appears. This variable is passed into the margin boxes of the page and into all the following margin boxes until there is a new title.
+`,
+}
 
 const TASK_AND_ROLE_DEFINITIONS = `You are a CSS, JS and HTML expert with a vast knowledge on pagedjs library ('https://pagedjs.org').
 
@@ -1047,7 +1061,7 @@ Keep in mind that 'user' don't know how to code, so the prompt must be analysed 
 IMPORTANT: 
 - You must never say to user what to code, and never give him instructions.
 
-- Your mission and prupose is to style a ${htmlTagNames[elementTagName]}, and help with any modifications required on the text content.
+- Your mission and prupose is to style a ${htmlTagNames[elementTagName]}, and help with any modifications required on the html content.
 
 - Your response must be ALWAYS the valid JSON (described below), NEVER text.
 `
@@ -1062,7 +1076,11 @@ const CONTEXT = (sheet, inlineStyles, providedText, isSingleElement) => `${
     : ''
 }${
   isSingleElement && providedText
-    ? `\nThis is the current text of the element in context: "${providedText}"\n`
+    ? `\nThis is the html content of the element in context: "${providedText}"\n`
+    : ''
+}${
+  !isSingleElement
+    ? `Here you have some pagedJS guides: ${values(PAGEDJS_GUIDELINES)}`
     : ''
 }
 You must retain also in context the properties 'user' pointed on previous prompts, to add, remove, or modify it/them accordingly.
@@ -1093,21 +1111,39 @@ const CSS_SHAPE = `If user requested a change on the css: A well formed valid CS
     - With this guides in mind you will always return a well formed valid CSS string including line breaks (/n) and indentation (/t)
 `
 
-const TEXT_CONTENT_SHAPE = `Only in case that user request a change, improvement or replacement on element's content: 
-- A string with the text/html of the element in context with the modifications user requested
-- In some cases, you must resolve the user request through html, eg: if user request: "paint [x] word/s into a yellow background" you must wrap those words in a span and add the inline styles.
+const CONTENT_SHAPE = `Only in case that user request a change, improvement or replacement that requires to modify element's html content: 
+- A string with the html of the element in context with the modifications user requested
+- In some cases, you must resolve the user request creating new elements, eg: if user request: "paint [x] word/s into a yellow background" you must wrap those words in a span and add the inline styles.
 - NEVER remove/add elements or text parts from the original text/html unless 'user' requested to do that.
 - You must be precise and carefully with this, if you remove content from the original it may not be recoverable.
 
 Otherwise omit this property
 `
 
-const ADD_ELEMENT_SHAPE = `if user request to create or add a new element here you must return: 
+const INSERT_HTML_SHAPE = `if user request to create or add a new element here you must return: 
 "{ 
   "position": - if you could interpret where 'user' wants to create the new dom element this property will be present and its value can be one of the following strings: ["beforebegin","afterbegin","beforeend" or "afterend"]. If user didn't specify a position just dont return this property,
   "html": if you could interpret what type of element or elements 'user' wants to create or add; a valid html string; otherwise omit this property
 }" 
 Otherwise, omit this property`
+
+const FEEDBACK_SHAPE =
+  providedText => `you must provide here a string with the feedback: 
+this string can contain:
+
+- In case the user request can be fullfiled: The last changes that where applied, if there is a list, then provide a list.
+
+- If 'user' ask for the value of a property on the css sheet context, respond in natural(non-technical) language, for example: The [property] of the [requested element by user] is [value].
+
+- If user request information about valid css or pagedjs properties or values is expected a list of avaiable values or properties as output.${
+    providedText
+      ? '\n - If user request it, return the text from the element in context (extract it from the html, and return only the text)'
+      : ''
+  }
+
+- If none of the above you must ask user to improve his prompt in order to help you to style or modify his book.
+
+- Ensure the text is well formatted including line breaks, and indentation`
 
 const CSS_LIMITS = `Use hex for colors. 'user' can request to mix colors: for example if the color is #000000 and 'user' asks for a litle more of blue you have to mix the hex values acordingly
 
@@ -1124,30 +1160,11 @@ const JSON_FORMAT = (
   ${
     isSingleElement
       ? `"rules": ${RULES_SHAPE},
-}, insertHtml: ${ADD_ELEMENT_SHAPE},`
+ "insertHtml": ${INSERT_HTML_SHAPE},`
       : `"css": "${CSS_SHAPE}",`
   }
-${
-  providedText || hasNoTextContent
-    ? `\n"textContent": ${TEXT_CONTENT_SHAPE},`
-    : ''
-}
-"feedback": you must provide here a string with the feedback: 
-this string can contain:
-
-- In case the user request can be fullfiled: The last changes that where applied, if there is a list, then provide a list.
-
-- If 'user' ask for the value of a property on the css sheet context, respond in natural(non-technical) language, for example: The [property] of the [requested element by user] is [value].
-
-- If user request information about valid css or pagedjs properties or values is expected a list of avaiable values or properties as output.${
-  providedText
-    ? '\n - If user request it, return the text from the element in context'
-    : ''
-}
-
-- If none of the above, Ask user again to improve his prompt in order to help you to style or modify his book.
-
-- Ensure the text is well formatted including line breaks (/n) and indentation (/t),
+${providedText || hasNoTextContent ? `\n"content": ${CONTENT_SHAPE},` : ''}
+"feedback": ${FEEDBACK_SHAPE(providedText)},
 }
 `
 

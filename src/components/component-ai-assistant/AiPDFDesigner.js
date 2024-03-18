@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import {
+  DeleteOutlined,
   InteractionOutlined,
   PrinterOutlined,
   RedoOutlined,
@@ -8,7 +9,7 @@ import {
 } from '@ant-design/icons'
 
 import Editor from './components/Editor'
-import CssAssistant from './CssAssistant'
+import PromptsInput from './PromptsInput'
 import {
   srcdoc,
   initialPagedJSCSS,
@@ -19,6 +20,7 @@ import {
   getScrollPercent,
   setInlineStyle,
   addElement,
+  finishReasons,
 } from './utils'
 import SelectionBox from './SelectionBox'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
@@ -27,7 +29,7 @@ import ChatHistory from './ChatHistory'
 import Checkbox from './components/Checkbox'
 import useChatGpt from './hooks/useChatGpt'
 
-const Assistant = styled(CssAssistant)`
+const Assistant = styled(PromptsInput)`
   margin: 10px 0;
   width: 480px;
 `
@@ -226,6 +228,8 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
     onHistory,
     getValidSelectors,
     history,
+    clearHistory,
+    updateCtxNodes,
   } = useContext(CssAssistantContext)
 
   const previewScrollTopRef = useRef(0)
@@ -237,24 +241,21 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
   const [showChat, setShowChat] = useState(false)
 
   const { callOpenAi, loading, error } = useChatGpt({
-    onCompleted: chatGPTContent => {
-      if (chatGPTContent.startsWith('{')) {
+    onCompleted: ({ message, finishReason }) => {
+      if (message.startsWith('{')) {
         try {
-          const response = JSON.parse(chatGPTContent)
+          const response = JSON.parse(message)
 
           const {
             css: resCss,
             rules,
             feedback,
-            textContent = '',
+            content = '',
             insertHtml,
           } = response
 
-          if (css || insertHtml || rules || textContent) {
-            onHistory.addRegistry('undo', {
-              css: styleSheetRef.current.textContent,
-              content: htmlSrc.innerHTML,
-            })
+          if (resCss || insertHtml || rules || content) {
+            onHistory.addRegistry('undo')
             history.current.source.redo = []
           }
 
@@ -269,16 +270,20 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
           }
 
           insertHtml && addElement(selectedNode, insertHtml)
-          textContent && (selectedCtx.node.innerHTML = textContent)
+          content && (selectedCtx.node.innerHTML = content)
           feedback && setFeedback(feedback)
           feedback &&
             selectedCtx.history.push({ role: 'assistant', content: feedback })
 
           updatePreview()
         } catch (err) {
-          setFeedback(
-            'There was an error generating the response\n Please, try again in a few seconds',
-          )
+          if (finishReasons[finishReason]) {
+            setFeedback(finishReasons[finishReason])
+            selectedCtx.history.push({
+              role: 'assistant',
+              content: finishReasons[finishReason],
+            })
+          }
         }
       } else {
         setFeedback(
@@ -371,7 +376,7 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
         ),
       )
     updateSelectionBoxPosition()
-
+    updateCtxNodes()
     htmlSrc && getValidSelectors(htmlSrc)
   }
 
@@ -387,8 +392,8 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
             placeholder="Type here how your book should look..."
           />
           <span>
-            <UndoOutlined onClick={() => onHistory.modify('undo')} />
-            <RedoOutlined onClick={() => onHistory.modify('redo')} />
+            <UndoOutlined onClick={() => onHistory.apply('undo')} />
+            <RedoOutlined onClick={() => onHistory.apply('redo')} />
           </span>
         </CssAssistantUi>
         <CheckBoxes>
@@ -421,6 +426,10 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
         <StyledWindow $show={showChat} style={{ maxWidth: '30%' }}>
           <WindowHeading>
             <span>CHAT HISTORY</span>
+            <DeleteOutlined
+              onClick={clearHistory}
+              title="Clear history(not undoable)"
+            />
           </WindowHeading>
           <ChatHistory />
         </StyledWindow>

@@ -19,7 +19,7 @@ export const srcdoc = (scope, css, template, scrollPos) => /* html */ `
           try {
             scopeIsReady && PagedPolyfill.preview(scopeIsReady);
           }
-          catch (e) { console.log(e) }
+          catch (e) { window.parent.console.log(e) }
           setTimeout(() => document.documentElement.scrollTo(0, ${scrollPos}), 100)
         });
           document.addEventListener("scroll", () => {
@@ -32,10 +32,11 @@ export const srcdoc = (scope, css, template, scrollPos) => /* html */ `
     </html>
 `
 
-export const removeStyleAttribute = node => {
+export const removeStyleAttribute = (node, recursive = true) => {
   if (!node) return
-  const childs = [...node.children]
   node.removeAttribute('style')
+  if (!recursive) return
+  const childs = [...node.children]
   childs.length > 0 && childs.forEach(removeStyleAttribute)
 }
 
@@ -97,6 +98,16 @@ export const setImagesDefaultStyles = node => {
 export const addElement = (parentElement, options) => {
   const { position = 'afterend', html } = options
   parentElement.insertAdjacentHTML(position, html)
+}
+
+export const safeId = (prefix, existingIds) => {
+  let proposedId = 1
+
+  while (existingIds.includes(`${prefix}-${proposedId}`)) {
+    proposedId += 1
+  }
+
+  return `${prefix}-${proposedId}`
 }
 
 export const getScrollPercent = node =>

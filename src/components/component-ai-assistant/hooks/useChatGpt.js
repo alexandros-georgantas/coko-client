@@ -40,7 +40,10 @@ export default function useChatGpt({ onCompleted }) {
 
       const responseData = await response.json()
 
-      onCompleted(responseData.choices[0].message.content)
+      onCompleted({
+        message: responseData.choices[0].message.content,
+        finishReason: responseData.choices[0].finish_reason,
+      })
       setData(responseData)
     } catch (e) {
       setError(e.message)

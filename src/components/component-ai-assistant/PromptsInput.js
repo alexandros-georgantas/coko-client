@@ -62,12 +62,6 @@ const StyledSpinner = styled.div`
   }
 `
 
-// const CALL_OPEN_AI = gql`
-//   query OpenAi($input: String!, $history: [OpenAiMessage!]) {
-//     openAi(input: $input, history: $history)
-//   }
-// `
-
 const SendButton = styled.button`
   aspect-ratio: 1 /1;
   background: none;
@@ -83,7 +77,7 @@ const SendButton = styled.button`
   }
 `
 
-const CssAssistant = ({ enabled, className, loading, callOpenAi, ...rest }) => {
+const PromptsInput = ({ enabled, className, loading, callOpenAi, ...rest }) => {
   // #region HOOKS ---------------------------------------------------------------------
   const {
     styleSheetRef,
@@ -97,6 +91,7 @@ const CssAssistant = ({ enabled, className, loading, callOpenAi, ...rest }) => {
     promptRef,
     validSelectors,
     getCtxBy,
+    onHistory,
   } = useContext(CssAssistantContext)
 
   useEffect(() => {
@@ -136,7 +131,7 @@ const CssAssistant = ({ enabled, className, loading, callOpenAi, ...rest }) => {
     selectedCtx.history.push({ role: 'user', content: userPrompt })
   }
 
-  const handleKeydown = async e => {
+  const handleKeydown = e => {
     callOn(e.key, {
       Enter: () => !e.shiftKey && handleSend(e),
       ArrowDown: () => {
@@ -151,6 +146,12 @@ const CssAssistant = ({ enabled, className, loading, callOpenAi, ...rest }) => {
         history.current.prompts.active = true
       },
       ArrowUp: () => {},
+      z: () => {
+        e.ctrlKey && onHistory.apply('undo')
+      },
+      y: () => {
+        e.ctrlKey && onHistory.apply('redo')
+      },
       default: () =>
         history.current.prompts.active &&
         (history.current.prompts.active = false),
@@ -184,14 +185,14 @@ const CssAssistant = ({ enabled, className, loading, callOpenAi, ...rest }) => {
   )
 }
 
-CssAssistant.propTypes = {
+PromptsInput.propTypes = {
   enabled: PropTypes.bool,
   className: PropTypes.string,
 }
 
-CssAssistant.defaultProps = {
+PromptsInput.defaultProps = {
   enabled: true,
   className: '',
 }
 
-export default CssAssistant
+export default PromptsInput

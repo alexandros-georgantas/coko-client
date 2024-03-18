@@ -40,6 +40,7 @@ const Editor = ({ stylesFromSource, contentEditable, enablePaste }) => {
     setCss,
     promptRef,
     createStyleSheet,
+    onHistory,
   } = useContext(CssAssistantContext)
 
   const editorRef = useRef(null)
@@ -48,9 +49,10 @@ const Editor = ({ stylesFromSource, contentEditable, enablePaste }) => {
     e.preventDefault()
 
     const clipboardData = e.clipboardData || window.clipboardData
-    const pastedData = clipboardData.getData('text/html')
-
-    setPassedContent(pastedData)
+    const dataToPaste = clipboardData.getData('text/html')
+    if (!dataToPaste) return
+    onHistory.addRegistry('undo')
+    setPassedContent(dataToPaste)
   }
 
   useEffect(() => {
@@ -108,14 +110,14 @@ const Editor = ({ stylesFromSource, contentEditable, enablePaste }) => {
     e.stopPropagation()
 
     if (htmlSrc.contains(e.target)) {
-      // update the node in ctx as it was recreated
+      // update the node in ctx if it was recreated
       !getCtxBy('node', e.target) &&
-        getCtxBy('dataRef', e.target.dataset.ref) &&
-        (getCtxBy('dataRef', e.target.dataset.ref).node = e.target)
+        getCtxBy('dataRef', e.target.dataset.aidctx) &&
+        (getCtxBy('dataRef', e.target.dataset.aidctx).node = e.target)
 
       const ctx =
         getCtxBy('node', e.target) ||
-        getCtxBy('dataRef', e.target.dataset.ref) ||
+        getCtxBy('dataRef', e.target.dataset.aidctx) ||
         addToCtx(newCtx(e.target, null, {}, false))
 
       setSelectedCtx(ctx)
