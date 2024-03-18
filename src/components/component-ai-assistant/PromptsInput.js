@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useContext } from 'react'
 import styled from 'styled-components'
-import { debounce, takeRight } from 'lodash'
+import { debounce } from 'lodash'
 import { rotate360 } from '@pubsweet/ui-toolkit'
 import PropTypes from 'prop-types'
 // import { gql, useLazyQuery } from '@apollo/client'
-import { autoResize, callOn, systemGuidelinesV2 } from './utils'
+import { autoResize, callOn } from './utils'
 import SendIcon from './SendButton'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
 
@@ -77,20 +77,14 @@ const SendButton = styled.button`
   }
 `
 
-const PromptsInput = ({ enabled, className, loading, callOpenAi, ...rest }) => {
+const PromptsInput = ({ enabled, className, loading, onSend, ...rest }) => {
   // #region HOOKS ---------------------------------------------------------------------
   const {
-    styleSheetRef,
-    htmlSrc,
     selectedCtx,
-    selectedNode,
-    setFeedback,
     history,
     userPrompt,
     setUserPrompt,
     promptRef,
-    validSelectors,
-    getCtxBy,
     onHistory,
   } = useContext(CssAssistantContext)
 
@@ -104,36 +98,9 @@ const PromptsInput = ({ enabled, className, loading, callOpenAi, ...rest }) => {
     debouncedResize()
   }
 
-  const handleSend = async e => {
-    if (loading) return
-    e.preventDefault()
-    userPrompt && setFeedback('Just give me a few seconds')
-    userPrompt
-      ? callOpenAi({
-          // variables: {
-          input: `${userPrompt}. NOTE: Remember to always return the expected valid JSON, have a second thought on this before responding`,
-          history: [
-            {
-              role: 'system',
-              content: systemGuidelinesV2({
-                ctx: selectedCtx || getCtxBy('node', htmlSrc),
-                sheet: styleSheetRef?.current?.textContent,
-                selectors: validSelectors?.current?.join(', '),
-                providedText:
-                  selectedNode !== htmlSrc && selectedCtx.node.innerHTML,
-              }),
-            },
-            ...(takeRight(selectedCtx.history, 14) || []),
-          ],
-          // },
-        })
-      : setFeedback('Please, tell me what you want to do')
-    selectedCtx.history.push({ role: 'user', content: userPrompt })
-  }
-
   const handleKeydown = e => {
     callOn(e.key, {
-      Enter: () => !e.shiftKey && handleSend(e),
+      Enter: () => !e.shiftKey && onSend(e),
       ArrowDown: () => {
         const userHistory = selectedCtx.history.filter(v => v.role === 'user')
         if (userHistory.length < 1) return
@@ -177,7 +144,7 @@ const PromptsInput = ({ enabled, className, loading, callOpenAi, ...rest }) => {
       {loading ? (
         <StyledSpinner />
       ) : (
-        <SendButton onClick={handleSend}>
+        <SendButton onClick={onSend}>
           <SendIcon size="18" />
         </SendButton>
       )}

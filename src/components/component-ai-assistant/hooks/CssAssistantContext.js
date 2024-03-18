@@ -146,11 +146,17 @@ export const CssAssistantProvider = ({ children }) => {
           ctx.tagName = node.localName || node.tagName.toLowerCase()
         }
       })
-    window.parent.console.log(context.current)
   }
 
   const clearHistory = () => {
     selectedCtx.history = []
+    setSelectedCtx({ ...selectedCtx })
+  }
+
+  const deleteLastMessage = () => {
+    const newHistory = [...selectedCtx.history]
+    newHistory.pop()
+    selectedCtx.history = newHistory
     setSelectedCtx({ ...selectedCtx })
   }
 
@@ -285,6 +291,7 @@ export const CssAssistantProvider = ({ children }) => {
         selectionBoxRef,
         setPassedContent,
         updateSelectionBoxPosition,
+        deleteLastMessage,
         onHistory,
       }}
     >

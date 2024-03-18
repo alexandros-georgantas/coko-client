@@ -998,7 +998,17 @@ export const initialPagedJSCSS = /* css */ `
       margin-bottom: 10mm;
     }
 `
-
+export const defaultSnippets = {
+  'snip-1': {
+    backgroundColor: 'black',
+    color: 'red',
+  },
+  'snip-2': {
+    color: 'red',
+    transform: 'rotate(180deg)',
+    description: 'rotates the elment',
+  },
+}
 export const finishReasons = {
   content_filter: 'The content was filtered due to violating content policies.',
   length_limit: 'The content exceeded the maximum allowed length.',

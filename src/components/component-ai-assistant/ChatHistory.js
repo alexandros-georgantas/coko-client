@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { fadeIn } from '@pubsweet/ui-toolkit'
+import { DeleteOutlined } from '@ant-design/icons'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
 import { htmlTagNames } from './utils'
 
@@ -48,7 +49,7 @@ const ChatHistoryContainer = styled.div`
     padding: 5px;
   }
 
-  > span > hr {
+  > * {
     animation: ${fadeIn} 1s;
     margin: 0 0 1em;
     padding: 2px 0;
@@ -61,6 +62,7 @@ const MessageContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
+  opacity: ${p => (p.forgotten ? 0.5 : 1)};
   padding: 10px;
 `
 
@@ -68,9 +70,20 @@ const MessageHeader = styled.div`
   align-items: center;
   display: flex;
   gap: var(--message-header-gap);
+  justify-content: space-between;
+  width: 100%;
 
-  > img,
-  span {
+  svg {
+    animation: ${fadeIn} 0.5s;
+  }
+
+  > span {
+    display: flex;
+    gap: var(--message-header-gap);
+  }
+
+  span > img,
+  span > span {
     align-items: center;
     border-radius: 50%;
     display: flex;
@@ -80,11 +93,11 @@ const MessageHeader = styled.div`
     width: var(--profile-picture-size);
   }
 
-  > strong {
+  span > span > strong {
     line-height: 1;
   }
 
-  > span {
+  span > span {
     font-size: 12px;
   }
 `
@@ -99,8 +112,11 @@ const MessageContent = styled.div`
 `
 
 // TODO: pass currentUser as prop
-const ChatHistory = () => {
-  const { selectedCtx, htmlSrc, feedback } = useContext(CssAssistantContext)
+// eslint-disable-next-line react/prop-types
+const ChatHistory = ({ settings }) => {
+  const { selectedCtx, htmlSrc, feedback, deleteLastMessage } =
+    useContext(CssAssistantContext)
+
   const threadRef = useRef(null)
 
   useEffect(() => {
@@ -126,10 +142,15 @@ const ChatHistory = () => {
     <ChatHistoryContainer ref={threadRef}>
       {selectedCtx?.history?.length > 0 ? (
         selectedCtx.history.map(({ role, content }, i) => {
+          const forgotten =
+            // eslint-disable-next-line react/prop-types
+            i < selectedCtx.history.length - settings.historyMax - 1
+
           return (
             // eslint-disable-next-line react/no-array-index-key
             <span key={role + content + i}>
               <MessageContainer
+                forgotten={forgotten}
                 onLoad={e =>
                   e.target.scrollIntoView({ behavior: 'smooth', block: 'end' })
                 }
@@ -141,7 +162,7 @@ const ChatHistory = () => {
               >
                 <MessageHeader>
                   {role === 'user' ? (
-                    <>
+                    <span>
                       <span
                         style={{
                           color: '#fff',
@@ -152,9 +173,9 @@ const ChatHistory = () => {
                         Y
                       </span>
                       <strong>@You</strong>
-                    </>
+                    </span>
                   ) : (
-                    <>
+                    <span>
                       <span
                         style={{
                           color: '#fff',
@@ -165,8 +186,15 @@ const ChatHistory = () => {
                         AI
                       </span>
                       <strong>Coko AI Book designer:</strong>
-                    </>
+                    </span>
                   )}
+                  {i === selectedCtx.history.length - 1 && (
+                    <DeleteOutlined
+                      onClick={deleteLastMessage}
+                      title="Remove from history (not undoable)"
+                    />
+                  )}
+                  {forgotten && <small>- forgotten -</small>}
                 </MessageHeader>
                 <MessageContent>{content}</MessageContent>
               </MessageContainer>

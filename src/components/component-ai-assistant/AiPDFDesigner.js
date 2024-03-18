@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import {
   DeleteOutlined,
   InteractionOutlined,
@@ -8,6 +8,7 @@ import {
   UndoOutlined,
 } from '@ant-design/icons'
 
+import { takeRight } from 'lodash'
 import Editor from './components/Editor'
 import PromptsInput from './PromptsInput'
 import {
@@ -21,6 +22,7 @@ import {
   setInlineStyle,
   addElement,
   finishReasons,
+  systemGuidelinesV2,
 } from './utils'
 import SelectionBox from './SelectionBox'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
@@ -32,6 +34,20 @@ import useChatGpt from './hooks/useChatGpt'
 const Assistant = styled(PromptsInput)`
   margin: 10px 0;
   width: 480px;
+`
+
+const editorLoadingAnim = keyframes`
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
 `
 
 const CssAssistantUi = styled.div`
@@ -83,6 +99,7 @@ const Root = styled.div`
 const EditorContainer = styled.div`
   background: #eee;
   display: flex;
+  filter: ${p => (p.$loading ? 'blur(2px)' : '')};
   height: 100%;
   overflow: auto;
   padding: 40px;
@@ -139,6 +156,7 @@ const StyledWindow = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
   transition: width 0.5s ease;
   width: ${p => (p.$show ? '100%' : '0')};
 `
@@ -206,10 +224,44 @@ const StyledRefreshButton = styled.span`
   }
 `
 
+const LoadingOverlay = styled.div`
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  z-index: 9999;
+`
+
+const OverlayAnimated = styled(LoadingOverlay)`
+  align-items: center;
+  background: #fff6;
+  display: flex;
+  justify-content: center;
+  opacity: ${p => (p.$loading ? 1 : 0)};
+  pointer-events: none;
+  transition: opacity 1.5s;
+
+  > span {
+    animation: ${p => (p.$loading ? editorLoadingAnim : 'none')} 1.5s infinite;
+    color: #00495c;
+    font-size: 40px;
+  }
+`
+
 const StyledCheckbox = styled(Checkbox)``
 
+const defaultSettings = {
+  advancedTools: true,
+  editor: {
+    contentEditable: true,
+    enablePaste: true,
+    enableSnippets: true,
+    selectionColor: { bg: 'dark', border: 'dark' }, // can be: dark, light, magenta
+  },
+  historyMax: 6,
+}
+
 // eslint-disable-next-line react/prop-types
-const AiPDFDesigner = ({ bookTitle, settings }) => {
+const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
   const {
     css,
     htmlSrc,
@@ -230,6 +282,9 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
     history,
     clearHistory,
     updateCtxNodes,
+    userPrompt,
+    getCtxBy,
+    validSelectors,
   } = useContext(CssAssistantContext)
 
   const previewScrollTopRef = useRef(0)
@@ -239,6 +294,12 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
   const [showEditor, setShowEditor] = useState(true)
   const [showPreview, setShowPreview] = useState(true)
   const [showChat, setShowChat] = useState(false)
+
+  // eslint-disable-next-line no-unused-vars
+  const [settings, setSettings] = useState({
+    ...defaultSettings,
+    ...passedSettings,
+  })
 
   const { callOpenAi, loading, error } = useChatGpt({
     onCompleted: ({ message, finishReason }) => {
@@ -359,14 +420,44 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
     iframeElement.scrollTo(0, setScrollFromPercent(iframeElement, percentage))
   }
 
-  const updatePreview = () => {
-    previewRef?.current?.contentDocument?.documentElement &&
-      previewRef?.current?.contentDocument?.documentElement?.scrollTop > 0 &&
-      (previewScrollTopRef.current =
-        previewRef.current.contentDocument.documentElement.scrollTop)
+  const handleSend = async e => {
+    if (loading) return
+    e.preventDefault()
+    userPrompt && setFeedback('Just give me a few seconds')
+    userPrompt
+      ? callOpenAi({
+          // variables: {
+          input: `${userPrompt}. NOTE: Remember to always return the expected valid JSON, have a second thought on this before responding`,
+          history: [
+            {
+              role: 'system',
+              content: systemGuidelinesV2({
+                ctx: selectedCtx || getCtxBy('node', htmlSrc),
+                sheet: styleSheetRef?.current?.textContent,
+                selectors: validSelectors?.current?.join(', '),
+                providedText:
+                  selectedNode !== htmlSrc && selectedCtx.node.innerHTML,
+              }),
+            },
+            // eslint-disable-next-line react/prop-types
+            ...(takeRight(selectedCtx.history, settings.historyMax) || []),
+          ],
+          // },
+        })
+      : setFeedback('Please, tell me what you want to do')
+    selectedCtx.history.push({ role: 'user', content: userPrompt })
+  }
+
+  const updatePreview = manualUpdate => {
+    const previewDoc = previewRef?.current?.contentDocument?.documentElement
+
+    previewDoc &&
+      previewDoc.scrollTop > 0 &&
+      (previewScrollTopRef.current = previewDoc.scrollTop)
 
     css &&
       htmlSrc?.outerHTML &&
+      (livePreview || manualUpdate) &&
       setPreviewSource(
         srcdoc(
           htmlSrc,
@@ -375,25 +466,32 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
           previewScrollTopRef.current,
         ),
       )
-    updateSelectionBoxPosition()
     updateCtxNodes()
+    updateSelectionBoxPosition()
     htmlSrc && getValidSelectors(htmlSrc)
   }
 
   return (
     <Root>
+      {settings.enableSnippets && <style id="aid-snippets" />}
       <StyledHeading>
         <CssAssistantUi>
           <ChatBubble forceHide={showChat} onRight />
           <Assistant
-            callOpenAi={callOpenAi}
             enabled
             loading={loading}
+            onSend={handleSend}
             placeholder="Type here how your book should look..."
           />
           <span>
-            <UndoOutlined onClick={() => onHistory.apply('undo')} />
-            <RedoOutlined onClick={() => onHistory.apply('redo')} />
+            <UndoOutlined
+              onClick={() => onHistory.apply('undo')}
+              title="Undo (Ctrl + z)"
+            />
+            <RedoOutlined
+              onClick={() => onHistory.apply('redo')}
+              title="Redo (Ctrl + y)"
+            />
           </span>
         </CssAssistantUi>
         <CheckBoxes>
@@ -428,10 +526,10 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
             <span>CHAT HISTORY</span>
             <DeleteOutlined
               onClick={clearHistory}
-              title="Clear history(not undoable)"
+              title="Clear history (not undoable)"
             />
           </WindowHeading>
-          <ChatHistory />
+          <ChatHistory settings={settings} />
         </StyledWindow>
         {showChat && (showEditor || showPreview) && <WindowDivision />}
 
@@ -447,7 +545,11 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
                 : 'Book'}
             </span>
           </WindowHeading>
-          <EditorContainer onScroll={handleScroll}>
+          {loading && <LoadingOverlay />}
+          <OverlayAnimated $loading={loading}>
+            <span>Proccesing...</span>
+          </OverlayAnimated>
+          <EditorContainer $loading={loading} onScroll={handleScroll}>
             <Editor
               passedContent={passedContent}
               stylesFromSource={initialPagedJSCSS}
@@ -458,6 +560,7 @@ const AiPDFDesigner = ({ bookTitle, settings }) => {
             <SelectionBox
               // eslint-disable-next-line react/prop-types
               advancedTools={settings?.advancedTools}
+              selectionColor={settings?.editor?.selectionColor}
               updatePreview={updatePreview}
             />
           </EditorContainer>

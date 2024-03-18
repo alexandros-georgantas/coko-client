@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useContext, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { CssAssistantContext } from '../hooks/CssAssistantContext'
@@ -6,6 +7,7 @@ import { setImagesDefaultStyles } from '../utils'
 const StyledEditor = styled.div`
   border: none;
   outline: none;
+  position: relative;
   width: 100%;
   z-index: 1;
 
@@ -23,8 +25,12 @@ const StyledEditor = styled.div`
   }
 `
 
-// eslint-disable-next-line react/prop-types
-const Editor = ({ stylesFromSource, contentEditable, enablePaste }) => {
+const Editor = ({
+  stylesFromSource,
+  loading,
+  contentEditable,
+  enablePaste,
+}) => {
   const {
     setHtmlSrc,
     htmlSrc,

@@ -9,9 +9,21 @@ import {
   setInlineStyle,
 } from './utils'
 
+const backgrounds = {
+  dark: '#0001',
+  light: '#fff1',
+  magenta: '#f0f1',
+}
+
+const borders = {
+  dark: '#0008',
+  light: '#fffa',
+  magenta: '#f0fa',
+}
+
 const AbsoluteContainer = styled.span`
-  background-color: #0001;
-  border: 1px dashed currentColor;
+  background-color: ${p => backgrounds[p.selectionColor.bg] || '#0001'};
+  border: 1px dashed ${p => borders[p.selectionColor.border] || 'currentColor'};
   display: flex;
   pointer-events: none;
   position: absolute;
@@ -59,6 +71,7 @@ const SelectionBox = ({
   yOffset = 10,
   xOffset = 10,
   advancedTools,
+  selectionColor,
   ...rest
 }) => {
   const {
@@ -100,7 +113,11 @@ const SelectionBox = ({
   }, [selectedNode])
 
   return (
-    <AbsoluteContainer ref={selectionBoxRef} {...rest}>
+    <AbsoluteContainer
+      ref={selectionBoxRef}
+      selectionColor={selectionColor}
+      {...rest}
+    >
       {advancedTools && (
         <RelativeContainer>
           <small>{htmlTagNames[selectedCtx.tagName] || 'element'}</small>
