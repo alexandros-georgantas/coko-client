@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { CssAssistantContext } from '../hooks/CssAssistantContext'
 import { setImagesDefaultStyles } from '../utils'
+import useIncrementalTarget from '../hooks/useIncrementalTarget'
 
 const StyledEditor = styled.div`
   border: none;
@@ -25,12 +26,7 @@ const StyledEditor = styled.div`
   }
 `
 
-const Editor = ({
-  stylesFromSource,
-  loading,
-  contentEditable,
-  enablePaste,
-}) => {
+const Editor = ({ stylesFromSource, updatePreview }) => {
   const {
     setHtmlSrc,
     htmlSrc,
@@ -47,8 +43,12 @@ const Editor = ({
     promptRef,
     createStyleSheet,
     onHistory,
+    settings,
   } = useContext(CssAssistantContext)
 
+  const { contentEditable, enablePaste } = settings.editor
+
+  const selectionHandler = useIncrementalTarget(500)
   const editorRef = useRef(null)
 
   const handlePaste = e => {
@@ -58,7 +58,7 @@ const Editor = ({
     const dataToPaste = clipboardData.getData('text/html')
     if (!dataToPaste) return
     onHistory.addRegistry('undo')
-    setPassedContent(dataToPaste)
+    setPassedContent(`<section>${dataToPaste}</section>`)
   }
 
   useEffect(() => {
@@ -107,33 +107,28 @@ const Editor = ({
   }, [passedContent])
 
   const handleSelection = e => {
-    if (
-      e.target.className === 'element-options' ||
-      (contentEditable && e.detail === 3)
-    )
-      return
+    if (e.target.className === 'element-options') return
     e.preventDefault()
     e.stopPropagation()
+    selectionHandler(e, target => {
+      if (htmlSrc.contains(target)) {
+        // update the node in ctx if it was recreated
+        !getCtxBy('node', target) &&
+          getCtxBy('dataRef', target.dataset.aidctx) &&
+          (getCtxBy('dataRef', target.dataset.aidctx).node = target)
 
-    if (htmlSrc.contains(e.target)) {
-      // update the node in ctx if it was recreated
-      !getCtxBy('node', e.target) &&
-        getCtxBy('dataRef', e.target.dataset.aidctx) &&
-        (getCtxBy('dataRef', e.target.dataset.aidctx).node = e.target)
+        const ctx =
+          getCtxBy('node', target) ||
+          getCtxBy('dataRef', target.dataset.aidctx) ||
+          addToCtx(newCtx(target, null, {}, false))
 
-      const ctx =
-        getCtxBy('node', e.target) ||
-        getCtxBy('dataRef', e.target.dataset.aidctx) ||
-        addToCtx(newCtx(e.target, null, {}, false))
-
-      setSelectedCtx(ctx)
-      setSelectedNode(e.target)
-    } else {
-      setSelectedCtx(getCtxBy('node', htmlSrc))
-      setSelectedNode(htmlSrc)
-    }
-
-    promptRef.current.focus()
+        setSelectedCtx(ctx)
+        setSelectedNode(target)
+      } else {
+        setSelectedCtx(getCtxBy('node', htmlSrc))
+        setSelectedNode(htmlSrc)
+      }
+    })
   }
 
   return (
@@ -141,8 +136,11 @@ const Editor = ({
       contentEditable={contentEditable}
       dangerouslySetInnerHTML={{ __html: passedContent }}
       id="assistant-ctx"
+      onFocus={() => !contentEditable && promptRef.current.focus()}
+      onInput={updatePreview}
       onPaste={enablePaste ? handlePaste : () => {}}
       ref={editorRef}
+      tabIndex={0}
     />
   )
 }

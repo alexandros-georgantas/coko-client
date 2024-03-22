@@ -11,6 +11,31 @@ import {
   setInlineStyle,
 } from '../utils'
 
+const defaultSettings = {
+  editor: {
+    advancedTools: true,
+    contentEditable: false,
+    enablePaste: true,
+    enableSnippets: true,
+    selectionColor: { bg: '#0001', border: '#0008' },
+    snippets: {
+      rotate: {
+        description: 'rotates the element by 90 degrees',
+        transform: 'rotate(90deg)',
+      },
+      scale: {
+        description: 'scale the element',
+        transform: 'scale(1.5)',
+      },
+      grayscale: {
+        description: 'grayscale the element',
+        filter: 'grayscale(100%)',
+      },
+    },
+  },
+  historyMax: 6,
+}
+
 export const CssAssistantContext = createContext()
 
 // eslint-disable-next-line react/prop-types
@@ -35,6 +60,8 @@ export const CssAssistantProvider = ({ children }) => {
   const [copiedStyles, setCopiedStyles] = useState('')
 
   const [feedback, setFeedback] = useState('')
+
+  const [settings, setSettings] = useState(defaultSettings)
 
   const promptRef = useRef(null)
   const [userPrompt, setUserPrompt] = useState('')
@@ -293,6 +320,8 @@ export const CssAssistantProvider = ({ children }) => {
         updateSelectionBoxPosition,
         deleteLastMessage,
         onHistory,
+        settings,
+        setSettings,
       }}
     >
       {children}

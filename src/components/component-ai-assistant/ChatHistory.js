@@ -113,8 +113,8 @@ const MessageContent = styled.div`
 
 // TODO: pass currentUser as prop
 // eslint-disable-next-line react/prop-types
-const ChatHistory = ({ settings }) => {
-  const { selectedCtx, htmlSrc, feedback, deleteLastMessage } =
+const ChatHistory = () => {
+  const { selectedCtx, htmlSrc, feedback, deleteLastMessage, settings } =
     useContext(CssAssistantContext)
 
   const threadRef = useRef(null)

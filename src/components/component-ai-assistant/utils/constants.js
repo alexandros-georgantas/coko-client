@@ -1006,7 +1006,7 @@ export const defaultSnippets = {
   'snip-2': {
     color: 'red',
     transform: 'rotate(180deg)',
-    description: 'rotates the elment',
+    description: 'rotates the element',
   },
 }
 export const finishReasons = {
@@ -1052,6 +1052,8 @@ You must interpret and translate the 'user' request, into css properties/values 
 Keep in mind that 'user' don't know how to code, so the prompt must be analysed carefully in order to complete the task.
 
 IMPORTANT: 
+- You must be aware that 'user' can select elements, and currently is no selected element, you must inform 'user' that if he selects a element you can change the content of the selected element and/or create new elements.
+
 - You must never say to user what to code, and never give him instructions.
 
 - Your response must be ALWAYS the valid JSON (described below), NEVER text.

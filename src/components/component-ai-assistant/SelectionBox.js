@@ -1,6 +1,11 @@
 import React, { useContext, useEffect } from 'react'
 import styled from 'styled-components'
-import { CopyOutlined, DeleteOutlined, DiffOutlined } from '@ant-design/icons'
+import {
+  CopyOutlined,
+  DeleteOutlined,
+  DiffOutlined,
+  RotateRightOutlined,
+} from '@ant-design/icons'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
 import {
   cssStringToObject,
@@ -9,21 +14,9 @@ import {
   setInlineStyle,
 } from './utils'
 
-const backgrounds = {
-  dark: '#0001',
-  light: '#fff1',
-  magenta: '#f0f1',
-}
-
-const borders = {
-  dark: '#0008',
-  light: '#fffa',
-  magenta: '#f0fa',
-}
-
 const AbsoluteContainer = styled.span`
-  background-color: ${p => backgrounds[p.selectionColor.bg] || '#0001'};
-  border: 1px dashed ${p => borders[p.selectionColor.border] || 'currentColor'};
+  background-color: ${p => p.selectionColor.bg || '#0001'};
+  border: 1px dashed ${p => p.selectionColor.border || 'currentColor'};
   display: flex;
   pointer-events: none;
   position: absolute;
@@ -70,8 +63,6 @@ const SelectionBox = ({
   updatePreview,
   yOffset = 10,
   xOffset = 10,
-  advancedTools,
-  selectionColor,
   ...rest
 }) => {
   const {
@@ -82,7 +73,10 @@ const SelectionBox = ({
     copiedStyles,
     updateSelectionBoxPosition,
     onHistory,
+    settings,
   } = useContext(CssAssistantContext)
+
+  const { advancedTools } = settings.editor
 
   useEffect(() => {
     updateSelectionBoxPosition(yOffset, xOffset)
@@ -115,12 +109,12 @@ const SelectionBox = ({
   return (
     <AbsoluteContainer
       ref={selectionBoxRef}
-      selectionColor={selectionColor}
+      selectionColor={settings.editor.selectionColor}
       {...rest}
     >
       {advancedTools && (
         <RelativeContainer>
-          <small>{htmlTagNames[selectedCtx.tagName] || 'element'}</small>
+          <small>{htmlTagNames[selectedCtx.tagName] || 'Element'}</small>
           {selectedCtx?.node?.hasAttribute('style') ? (
             <>
               <button
@@ -173,6 +167,34 @@ const SelectionBox = ({
               />
             </button>
           )}
+          {settings.editor.enableSnippets && (
+            <>
+              <SnippetButton
+                Icon={RotateRightOutlined}
+                name="rotate"
+                node={selectedCtx.node}
+                onHistory={onHistory}
+                title="rotate 90deg"
+                updatePreview={updatePreview}
+              />
+              <SnippetButton
+                Icon={RotateRightOutlined}
+                name="scale"
+                node={selectedCtx.node}
+                onHistory={onHistory}
+                title="scale 150%"
+                updatePreview={updatePreview}
+              />
+              <SnippetButton
+                Icon={RotateRightOutlined}
+                name="grayscale"
+                node={selectedCtx.node}
+                onHistory={onHistory}
+                title="turn to grayscale"
+                updatePreview={updatePreview}
+              />
+            </>
+          )}
         </RelativeContainer>
       )}
     </AbsoluteContainer>
@@ -180,3 +202,30 @@ const SelectionBox = ({
 }
 
 export default SelectionBox
+
+const SnippetButton = ({
+  onHistory,
+  node,
+  name,
+  Icon,
+  updatePreview,
+  ...rest
+}) => {
+  const className = `aid-snip-${name}`
+  return (
+    <button
+      className="element-options"
+      onClick={e => {
+        onHistory.addRegistry('undo')
+        const action = node.classList.contains(className) ? 'remove' : 'add'
+
+        node.classList[action](className)
+        updatePreview()
+      }}
+      type="button"
+      {...rest}
+    >
+      <Icon className="element-options" style={{ pointerEvents: 'none' }} />
+    </button>
+  )
+}

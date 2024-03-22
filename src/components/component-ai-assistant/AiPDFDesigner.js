@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import {
+  ControlOutlined,
   DeleteOutlined,
   InteractionOutlined,
   PrinterOutlined,
@@ -23,6 +24,7 @@ import {
   addElement,
   finishReasons,
   systemGuidelinesV2,
+  snippetsToCssText,
 } from './utils'
 import SelectionBox from './SelectionBox'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
@@ -30,7 +32,9 @@ import ChatBubble from './ChatBubble'
 import ChatHistory from './ChatHistory'
 import Checkbox from './components/Checkbox'
 import useChatGpt from './hooks/useChatGpt'
+import { SettingsMenu } from './components/SettingsMenu'
 
+// #region styleds
 const Assistant = styled(PromptsInput)`
   margin: 10px 0;
   width: 480px;
@@ -76,9 +80,10 @@ const StyledHeading = styled.div`
   border-bottom: 1px solid #0004;
   display: flex;
   flex-direction: row;
-  height: fit-content;
+  height: 80px;
   justify-content: space-between;
   padding: 0 0 0 10px;
+  position: relative;
   scrollbar-color: #00495c;
   scrollbar-width: thin;
   width: 100%;
@@ -132,16 +137,17 @@ const PreviewIframe = styled.iframe`
 `
 
 const CheckBoxes = styled.div`
+  align-items: center;
   border-left: 1px solid #0002;
   color: #555;
   display: flex;
-  flex-direction: column;
   font-size: 14px;
   line-height: 1.3;
   min-width: 150px;
   padding: 0;
 
   > span {
+    height: fit-content;
     padding: 5px 10px;
   }
 `
@@ -249,16 +255,7 @@ const OverlayAnimated = styled(LoadingOverlay)`
 
 const StyledCheckbox = styled(Checkbox)``
 
-const defaultSettings = {
-  advancedTools: true,
-  editor: {
-    contentEditable: true,
-    enablePaste: true,
-    enableSnippets: true,
-    selectionColor: { bg: 'dark', border: 'dark' }, // can be: dark, light, magenta
-  },
-  historyMax: 6,
-}
+// #endregion styleds
 
 // eslint-disable-next-line react/prop-types
 const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
@@ -285,6 +282,8 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
     userPrompt,
     getCtxBy,
     validSelectors,
+    settings,
+    setSettings,
   } = useContext(CssAssistantContext)
 
   const previewScrollTopRef = useRef(0)
@@ -294,13 +293,10 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
   const [showEditor, setShowEditor] = useState(true)
   const [showPreview, setShowPreview] = useState(true)
   const [showChat, setShowChat] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
 
   // eslint-disable-next-line no-unused-vars
-  const [settings, setSettings] = useState({
-    ...defaultSettings,
-    ...passedSettings,
-  })
-
+  // To be replaced by the lazyQuery
   const { callOpenAi, loading, error } = useChatGpt({
     onCompleted: ({ message, finishReason }) => {
       if (message.startsWith('{')) {
@@ -355,41 +351,10 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
       setUserPrompt('')
     },
   })
-  // const [callOpenAi, { loading }] = useLazyQuery(CALL_OPEN_AI, {
-  //   onCompleted: ({ openAi }) => {
-  //     if (openAi.startsWith('{')) {
-  //       try {
-  //         const response = JSON.parse(openAi)
-  //         const { css, rules, feedback, textContent = '' } = response
-  //         const ctxIsHtmlSrc = selectedCtx.node === htmlSrc
 
-  //         if (rules && !ctxIsHtmlSrc) {
-  //           addRules(selectedCtx, rules)
-  //           setInlineStyle(selectedCtx.node, rules)
-  //         } else if (css) {
-  //           styleSheetRef.current.textContent = css
-  //           setCss(styleSheetRef.current.textContent)
-  //         }
-
-  //         textContent && (selectedCtx.node.innerHTML = textContent)
-  //         feedback && setFeedback(feedback)
-  //         feedback &&
-  //           selectedCtx.history.push({ role: 'assistant', content: feedback })
-  //         updatePreview()
-  //       } catch (err) {
-  //         setFeedback(
-  //           'There was an error generating the response\n Please, try again in a few seconds',
-  //         )
-  //       }
-  //     } else {
-  //       setFeedback(openAi)
-  //       selectedCtx.history.push({ role: 'assistant', content: openAi })
-  //     }
-
-  //     setUserPrompt('')
-  //   },
-  // })
-
+  useEffect(() => {
+    passedSettings && setSettings(passedSettings)
+  }, [])
   useEffect(() => {
     showPreview && livePreview && updatePreview()
   }, [htmlSrc, css, passedContent])
@@ -473,7 +438,11 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
 
   return (
     <Root>
-      {settings.enableSnippets && <style id="aid-snippets" />}
+      {settings.editor.enableSnippets && (
+        <style id="aid-snippets">
+          {snippetsToCssText(settings.editor.snippets)}
+        </style>
+      )}
       <StyledHeading>
         <CssAssistantUi>
           <ChatBubble forceHide={showChat} onRight />
@@ -518,7 +487,16 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
               style={{ margin: 0 }}
             />
           </span>
+          <span>
+            <ControlOutlined
+              onClick={() => setShowSettings(!showSettings)}
+              style={{
+                cursor: 'pointer',
+              }}
+            />
+          </span>
         </CheckBoxes>
+        <SettingsMenu showSettings={showSettings} />
       </StyledHeading>
       <WindowsContainer>
         <StyledWindow $show={showChat} style={{ maxWidth: '30%' }}>
@@ -529,14 +507,14 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
               title="Clear history (not undoable)"
             />
           </WindowHeading>
-          <ChatHistory settings={settings} />
+          <ChatHistory />
         </StyledWindow>
         {showChat && (showEditor || showPreview) && <WindowDivision />}
 
         <StyledWindow $show={showEditor}>
           <WindowHeading>
             <span>
-              CONTENT SELECTION{bookTitle ? ` for: "${bookTitle}"` : ':'}
+              CONTENT SELECTION{bookTitle ? `for: "${bookTitle}"` : ':'}
             </span>
             <span>
               Selection:{' '}
@@ -555,12 +533,9 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
               stylesFromSource={initialPagedJSCSS}
               updatePreview={updatePreview}
               // eslint-disable-next-line react/prop-types
-              {...settings?.editor}
             />
             <SelectionBox
               // eslint-disable-next-line react/prop-types
-              advancedTools={settings?.advancedTools}
-              selectionColor={settings?.editor?.selectionColor}
               updatePreview={updatePreview}
             />
           </EditorContainer>
