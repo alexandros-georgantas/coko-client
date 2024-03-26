@@ -2,23 +2,27 @@
 import React, { useContext, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { CssAssistantContext } from '../hooks/CssAssistantContext'
-import { setImagesDefaultStyles } from '../utils'
+import { removeStyleAttribute, setImagesDefaultStyles } from '../utils'
 import useIncrementalTarget from '../hooks/useIncrementalTarget'
 
+const EditorWrapper = styled.div`
+  background-color: #fff;
+  box-shadow: 0 0 5px #0002;
+  height: fit-content;
+  min-height: 100%;
+  padding: 80px;
+  width: 100%;
+`
+
 const StyledEditor = styled.div`
+  background: #fff;
   border: none;
+  margin-bottom: 20px;
+  min-height: 100%;
   outline: none;
   position: relative;
   width: 100%;
   z-index: 1;
-
-  section {
-    background: #fff;
-    box-shadow: 0 0 5px #0002;
-    margin-bottom: 20px;
-    min-height: 100%;
-    padding: 20px;
-  }
 
   &:hover {
     border: none;
@@ -58,7 +62,7 @@ const Editor = ({ stylesFromSource, updatePreview }) => {
     const dataToPaste = clipboardData.getData('text/html')
     if (!dataToPaste) return
     onHistory.addRegistry('undo')
-    setPassedContent(`<section>${dataToPaste}</section>`)
+    setPassedContent(`<section>${removeStyleAttribute(dataToPaste)}</section>`)
   }
 
   useEffect(() => {
@@ -75,11 +79,12 @@ const Editor = ({ stylesFromSource, updatePreview }) => {
       setSelectedNode(htmlSrc)
       setCss(styleSheetRef.current.textContent)
       allChilds.forEach(child => {
+        child.removeAttribute('style')
         child.addEventListener('click', handleSelection)
       })
       getValidSelectors(htmlSrc)
 
-      htmlSrc.parentNode.addEventListener('click', handleSelection)
+      htmlSrc.parentNode.parentNode.addEventListener('click', handleSelection)
     }
   }, [htmlSrc])
 
@@ -89,25 +94,31 @@ const Editor = ({ stylesFromSource, updatePreview }) => {
         ;[...htmlSrc.children].forEach(child =>
           child.removeEventListener('click', handleSelection),
         )
-        htmlSrc.parentNode.removeEventListener('click', handleSelection)
+        htmlSrc.parentNode.parentNode.removeEventListener(
+          'click',
+          handleSelection,
+        )
       }
     }
   }, [])
 
   useEffect(() => {
     !passedContent &&
-      setPassedContent('<section><p>Paste the article here</p></section>')
+      setPassedContent(
+        removeStyleAttribute(
+          '<section><p style="color:red;">Paste the article here</p></section>',
+        ),
+      )
   }, [])
 
   useEffect(() => {
     editorRef?.current && setHtmlSrc(editorRef.current)
     editorRef?.current && getValidSelectors(editorRef.current)
-    // ;[...editorRef.current.children].forEach(removeStyleAttribute)
     setImagesDefaultStyles(editorRef.current)
   }, [passedContent])
 
   const handleSelection = e => {
-    if (e.target.className === 'element-options') return
+    if (e.target.dataset.element === 'element-options') return
     e.preventDefault()
     e.stopPropagation()
     selectionHandler(e, target => {
@@ -132,16 +143,18 @@ const Editor = ({ stylesFromSource, updatePreview }) => {
   }
 
   return (
-    <StyledEditor
-      contentEditable={contentEditable}
-      dangerouslySetInnerHTML={{ __html: passedContent }}
-      id="assistant-ctx"
-      onFocus={() => !contentEditable && promptRef.current.focus()}
-      onInput={updatePreview}
-      onPaste={enablePaste ? handlePaste : () => {}}
-      ref={editorRef}
-      tabIndex={0}
-    />
+    <EditorWrapper>
+      <StyledEditor
+        contentEditable={contentEditable}
+        dangerouslySetInnerHTML={{ __html: passedContent }}
+        id="assistant-ctx"
+        onFocus={() => !contentEditable && promptRef.current.focus()}
+        onInput={updatePreview}
+        onPaste={enablePaste ? handlePaste : () => {}}
+        ref={editorRef}
+        tabIndex={0}
+      />
+    </EditorWrapper>
   )
 }
 

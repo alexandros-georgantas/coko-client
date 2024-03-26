@@ -1,3 +1,4 @@
+import { merge } from 'lodash'
 import { mapEntries, onEntries } from './utils'
 
 export const srcdoc = (scope, css, template, scrollPos) => /* html */ `
@@ -32,12 +33,18 @@ export const srcdoc = (scope, css, template, scrollPos) => /* html */ `
     </html>
 `
 
-export const removeStyleAttribute = (node, recursive = true) => {
-  if (!node) return
-  node.removeAttribute('style')
-  if (!recursive) return
-  const childs = [...node.children]
-  childs.length > 0 && childs.forEach(removeStyleAttribute)
+export function removeStyleAttribute(htmlString) {
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(htmlString, 'text/html')
+
+  doc.querySelectorAll('*').forEach(element => {
+    element.removeAttribute('style')
+  })
+
+  const serializer = new XMLSerializer()
+  const cleanedHtmlString = serializer.serializeToString(doc)
+
+  return cleanedHtmlString
 }
 
 // can be useful for setting the inlinestyles
@@ -95,39 +102,50 @@ export const setImagesDefaultStyles = node => {
     })
 }
 
-export const snippetsToCssText = snippets =>
+// #region SNIPPETS
+
+export const snippetsToCssText = (snippets, prefix = '.aid-snip-') =>
   mapEntries(
     snippets,
-    (k, { description, ...v }) =>
-      `${
-        description ? `/* ${description} */\n` : ''
-      }.aid-snip-${k} {\n${mapEntries(
-        v,
-        (rule, val) => `\t${toSnake(rule)}: ${val};`,
-      ).join('\n')}\n}`,
+    (k, { description, classBody }) => `
+    /* ${description} */
+    ${prefix + k} {
+      ${classBody}
+    }
+    `,
   ).join('\n')
 
-export const addSnippet = (snippet, name, snippetsKeys) => {
+export const getSnippetsBy = (snippets, prop = 'active') =>
+  Object.entries(snippets).reduce((acc, [k, v]) => {
+    if (v[prop]) {
+      acc[k] = v
+    }
+
+    return acc
+  }, {})
+
+export const getSnippetsByElementType = (snippets, elementType = '*') =>
+  Object.entries(snippets).reduce((acc, [k, v]) => {
+    if (v.elementType === elementType || elementType === '*') {
+      acc[k] = v
+    }
+
+    return acc
+  }, {})
+
+export const newSnippet = (snippet, name, snippetsKeys) => {
   const selector = safeId(name, snippetsKeys)
-  return { [selector]: snippet }
+  return { [selector]: { ...snippet[name] } }
 }
 
-export const updateSnippet = (name, newProps, allSnippets) => {
-  const updatedSnippets = allSnippets
-  if (!updatedSnippets[name]) return allSnippets
-  newProps
-    ? onEntries(newProps, (k, v) => {
-        updatedSnippets[name][k] = v
-      })
-    : delete updatedSnippets[name]
-
-  return updatedSnippets
-}
+export const updateSnippet = (snippet, allSnippets) =>
+  merge({}, allSnippets, snippet)
 
 export const addElement = (parentElement, options) => {
   const { position = 'afterend', html } = options
   parentElement.insertAdjacentHTML(position, html)
 }
+// #endregion SNIPPETS
 
 export const safeId = (prefix, existingIds) => {
   let proposedId = 1

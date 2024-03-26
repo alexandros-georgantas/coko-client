@@ -1,15 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
-import {
-  ControlOutlined,
-  DeleteOutlined,
-  InteractionOutlined,
-  PrinterOutlined,
-  RedoOutlined,
-  UndoOutlined,
-} from '@ant-design/icons'
+import { DeleteOutlined, PrinterOutlined } from '@ant-design/icons'
 
-import { takeRight } from 'lodash'
+import { merge, takeRight } from 'lodash'
 import Editor from './components/Editor'
 import PromptsInput from './PromptsInput'
 import {
@@ -20,11 +13,11 @@ import {
   cssTemplate3,
   setScrollFromPercent,
   getScrollPercent,
-  setInlineStyle,
   addElement,
   finishReasons,
   systemGuidelinesV2,
   snippetsToCssText,
+  removeStyleAttribute,
 } from './utils'
 import SelectionBox from './SelectionBox'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
@@ -64,13 +57,7 @@ const CssAssistantUi = styled.div`
   > :last-child {
     color: #00495c;
     display: flex;
-    gap: 5px;
-
-    > * {
-      border: 1px solid #0004;
-      border-radius: 5px;
-      padding: 8px;
-    }
+    gap: 0;
   }
 `
 
@@ -87,9 +74,14 @@ const StyledHeading = styled.div`
   scrollbar-color: #00495c;
   scrollbar-width: thin;
   width: 100%;
+  z-index: 999999;
 `
 
 const Root = styled.div`
+  --color-fill: #50737c;
+  --color-fill-1: #6a919b;
+  --color-fill-2: #fff;
+
   border: 1px solid #0002;
   border-radius: 0 8px 8px;
   display: flex;
@@ -105,7 +97,7 @@ const EditorContainer = styled.div`
   background: #eee;
   display: flex;
   filter: ${p => (p.$loading ? 'blur(2px)' : '')};
-  height: 100%;
+  height: calc(100vh - 130px);
   overflow: auto;
   padding: 40px;
   position: relative;
@@ -132,7 +124,8 @@ const EditorContainer = styled.div`
 const PreviewIframe = styled.iframe`
   border: none;
   display: flex;
-  height: 100%;
+  height: calc(100vh - 130px);
+
   width: 100%;
 `
 
@@ -264,7 +257,6 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
     htmlSrc,
     setSelectedCtx,
     setSelectedNode,
-    context,
     selectedCtx,
     passedContent,
     updateSelectionBoxPosition,
@@ -273,7 +265,7 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
     selectedNode,
     setFeedback,
     setUserPrompt,
-    addRules,
+    addSnippet,
     onHistory,
     getValidSelectors,
     history,
@@ -284,6 +276,7 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
     validSelectors,
     settings,
     setSettings,
+    markedSnippet,
   } = useContext(CssAssistantContext)
 
   const previewScrollTopRef = useRef(0)
@@ -305,22 +298,21 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
 
           const {
             css: resCss,
-            rules,
+            snippet,
             feedback,
             content = '',
             insertHtml,
           } = response
 
-          if (resCss || insertHtml || rules || content) {
+          if (resCss || insertHtml || snippet || content) {
             onHistory.addRegistry('undo')
             history.current.source.redo = []
           }
 
           const ctxIsHtmlSrc = selectedCtx.node === htmlSrc
 
-          if (rules && !ctxIsHtmlSrc) {
-            addRules(selectedCtx, rules)
-            setInlineStyle(selectedCtx.node, rules)
+          if (snippet && !ctxIsHtmlSrc) {
+            addSnippet(selectedCtx.node, snippet)
           } else if (resCss) {
             styleSheetRef.current.textContent = resCss
             setCss(styleSheetRef.current.textContent)
@@ -353,7 +345,7 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
   })
 
   useEffect(() => {
-    passedSettings && setSettings(passedSettings)
+    passedSettings && setSettings(merge({}, settings, passedSettings))
   }, [])
   useEffect(() => {
     showPreview && livePreview && updatePreview()
@@ -366,7 +358,7 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
 
   useEffect(() => {
     if (!showEditor) {
-      setSelectedCtx(context.current.find(ctx => ctx.node === htmlSrc))
+      setSelectedCtx(getCtxBy('node', htmlSrc))
       setSelectedNode(htmlSrc)
       !showPreview && setShowPreview(true)
     }
@@ -392,7 +384,7 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
     userPrompt
       ? callOpenAi({
           // variables: {
-          input: `${userPrompt}. NOTE: Remember to always return the expected valid JSON, have a second thought on this before responding`,
+          input: `${userPrompt}.\nNOTE: Remember to always return the expected valid JSON, have a second thought on this before responding`,
           history: [
             {
               role: 'system',
@@ -402,6 +394,7 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
                 selectors: validSelectors?.current?.join(', '),
                 providedText:
                   selectedNode !== htmlSrc && selectedCtx.node.innerHTML,
+                markedSnippet,
               }),
             },
             // eslint-disable-next-line react/prop-types
@@ -427,12 +420,15 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
         srcdoc(
           htmlSrc,
           css,
-          cssTemplate1 + cssTemplate3,
+          cssTemplate1 +
+            cssTemplate3 +
+            snippetsToCssText(settings.editor.snippets),
           previewScrollTopRef.current,
         ),
       )
     updateCtxNodes()
     updateSelectionBoxPosition()
+    htmlSrc && removeStyleAttribute(htmlSrc)
     htmlSrc && getValidSelectors(htmlSrc)
   }
 
@@ -453,11 +449,11 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
             placeholder="Type here how your book should look..."
           />
           <span>
-            <UndoOutlined
+            <settings.Icons.UndoIcon
               onClick={() => onHistory.apply('undo')}
               title="Undo (Ctrl + z)"
             />
-            <RedoOutlined
+            <settings.Icons.RedoIcon
               onClick={() => onHistory.apply('redo')}
               title="Redo (Ctrl + y)"
             />
@@ -488,7 +484,7 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
             />
           </span>
           <span>
-            <ControlOutlined
+            <settings.Icons.SettingsIcon
               onClick={() => setShowSettings(!showSettings)}
               style={{
                 cursor: 'pointer',
@@ -509,6 +505,7 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
           </WindowHeading>
           <ChatHistory />
         </StyledWindow>
+
         {showChat && (showEditor || showPreview) && <WindowDivision />}
 
         <StyledWindow $show={showEditor}>
@@ -525,22 +522,19 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
           </WindowHeading>
           {loading && <LoadingOverlay />}
           <OverlayAnimated $loading={loading}>
-            <span>Proccesing...</span>
+            <span>Processing...</span>
           </OverlayAnimated>
           <EditorContainer $loading={loading} onScroll={handleScroll}>
             <Editor
-              passedContent={passedContent}
               stylesFromSource={initialPagedJSCSS}
               updatePreview={updatePreview}
-              // eslint-disable-next-line react/prop-types
             />
-            <SelectionBox
-              // eslint-disable-next-line react/prop-types
-              updatePreview={updatePreview}
-            />
+            <SelectionBox updatePreview={updatePreview} />
           </EditorContainer>
         </StyledWindow>
+
         {showEditor && showPreview && <WindowDivision />}
+
         <StyledWindow $show={showPreview}>
           <WindowHeading>
             <span>BOOK PREVIEW{bookTitle ? ` for: "${bookTitle}"` : ':'}</span>
@@ -550,7 +544,7 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
                 title="Update preview"
                 type="button"
               >
-                <InteractionOutlined />
+                <settings.Icons.RefreshIcon />
               </button>
               <button
                 onClick={() => previewRef?.current?.contentWindow?.print()}

@@ -1,14 +1,19 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 /* eslint-disable no-param-reassign */
 import React, { createContext, useMemo, useRef, useState } from 'react'
-import { takeRight } from 'lodash'
+import { keys, merge, takeRight } from 'lodash'
 import {
   callOn,
   htmlTagNames,
-  onEntries,
   safeCall,
   safeId,
   setInlineStyle,
+  Icons,
+  onEntries,
+  updateSnippet,
+  getSnippetsBy,
+  onKeys,
+  newSnippet,
 } from '../utils'
 
 const defaultSettings = {
@@ -17,29 +22,52 @@ const defaultSettings = {
     contentEditable: false,
     enablePaste: true,
     enableSnippets: true,
+    createNewSnippetVersions: false,
     selectionColor: { bg: '#0001', border: '#0008' },
     snippets: {
+      exceltable: {
+        borderCollapse: 'collapse',
+        width: '100%',
+        classBody: `\t\tborder: 1px solid #d4d4d4;
+    tbody > tr > td {
+      border: 1px solid #d4d4d4;
+      padding: 8px;
+      textAlign: left;
+    }
+    tbody > tr:nth-of-type(odd) {
+      backgroundColor: '#f2f2f2';
+    }`,
+      },
       rotate: {
         description: 'rotates the element by 90 degrees',
-        transform: 'rotate(90deg)',
+        classBody: `
+    transform: rotate(15deg);
+    p {
+      color: #f00;
+    }
+    p:nth-of-type(2) {
+      color: #0f0; 
+    }`,
       },
       scale: {
         description: 'scale the element',
-        transform: 'scale(1.5)',
+        classBody: 'transform: scale(1.5);',
       },
       grayscale: {
         description: 'grayscale the element',
-        filter: 'grayscale(100%)',
+        classBody: 'filter: grayscale(100%);',
       },
     },
   },
   historyMax: 6,
+  Icons,
 }
 
 export const CssAssistantContext = createContext()
 
 // eslint-disable-next-line react/prop-types
 export const CssAssistantProvider = ({ children }) => {
+  // #region HOOKS ----------------------------------------------------------------
   const context = useRef([])
   const validSelectors = useRef(null)
   const styleSheetRef = useRef(null)
@@ -57,7 +85,8 @@ export const CssAssistantProvider = ({ children }) => {
   const [htmlSrc, setHtmlSrc] = useState(null)
   const [css, setCss] = useState(null)
   const [passedContent, setPassedContent] = useState('')
-  const [copiedStyles, setCopiedStyles] = useState('')
+  const [copiedSnippet, setCopiedSnippet] = useState(null)
+  const [markedSnippet, setMarkedSnippet] = useState('')
 
   const [feedback, setFeedback] = useState('')
 
@@ -65,6 +94,7 @@ export const CssAssistantProvider = ({ children }) => {
 
   const promptRef = useRef(null)
   const [userPrompt, setUserPrompt] = useState('')
+  // #endregion HOOKS ----------------------------------------------------------------
 
   // #region CONTEXT ----------------------------------------------------------------
   const makeSelector = (node, parent) => {
@@ -77,8 +107,8 @@ export const CssAssistantProvider = ({ children }) => {
 
     const selector = `${
       parentSelector
-        ? `${parentSelector} > ${tagName}${classNames}`
-        : `${tagName}${node.id ? `#${node.id}` : ''}${classNames}`
+        ? `${parentSelector} > ${tagName}`
+        : `${tagName}${node.id ? `#${node.id}` : ''}`
     }`.trim()
 
     return { selector, tagName, classNames }
@@ -115,7 +145,7 @@ export const CssAssistantProvider = ({ children }) => {
     validSelectors.current = selectors
   }
 
-  const newCtx = (node, parent, rules = {}, addSelector = true) => {
+  const newCtx = (node, parent, snippets = {}, addSelector = true) => {
     const { selector, tagName } = makeSelector(node, parent)
 
     const dataRef = safeId(
@@ -129,7 +159,8 @@ export const CssAssistantProvider = ({ children }) => {
       node,
       dataRef,
       tagName,
-      rules,
+      // rules,
+      snippets,
       history: [],
     }
   }
@@ -149,19 +180,11 @@ export const CssAssistantProvider = ({ children }) => {
         context.current[method](ctx => ctx.selector === selector),
       tagName: tag => context.current[method](ctx => ctx.tagName === tag),
       dataRef: data => context.current[method](ctx => ctx.dataRef === data),
-      default: node => context.current[method](ctx => ctx.node === node),
+      snippet: snippet => context.current[method](ctx => ctx.snippets[snippet]),
+      default: node => context.current[method](ctx => ctx),
     }
 
     return callOn(by, ctxProps, [prop])
-  }
-
-  const addRules = (ctx, inputRules = {}) => {
-    if (!ctx) return null
-    const rules = { ...ctx.rules }
-    onEntries(inputRules, (rule, value) => (rules[rule] = value))
-    ctx.rules = rules
-
-    return rules
   }
 
   const updateCtxNodes = () => {
@@ -222,6 +245,7 @@ export const CssAssistantProvider = ({ children }) => {
     } else selectionBoxRef.current.style.opacity = 0
   }
 
+  // TODO: add snippets to history registry
   const onHistory = {
     addRegistry: (
       regKey,
@@ -259,6 +283,74 @@ export const CssAssistantProvider = ({ children }) => {
 
   // #endregion HELPERS -----------------------------------------------------------------
 
+  // #region SNIPPETS -------------------------------------------------------------------
+  const addSnippet = (node, snippet) => {
+    const snippetToAdd = !settings.editor.createNewSnippetVersions
+      ? { ...snippet }
+      : newSnippet(snippet, keys(snippet)[0], keys(settings.editor.snippets))
+
+    onKeys(snippetToAdd, k => (snippetToAdd[k].active = true))
+    settings.editor.createNewSnippetVersions &&
+      !getMarkedSnippetName() &&
+      onKeys(snippetToAdd, k => (snippetToAdd[k].marked = true))
+    const snippets = updateSnippet(snippetToAdd, settings.editor.snippets)
+    setSettings(prev => {
+      return merge({}, { ...prev }, { editor: { snippets } })
+    })
+    getCtxBy('node', node).snippets = merge(
+      {},
+      getCtxBy('node', node).snippets,
+      snippetToAdd,
+    )
+    addSnippetsClass()
+    setMarkedSnippet(getMarkedSnippetName())
+  }
+
+  const removeSnippet = (snippetName, node) => {
+    if (!node) {
+      const updatedSnippets = settings.editor.snippets
+      delete updatedSnippets[snippetName]
+      setSettings(prev => {
+        return merge({}, { ...prev }, { editor: { ...updatedSnippets } })
+      })
+      getCtxBy('snippet', snippetName, true).forEach(ctx => {
+        delete ctx.snippets[snippetName]
+        ctx.node.classList.remove(`aid-snip-${snippetName}`)
+      })
+    } else {
+      delete selectedCtx.snippets[snippetName]
+      selectedNode.classList.remove(`aid-snip-${snippetName}`)
+    }
+  }
+
+  const getMarkedSnippetName = () =>
+    selectedCtx?.snippets
+      ? keys(getSnippetsBy(selectedCtx.snippets, 'marked'))[0] ?? ''
+      : ''
+
+  const addSnippetsClass = () => {
+    onEntries(selectedCtx.snippets, (snippetName, snippetValues) => {
+      const className = `aid-snip-${snippetName}`
+
+      snippetValues.active
+        ? selectedCtx.node.classList.add(className)
+        : selectedCtx.node.classList.remove(className)
+    })
+  }
+
+  const updateSnippetDescription = (snippetName, description) => {
+    const { snippets } = settings.editor
+    snippets[snippetName].description = description
+    setSettings(prev => {
+      return merge({}, { ...prev }, { editor: { snippets } })
+    })
+    getCtxBy('snippet', snippetName, true).forEach(ctx => {
+      ctx.snippets[snippetName].description = description
+    })
+  }
+
+  // #endregion SNIPPETS -------------------------------------------------------------------
+
   const dom = useMemo(() => {
     return {
       promptRef,
@@ -294,10 +386,10 @@ export const CssAssistantProvider = ({ children }) => {
 
   const nodeOptions = useMemo(() => {
     return {
-      copiedStyles,
-      setCopiedStyles,
+      copiedSnippet,
+      setCopiedSnippet,
     }
-  }, [copiedStyles])
+  }, [copiedSnippet])
 
   return (
     <CssAssistantContext.Provider
@@ -311,7 +403,6 @@ export const CssAssistantProvider = ({ children }) => {
         addToCtx,
         getCtxBy,
         newCtx,
-        addRules,
         clearHistory,
         updateCtxNodes,
         passedContent,
@@ -322,6 +413,14 @@ export const CssAssistantProvider = ({ children }) => {
         onHistory,
         settings,
         setSettings,
+        // TODO: memoize in a new object
+        addSnippetsClass,
+        addSnippet,
+        removeSnippet,
+        getMarkedSnippetName,
+        markedSnippet,
+        setMarkedSnippet,
+        updateSnippetDescription,
       }}
     >
       {children}

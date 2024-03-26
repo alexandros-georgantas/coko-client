@@ -1,4 +1,4 @@
-import { values } from 'lodash'
+import { getSnippetsBy, snippetsToCssText } from './helpers'
 
 // IDEA:This could be used to limit the selectable nodes
 export const htmlTagNames = {
@@ -998,17 +998,7 @@ export const initialPagedJSCSS = /* css */ `
       margin-bottom: 10mm;
     }
 `
-export const defaultSnippets = {
-  'snip-1': {
-    backgroundColor: 'black',
-    color: 'red',
-  },
-  'snip-2': {
-    color: 'red',
-    transform: 'rotate(180deg)',
-    description: 'rotates the element',
-  },
-}
+
 export const finishReasons = {
   content_filter: 'The content was filtered due to violating content policies.',
   length_limit: 'The content exceeded the maximum allowed length.',
@@ -1020,26 +1010,26 @@ export const finishReasons = {
   unknown: 'An unknown error occurred during the completion process.',
 }
 
-const PAGEDJS_GUIDELINES = {
-  NamedString: `
-The fastest way to create running headers/footers is to use what is already in your content. Named strings are used to create running headers and footers: they copy text for reuse in margin boxes.
+// const PAGEDJS_GUIDELINES = {
+//   NamedString: `
+// The fastest way to create running headers/footers is to use what is already in your content. Named strings are used to create running headers and footers: they copy text for reuse in margin boxes.
 
-First, the text content of the selected element is cloned into a named string using string-set with a custom identifier (in the code below we call it “title”, but you can name it whatever makes sense as a variable). In the following example, each time a new <h2> appears in the HTML, the content of the named string gets updated with the text of that <h2>. (It also can be selected with a class if you prefer).
+// First, the text content of the selected element is cloned into a named string using string-set with a custom identifier (in the code below we call it “title”, but you can name it whatever makes sense as a variable). In the following example, each time a new <h2> appears in the HTML, the content of the named string gets updated with the text of that <h2>. (It also can be selected with a class if you prefer).
 
-h2 {
-  string-set: title content(text);
-}
+// h2 {
+//   string-set: title content(text);
+// }
 
-Next, the string() function copies the value of a named string to the margin boxes, via the content property:
+// Next, the string() function copies the value of a named string to the margin boxes, via the content property:
 
-@page {
-  @bottom-center {
-    content: string(title);
-  }
-}
-The string property act like a variable. It read your DOM and each time a new title level 2 is encountered, it change the variable from the page where that title appears. This variable is passed into the margin boxes of the page and into all the following margin boxes until there is a new title.
-`,
-}
+// @page {
+//   @bottom-center {
+//     content: string(title);
+//   }
+// }
+// The string property act like a variable. It read your DOM and each time a new title level 2 is encountered, it change the variable from the page where that title appears. This variable is passed into the margin boxes of the page and into all the following margin boxes until there is a new title.
+// `,
+// }
 
 const TASK_AND_ROLE_DEFINITIONS = `You are a CSS, JS and HTML expert with a vast knowledge on pagedjs library ('https://pagedjs.org').
 
@@ -1052,13 +1042,13 @@ You must interpret and translate the 'user' request, into css properties/values 
 Keep in mind that 'user' don't know how to code, so the prompt must be analysed carefully in order to complete the task.
 
 IMPORTANT: 
-- You must be aware that 'user' can select elements, and currently is no selected element, you must inform 'user' that if he selects a element you can change the content of the selected element and/or create new elements.
+- You must be aware that 'user' can select elements by click, and currently is no selected element, you must inform 'user' that if he selects a element you can change the content of the selected element and/or create new elements.
 
 - You must never say to user what to code, and never give him instructions.
 
-- Your response must be ALWAYS the valid JSON (described below), NEVER text.
+- The book is designed with pagedjs, so you will need to apply pagedjs css in some cases.
 
-The book is designed with pagedjs, so you will need to apply pagedjs css in some cases.
+- Your response must be ALWAYS the valid JSON (described below), NEVER text.
 `
 
 const TASK_AND_ROLE_DEFINITIONS_SINGLE_ELEMENT =
@@ -1078,25 +1068,29 @@ IMPORTANT:
 - Your response must be ALWAYS the valid JSON (described below), NEVER text.
 `
 
-const CONTEXT = (sheet, inlineStyles, providedText, isSingleElement) => `${
+const CONTEXT = (sheet, snippets, providedText, isSingleElement) => `${
   !isSingleElement && sheet
     ? `This style sheet is the css context:\n${sheet}\n`
     : ''
 }${
-  isSingleElement && inlineStyles
-    ? `\nThis are the inline styles for the element in context: ${inlineStyles}`
+  isSingleElement && snippets
+    ? `\nThis are the classes that affect the styles of the element(and childs) in context: ${snippetsToCssText(
+        snippets,
+        '.',
+      )}`
     : ''
 }${
   isSingleElement && providedText
     ? `\nThis is the html content of the element in context: "${providedText}"\n`
     : ''
 }${
-  !isSingleElement
-    ? `Here you have some pagedJS guides: ${values(PAGEDJS_GUIDELINES)}`
-    : ''
+  ''
+  // !isSingleElement
+  //   ? `Here you have some pagedJS guides: ${values(PAGEDJS_GUIDELINES)}`
+  //   : ''
 }
-You must retain also in context the properties 'user' pointed on previous prompts, to add, remove, or modify it/them accordingly.
 `
+// Removed for now: You must retain also in context the properties 'user' pointed on previous prompts, to add, remove, or modify it/them accordingly.
 
 const SELECTOR_SHAPE = ({
   selectors,
@@ -1108,29 +1102,55 @@ const SELECTOR_SHAPE = ({
  
  The only element types that exists in this context are the ones mentioned above. 
  
- But can be more than one element with te same selector, so, if you have for example: div#some-id > div > h2 as valid selector for the h2, and user request to change the first h2, you must do div#some-id > div:nth-of-type(1) > h2, It means you must target the container, not the h2 itself, this applies to all elements/selectors
+ But can be more than one element with the same selector, so, if you have for example: div#some-id > div > h2 as valid selector for the h2, and user request to change the first h2, you must do div#some-id > div:nth-of-type(1) > h2, It means you must target the container, not the h2 itself, this applies to all elements/selectors
  
  If the prompt refers to an HTML element and it's tagname matches one of these valid selectors use it, otherwise use "${'@page'}" as default value. 
 
 ["validSelector"] also can be followed by nth-of-type(n) or nth-child(n) or any other pseudo-selectors, but ONLY if 'user' specifies a number for the element,
 `
 
-const RULES_SHAPE = `If user wants to apply inline styles to the element: {"validCSSProperty": "validCSSValue", ...moreValidCssPropertiesAndValues}, otherwise: {}`
+// const RULES_SHAPE = `If user wants to apply inline styles to the element: {"validCSSProperty": "validCSSValue", ...moreValidCssPropertiesAndValues}, otherwise: {}`
 
 const CSS_SHAPE = `If user requested a change on the css: A well formed valid CSS string that will be the complete provided context stylesheet with the following: 
     - You must add, to the provided stylesheet, the required changes that 'user' requested.
     - if a declaration exists on the provided stylesheet apply the changes on that declaration, instead of creating a new one.
-    - With this guides in mind you will always return a well formed valid CSS string including line breaks (/n) and indentation (/t)
+    - With this guides in mind you will always return a well formed valid CSS string including line breaks and indentation
 `
 
 const CONTENT_SHAPE = `Only in case that user request a change, improvement or replacement that requires to modify element's html content: 
 - A string with the html of the element in context with the modifications user requested
-- In some cases, you must resolve the user request creating new elements, eg: if user request: "paint [x] word/s into a yellow background" you must wrap those words in a span and add the inline styles.
+- In some cases, you must resolve the user request creating new elements, eg: if user request: "paint [x] word/s into a yellow background" you must wrap those words in a span and add or modify a snippet to include the nested declaration for the new span/s styles.
 - NEVER remove/add elements or text parts from the original text/html unless 'user' requested to do that.
 - You must be precise and carefully with this, if you remove content from the original it may not be recoverable.
 
 Otherwise omit this property
 `
+
+const SNIPPET_SHAPE = (
+  ctx,
+  markedSnippet,
+) => `For the styles you must return a object (described below)
+  - This Object is a snippet to create a css class with nested declarations.
+  The [className] variable is the name of the class, it must be short, in kebab case and inspired on 'user' request and element.${
+    markedSnippet
+      ? `- In case that 'user' not specify to create a new snippet: - You must udpate the following snippet returning the same properties, updating only the "description"(if needed) and "classBody", based on user's request. Here is the snippet to update: ${markedSnippet}: ${JSON.stringify(
+          ctx.snippets[markedSnippet],
+        )}. Otherwise you must create a new snippet from the ground, without mixing the styles requested on previous prompts`
+      : `- You must create a new snippet from the ground, without mixing the styles requested on previous prompts`
+  }
+  Here is the expected object description:
+  [className]: {
+    elementType: - The tag name of element in context, in this case: '${
+      ctx.node.localName
+    }'
+    description: - the description of the styles applied
+    classBody: - valid css text containing the class body:  
+      - It must have nested declarations for childs styling.
+      - don't add the either className or the initial and end curly brackets(only add them on the child's nested declarations)
+      - if the element in context has childs you must style them within the nested declarations
+   }
+  }
+  `
 
 const INSERT_HTML_SHAPE = `if user request to create or add a new element here you must return: 
 "{ 
@@ -1139,8 +1159,10 @@ const INSERT_HTML_SHAPE = `if user request to create or add a new element here y
 }" 
 Otherwise, omit this property`
 
-const FEEDBACK_SHAPE =
-  providedText => `you must provide here a string with the feedback: 
+const FEEDBACK_SHAPE = (
+  providedText,
+  isSingleElement,
+) => `you must provide here a string with the feedback: 
 this string can contain:
 
 - In case the user request can be fullfiled: The last changes that where applied, if there is a list, then provide a list.
@@ -1148,10 +1170,10 @@ this string can contain:
 - If 'user' ask for the value of a property on the css sheet context, respond in natural(non-technical) language, for example: The [property] of the [requested element by user] is [value].
 
 - If user request information about valid css or pagedjs properties or values is expected a list of avaiable values or properties as output.${
-    providedText
-      ? '\n - If user request it, return the text from the element in context (extract it from the html, and return only the text)'
-      : ''
-  }
+  providedText
+    ? '\n - If user request it, return the text from the element in context (extract it from the html, and return only the text)'
+    : ''
+}
 
 - If none of the above you must ask user to improve his prompt in order to help you to style or modify his book.
 
@@ -1168,15 +1190,17 @@ const JSON_FORMAT = (
   providedText,
   isSingleElement,
   hasNoTextContent,
+  ctx,
+  markedSnippet,
 ) => `The output must be always in the following JSON format: {
   ${
     isSingleElement
-      ? `"rules": ${RULES_SHAPE},
+      ? `"snippet": ${SNIPPET_SHAPE(ctx, markedSnippet)},
  "insertHtml": ${INSERT_HTML_SHAPE},`
       : `"css": "${CSS_SHAPE}",`
   }
 ${providedText || hasNoTextContent ? `\n"content": ${CONTENT_SHAPE},` : ''}
-"feedback": ${FEEDBACK_SHAPE(providedText)},
+"feedback": ${FEEDBACK_SHAPE(providedText, isSingleElement)},
 }
 `
 
@@ -1185,20 +1209,28 @@ IMPORTANT:
 
 - The output must always be the expected valid JSON so the changes can be applied. 
 
-- Ensure that each key is a string enclosed in double quotes and that each value is a valid CSS value, also enclosed in double quotes.${
-  !isSingleElement
-    ? `
+- Ensure that each key is a string enclosed in double quotes and that each value is a valid CSS value, also enclosed in double quotes.
+
 - If 'user' requests to change the styles to make the book look "like" or "similar" to a given reference:
-     - Your scope must be pagedjs, starting from the @page rule. 
+${
+  !isSingleElement
+    ? `\t\t- Your scope must be pagedjs, starting from the @page rule. 
      - You must modify all necessary styles, including pagedjs rules.
-     - It needs to be as detailed as possible, change colors, fonts, margins, padding, footers and any other pagedjs and css styles to achieve the most similar appearence.
+     - It needs to be as detailed as possible, use all needed validSelectors, change colors, fonts, margins, padding, footers and any other pagedjs and css styles to achieve the most similar appearence.
 `
-    : ''
+    : `\t\t- You must create a new snippet including necessary styles for the element and its childs
+    - You must add as much details as possible to achieve the most similar appearence`
 }
 VERY IMPORTANT: Ensure that your response is ALWAYS the expected valid JSON, never text, if you have something to say it must be on the feedback from the JSON object.
 `
 
-export const systemGuidelinesV2 = ({ ctx, sheet, selectors, providedText }) => {
+export const systemGuidelinesV2 = ({
+  ctx,
+  sheet,
+  selectors,
+  providedText,
+  markedSnippet,
+}) => {
   const isSingleElement = ctx.node.id !== 'assistant-ctx'
   return `${
     !isSingleElement
@@ -1206,12 +1238,20 @@ export const systemGuidelinesV2 = ({ ctx, sheet, selectors, providedText }) => {
       : TASK_AND_ROLE_DEFINITIONS_SINGLE_ELEMENT(ctx.tagName)
   }
 
-${CONTEXT(sheet, ctx.node.getAttribute('style'), providedText, isSingleElement)}
+${CONTEXT(sheet, getSnippetsBy(ctx.snippets), providedText, isSingleElement)}
 
-${CSS_LIMITS}${
-    !isSingleElement ? `\n${SELECTOR_SHAPE({ ...ctx, selectors })}` : ''
-  }
-${JSON_FORMAT(providedText, isSingleElement, ctx.node.textContent === '')}
+${
+  !isSingleElement
+    ? `${CSS_LIMITS}\n${SELECTOR_SHAPE({ ...ctx, selectors })}`
+    : ''
+}
+${JSON_FORMAT(
+  providedText,
+  isSingleElement,
+  ctx.node.textContent === '',
+  ctx,
+  markedSnippet,
+)}
 
 ${IMPORTANT_NOTES(isSingleElement)}
 `

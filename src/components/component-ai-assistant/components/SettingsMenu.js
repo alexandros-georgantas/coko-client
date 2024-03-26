@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { merge } from 'lodash'
 import Checkbox from './Checkbox'
 import { CssAssistantContext } from '../hooks/CssAssistantContext'
 
@@ -15,15 +16,15 @@ const Container = styled.div`
   font-size: 12px;
   gap: 5px;
   height: fit-content;
-  max-height: ${p => (p.$show ? '250px' : '0')};
+  max-height: ${p => (p.$show ? '300px' : '0')};
   overflow: hidden;
   padding: ${p => (p.$show ? '10px 10px' : '0 10px')};
   position: absolute;
   right: -3px;
-  top: ${p => (p.$show ? '72px' : '71px')};
+  top: ${p => (p.$show ? '71px' : '70px')};
   transition: all 0.2s linear;
   width: 300px;
-  z-index: 999999;
+  z-index: 9;
 
   > * {
     opacity: ${p => (p.$show ? '1' : '0')};
@@ -109,13 +110,13 @@ export const SettingsMenu = ({ showSettings }) => {
       <Checkbox
         checked={settings.editor.advancedTools}
         handleChange={() =>
-          setSettings(prev => ({
-            ...prev,
-            editor: {
-              ...prev.editor,
-              advancedTools: !prev.editor.advancedTools,
-            },
-          }))
+          setSettings(prev =>
+            merge({}, prev, {
+              editor: {
+                advancedTools: !prev.editor.advancedTools,
+              },
+            }),
+          )
         }
         id="advanced-tools"
         label="Advanced Tools"
@@ -133,7 +134,22 @@ export const SettingsMenu = ({ showSettings }) => {
           }))
         }
         id="enabled-edition"
-        label="Enable edition"
+        label="Enable editing"
+        style={{ margin: 0 }}
+      />{' '}
+      <Checkbox
+        checked={settings.editor.createNewSnippetVersions}
+        handleChange={() =>
+          setSettings(prev => ({
+            ...prev,
+            editor: {
+              ...prev.editor,
+              createNewSnippetVersions: !prev.editor.createNewSnippetVersions,
+            },
+          }))
+        }
+        id="mark-snippet-by-default"
+        label="Create new version from 'marked' snippet"
         style={{ margin: 0 }}
       />
       <Checkbox

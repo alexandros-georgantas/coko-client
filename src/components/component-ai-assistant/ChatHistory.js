@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { fadeIn } from '@pubsweet/ui-toolkit'
-import { DeleteOutlined } from '@ant-design/icons'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
 import { htmlTagNames } from './utils'
 
@@ -189,8 +188,14 @@ const ChatHistory = () => {
                     </span>
                   )}
                   {i === selectedCtx.history.length - 1 && (
-                    <DeleteOutlined
+                    <settings.Icons.DeleteIcon
                       onClick={deleteLastMessage}
+                      svgProps={{
+                        style: {
+                          width: '20px',
+                          height: '20px',
+                        },
+                      }}
                       title="Remove from history (not undoable)"
                     />
                   )}

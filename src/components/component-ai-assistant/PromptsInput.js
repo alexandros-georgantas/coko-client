@@ -6,7 +6,6 @@ import { rotate360 } from '@pubsweet/ui-toolkit'
 import PropTypes from 'prop-types'
 // import { gql, useLazyQuery } from '@apollo/client'
 import { autoResize, callOn } from './utils'
-import SendIcon from './SendButton'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
 
 const StyledForm = styled.form`
@@ -62,21 +61,6 @@ const StyledSpinner = styled.div`
   }
 `
 
-const SendButton = styled.button`
-  aspect-ratio: 1 /1;
-  background: none;
-  border: none;
-  cursor: pointer;
-  outline: none;
-  padding: 0;
-  width: 24px;
-
-  > svg {
-    fill: #00495c;
-    transform: scale(1.35);
-  }
-`
-
 const PromptsInput = ({ enabled, className, loading, onSend, ...rest }) => {
   // #region HOOKS ---------------------------------------------------------------------
   const {
@@ -86,6 +70,9 @@ const PromptsInput = ({ enabled, className, loading, onSend, ...rest }) => {
     setUserPrompt,
     promptRef,
     onHistory,
+    settings: {
+      Icons: { SendIcon },
+    },
   } = useContext(CssAssistantContext)
 
   useEffect(() => {
@@ -141,13 +128,7 @@ const PromptsInput = ({ enabled, className, loading, onSend, ...rest }) => {
         value={userPrompt}
         {...rest}
       />
-      {loading ? (
-        <StyledSpinner />
-      ) : (
-        <SendButton onClick={onSend}>
-          <SendIcon size="18" />
-        </SendButton>
-      )}
+      {loading ? <StyledSpinner /> : <SendIcon onClick={onSend} />}
     </StyledForm>
   )
 }
