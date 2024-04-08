@@ -117,7 +117,6 @@ const MessageContent = styled.div`
 `
 
 // TODO: pass currentUser as prop
-// eslint-disable-next-line react/prop-types
 const ChatHistory = () => {
   const { selectedCtx, htmlSrc, feedback, deleteLastMessage, settings } =
     useContext(CssAssistantContext)
@@ -152,7 +151,6 @@ const ChatHistory = () => {
       {selectedCtx?.history?.length > 0 ? (
         selectedCtx.history.map(({ role, content }, i) => {
           const forgotten =
-            // eslint-disable-next-line react/prop-types
             i < selectedCtx.history.length - settings.chat.historyMax - 1
 
           return (

@@ -47,7 +47,7 @@ const Toggle = ({ handleChange, checked, label, ...rest }) => {
       <Container checked={checked} onClick={handleChange}>
         <span />
       </Container>
-      <span>{label}</span>
+      {label && <span>{label}</span>}
     </Root>
   )
 }

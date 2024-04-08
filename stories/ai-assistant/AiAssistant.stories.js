@@ -26,9 +26,11 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body,
-  html {
+  html,
+  html > body.sb-show-main body.sb-main-padded {
     box-sizing: border-box;
     margin: 0;
+    padding: 0;
   }
 
   * :not(div#assistant-ctx) {

@@ -254,259 +254,7 @@ export const cssTemplate1 = /* css */ `
     background: #fff0;
     padding: 5px;
   }
-  
 `
-// export const cssTemplate3 = `
-// html {
-//   -ms-text-size-adjust: 100%;
-//   -webkit-text-size-adjust: 100%;
-// }
-// body {
-//   margin: 0;
-// }
-// template,
-// [hidden] {
-//   display: none;
-// }
-// :root {
-//   --color-background: #b1b1b1;
-//   --color-marginBox: transparent;
-//   --color-pageBox: grey;
-//   --color-paper: white;
-//   --color-baseline: red;
-//   --font-texte: "Crimson Text";
-//   --font-titre: "Crimson Text";
-//   --weight-titre: 300;
-//   --color-body: #222222;
-//   --color-une: rgb(139, 139, 139);
-//   --color-deux: #0f0e0f;
-//   --font-size: 13pt;
-//   --font-lineHeight: 17pt;
-//   --indent-block: calc(var(--page-margin-left) * 0.3);
-//   --list-padding: 3mm;
-//   --page-margin-top: 12mm;
-//   --page-margin-bottom: 15mm;
-//   --page-margin-left: 15mm;
-//   --page-margin-right: 15mm;
-//   --pagedjs-width: 216mm;
-//   --pagedjs-height: 279mm;
-//   --pagedjs-width-right: 216mm;
-//   --pagedjs-height-right: 279mm;
-//   --pagedjs-width-left: 216mm;
-//   --pagedjs-height-left: 279mm;
-//   --color-background: #b1b1b1;
-//   --color-marginBox: transparent;
-//   --color-pageBox: grey;
-//   --color-paper: white;
-//   --color-baseline: red;
-//   --font-texte: "Crimson Text";
-//   --font-titre: "Crimson Text";
-//   --weight-titre: 300;
-//   --color-body: #222;
-//   --color-une: #8b8b8b;
-//   --color-deux: #0f0e0f;
-//   --font-size: 13pt;
-//   --font-lineHeight: 17pt;
-//   --indent-block: calc(var(--page-margin-left) * .3);
-//   --list-padding: 3mm;
-//   --page-margin-top: 28mm;
-//   --page-margin-bottom: 30mm;
-//   --page-margin-left: 30mm;
-//   --page-margin-right: 30mm;
-//   --color-interface-pageSheet: #cfcfcf;
-//   --color-interface-pageBox: violet;
-//   --color-interface-paper: white;
-//   --color-interface-marginBox: transparent;
-//   --pagedjs-interface-crop-color: black;
-//   --pagedjs-interface-crop-shadow: white;
-//   --pagedjs-interface-crop-stroke: 1px;
-//   --color-interface-background: #DCDCDC;
-//   --zoom-interface-factor: 1;
-//   --pagedjs-width: 8.5in;
-//   --pagedjs-height: 11in;
-//   --pagedjs-width-right: 8.5in;
-//   --pagedjs-height-right: 11in;
-//   --pagedjs-width-left: 8.5in;
-//   --pagedjs-height-left: 11in;
-//   --pagedjs-pagebox-width: 8.5in;
-//   --pagedjs-pagebox-height: 11in;
-//   --pagedjs-footnotes-height: 0mm;
-//   --pagedjs-margin-top: 1in;
-//   --pagedjs-margin-right: 1in;
-//   --pagedjs-margin-bottom: 1in;
-//   --pagedjs-margin-left: 1in;
-//   --pagedjs-padding-top: 0mm;
-//   --pagedjs-padding-right: 0mm;
-//   --pagedjs-padding-bottom: 0mm;
-//   --pagedjs-padding-left: 0mm;
-//   --pagedjs-border-top: 0mm;
-//   --pagedjs-border-right: 0mm;
-//   --pagedjs-border-bottom: 0mm;
-//   --pagedjs-border-left: 0mm;
-//   --pagedjs-bleed-top: 0mm;
-//   --pagedjs-bleed-right: 0mm;
-//   --pagedjs-bleed-bottom: 0mm;
-//   --pagedjs-bleed-left: 0mm;
-//   --pagedjs-bleed-right-top: 0mm;
-//   --pagedjs-bleed-right-right: 0mm;
-//   --pagedjs-bleed-right-bottom: 0mm;
-//   --pagedjs-bleed-right-left: 0mm;
-//   --pagedjs-bleed-left-top: 0mm;
-//   --pagedjs-bleed-left-right: 0mm;
-//   --pagedjs-bleed-left-bottom: 0mm;
-//   --pagedjs-bleed-left-left: 0mm;
-//   --pagedjs-crop-color: black;
-//   --pagedjs-crop-shadow: white;
-//   --pagedjs-crop-offset: 2mm;
-//   --pagedjs-crop-stroke: 1px;
-//   --pagedjs-cross-size: 5mm;
-//   --pagedjs-mark-cross-display: none;
-//   --pagedjs-mark-crop-display: none;
-//   --pagedjs-page-count: 0;
-//   --pagedjs-page-counter-increment: 1;
-//   --pagedjs-footnotes-count: 0;
-//   --pagedjs-column-gap-offset: 1000px;
-// }
-
-// html {
-//     font-weight: normal;
-//     font-size: var(--font-size);
-//     color: var(--color-body);
-//     font-kerning: normal;
-//     font-variant-ligatures: none;
-// }
-// html {
-//     -webkit-text-size-adjust: 100%;
-//     -ms-text-size-adjust: 100%;
-
-// @media screen {
-//   body {
-//     background-color: var(--color-background);
-//   }
-//   .pagedjs_pages {
-//     display: flex;
-//     width: calc(var(--pagedjs-width) * 2);
-//     flex: 0;
-//     flex-wrap: wrap;
-//     margin: 0 auto;
-//     margin-bottom: 3em;
-//   }
-//   .pagedjs_page {
-//     background-color: var(--color-paper);
-//     box-shadow: 0 0 0 2px var(--color-pageBox);
-//     margin: 0;
-//     flex-shrink: 0;
-//     flex-grow: 0;
-//     margin-top: 10mm;
-//   }
-//   .pagedjs_first_page {
-//     margin-left: var(--pagedjs-width);
-//   }
-// }
-
-// .running-left {
-//   string-set: title content(text);
-// }
-// @page :blank {
-//   @top-left-corner {
-//     content: none;
-//   }
-//   @top-left {
-//     content: none;
-//   }
-//   @top-center {
-//     content: none;
-//   }
-//   @top-right {
-//     content: none;
-//   }
-//   @top-right-corner {
-//     content: none;
-//   }
-//   @right-top {
-//     content: none;
-//   }
-//   @right-middle {
-//     content: none;
-//   }
-//   @right-bottom {
-//     content: none;
-//   }
-//   @bottom-right-corner {
-//     content: none;
-//   }
-//   @bottom-right {
-//     content: none;
-//   }
-//   @bottom-center {
-//     content: none;
-//   }
-//   @bottom-left {
-//     content: none;
-//   }
-//   @bottom-left-corner {
-//     content: none;
-//   }
-//   @left-bottom {
-//     content: none;
-//   }
-//   @left-middle {
-//     content: none;
-//   }
-//   @left-top {
-//     content: none;
-//   }
-
-// @page copyrights {
-//   @bottom-center {
-//     content: none;
-//   }
-//   @bottom-right-corner {
-//     content: none;
-//   }
-//   @bottom-left-corner {
-//     content: none;
-//   }
-// }
-// .toc {
-//   page: toc;
-// }
-// @page toc {
-//   @bottom-center {
-//     content: none;
-//   }
-//   @bottom-right-corner {
-//     content: none;
-//   }
-//   @bottom-left-corner {
-//     content: none;
-//   }
-// }
-// .chapter header {
-//   page: chapitre-ouverture;
-//   break-before: right;
-//   break-after: page;
-// }
-// @page chapitre-ouverture {
-//   @bottom-center {
-//     content: none;
-//   }
-//   @bottom-right-corner {
-//     content: none;
-//   }
-//   @bottom-left-corner {
-//     content: none;
-//   }
-// }
-// .chapter {
-//   page: chapitre;
-// }
-// @page chapitre:first {
-//   @bottom-center {
-//     content: none;
-//   }
-// }
-// `
 
 export const initialPagedJSCSS = /* css */ `
 :root {
@@ -575,27 +323,6 @@ export const finishReasons = {
   unknown: 'An unknown error occurred during the completion process.',
 }
 
-// const PAGEDJS_GUIDELINES = {
-//   NamedString: `
-// The fastest way to create running headers/footers is to use what is already in your content. Named strings are used to create running headers and footers: they copy text for reuse in margin boxes.
-
-// First, the text content of the selected element is cloned into a named string using string-set with a custom identifier (in the code below we call it “title”, but you can name it whatever makes sense as a variable). In the following example, each time a new <h2> appears in the HTML, the content of the named string gets updated with the text of that <h2>. (It also can be selected with a class if you prefer).
-
-// h2 {
-//   string-set: title content(text);
-// }
-
-// Next, the string() function copies the value of a named string to the margin boxes, via the content property:
-
-// @page {
-//   @bottom-center {
-//     content: string(title);
-//   }
-// }
-// The string property act like a variable. It read your DOM and each time a new title level 2 is encountered, it change the variable from the page where that title appears. This variable is passed into the margin boxes of the page and into all the following margin boxes until there is a new title.
-// `,
-// }
-
 const TASK_AND_ROLE_DEFINITIONS = `You are a CSS, JS and HTML expert with a vast knowledge on pagedjs library ('https://pagedjs.org').
 
 Your task is to assist 'user' with the design of a article.
@@ -645,15 +372,9 @@ const CONTEXT = (sheet, snippets, providedText, isSingleElement) => `${
   isSingleElement && providedText
     ? `\nThis is the html content of the element in context: "${providedText}"\n`
     : ''
-}${
-  ''
-  // !isSingleElement
-  //   ? `Here you have some pagedJS guides: ${values(PAGEDJS_GUIDELINES)}`
-  //   : ''
 }
 `
 
-// Removed for now: You must retain also in context the properties 'user' pointed on previous prompts, to add, remove, or modify it/them accordingly.
 const SELECTOR_SHAPE = ({
   selectors,
 }) => `${`- This are all elements in the context of the artcle, you must change them as needed: ${[
@@ -668,24 +389,6 @@ const SELECTOR_SHAPE = ({
   }
   ... and so on as needed
 `
-// const SELECTOR_SHAPE = ({
-//   selectors,
-// }) => `[validSelector] is a placeholder variable (see below), and its value can only be a pagedjs special selector or any of the following valid selectors: [${selectors}].
-
-//  This variable represents the HTML element whose CSS properties needs to be changed.
-
-//  A classic single tagname is not a valid selector, you must never use them.
-
-//  The only element types that exists in this context are the ones mentioned above.
-
-//  But can be more than one element with the same selector, so, if you have for example: div#some-id > div > h2 as valid selector for the h2, and user request to change the first h2, you must do div#some-id > div:nth-of-type(1) > h2, It means you must target the container, not the h2 itself, this applies to all elements/selectors
-
-//  If the prompt refers to an HTML element and it's tagname matches one of these valid selectors use it, otherwise use "${'@page'}" as default value.
-
-// ["validSelector"] also can be followed by nth-of-type(n) or nth-child(n) or any other pseudo-selectors, but ONLY if 'user' specifies a number for the element,
-// `
-
-// const RULES_SHAPE = `If user wants to apply inline styles to the element: {"validCSSProperty": "validCSSValue", ...moreValidCssPropertiesAndValues}, otherwise: {}`
 
 const CSS_SHAPE = `If user requested a change on the css: A well formed valid CSS string that will be the complete provided context stylesheet with the following: 
     - You must add, to the provided stylesheet, the required changes that 'user' requested.
@@ -782,10 +485,11 @@ const JSON_FORMAT = (
       : `"css": "${CSS_SHAPE}",`
   }
   ${
+    '' /*
     (isSingleElement && ctx.node.classList.contains('tibetan')) ||
     (!isSingleElement &&
       `addTibetan: - if 'user' asks to add a phonetic english translation addition must be true, otherwise omit this property,
-`)
+`) */
   }
 ${providedText || hasNoTextContent ? `\n"content": ${CONTENT_SHAPE},` : ''}
 "feedback": ${FEEDBACK_SHAPE(providedText, isSingleElement)},

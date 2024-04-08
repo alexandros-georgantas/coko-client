@@ -42,10 +42,6 @@ const Root = styled.div`
     overflow-y: auto;
   }
 
-  .anticon svg {
-    color: #fff;
-  }
-
   > span {
     button {
       background-color: transparent;
@@ -156,11 +152,15 @@ const Heading = styled.span`
   padding: 0.5rem 1rem;
   /* cursor: ${p => (p.$dragging ? 'grabbing' : 'grab')}; */
 
-  > span > svg {
-    color: #fff;
+  > span > svg,
+  .anticon svg {
     display: flex;
     height: 18px;
     width: 18px;
+  }
+
+  .anticon svg {
+    color: var(--color-states-dark);
   }
 
   h3 {
@@ -306,6 +306,7 @@ export const SnippetsManager = ({ updatePreview, alignment = 'right' }) => {
         <span>
           <FullscreenOutlined
             onClick={() => setWidth(width === '50%' ? '100%' : '50%')}
+            style={{ color: '#fff' }}
           />
         </span>
       </Heading>
@@ -439,7 +440,14 @@ const SnippetsList = ({
       >
         <span>
           <h4>{capitalize(snippetName.replaceAll('-', ' '))}</h4>
-          <span style={{ alignItems: 'center', gap: '6px' }}>
+          <span
+            style={{
+              alignItems: 'center',
+              gap: '6px',
+              height: 'fit-content',
+              paddingRight: '8px',
+            }}
+          >
             {isAdded && isMarked && <small>editing</small>}
             {isMarked && (
               <CodeOutlined
