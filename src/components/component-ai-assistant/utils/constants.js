@@ -1,4 +1,4 @@
-import { getSnippetsBy, snippetsToCssText } from './helpers'
+import { getSnippetsBy } from './helpers'
 
 // IDEA:This could be used to limit the selectable nodes
 export const htmlTagNames = {
@@ -127,21 +127,12 @@ export const cssTemplate1 = /* css */ `
 /* CSS for Paged.js interface – v0.4 */
 
 /* Change the look */
-:root {
-    --color-background: whitesmoke;
-    --color-pageSheet: #cfcfcf;
-    --color-pageBox: violet;
-    --color-paper: white;
-    --color-marginBox: transparent;
-    --pagedjs-crop-color: black;
-    --pagedjs-crop-shadow: white;
-    --pagedjs-crop-stroke: 1px;
-}
+
 
 /* To define how the book look on the screen: */
 @media screen, pagedjs-ignore {
     body {
-        background-color: var(--color-background);
+        background-color: whitesmoke;
     }
 
     .pagedjs_pages {
@@ -153,8 +144,7 @@ export const cssTemplate1 = /* css */ `
     }
 
     .pagedjs_page {
-        background-color: var(--color-paper);
-        box-shadow: 0 0 0 1px var(--color-pageSheet);
+
         margin: 0;
         flex-shrink: 0;
         flex-grow: 0;
@@ -170,7 +160,7 @@ export const cssTemplate1 = /* css */ `
     }
 
     .pagedjs_pagebox{
-        box-shadow: 0 0 0 1px var(--color-pageBox);
+        box-shadow: 0 0 0 1px transparent;
     }
 
     .pagedjs_left_page{
@@ -192,7 +182,7 @@ export const cssTemplate1 = /* css */ `
         left: calc(var(--pagedjs-bleed-left)*-1);
     }
 
-    /* show the margin-box */
+    /* show the margin-box 
 
     .pagedjs_margin-top-left-corner-holder,
     .pagedjs_margin-top,
@@ -216,7 +206,7 @@ export const cssTemplate1 = /* css */ `
     .pagedjs_margin-left-bottom {
         box-shadow: 0 0 0 1px inset var(--color-marginBox);
     }
-
+*/
 
     .pagedjs_pages {
         flex-direction: column;
@@ -266,687 +256,269 @@ export const cssTemplate1 = /* css */ `
   }
   
 `
-export const cssTemplate3 = `
-html {
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-}
-body {
-  margin: 0;
-}
-h1 {
-  font-size: 30px;
-  margin: 10px 0;
-}
-figcaption,
-figure,
-main {
-  display: block;
-}
-hr {
-  box-sizing: content-box;
-  height: 0;
-  overflow: visible;
-}
-pre {
-  font-family: monospace, monospace;
-  font-size: 16px;
-}
-a {
-  background-color: transparent;
-  -webkit-text-decoration-skip: objects;
-}
-abbr[title] {
-  border-bottom: none;
-  text-decoration: underline;
-  text-decoration: underline dotted;
-}
-b,
-strong {
-  font-weight: inherit;
-  font-weight: bolder;
-}
-code,
-kbd,
-samp {
-  font-family: monospace, monospace;
-  font-size: 16px;
-}
-dfn {
-  font-style: italic;
-}
-mark {
-  background-color: #ff0;
-  color: #000;
-}
-small {
-  font-size: 80%;
-}
-sub,
-sup {
-  font-size: 75%;
-  line-height: 0;
-  position: relative;
-  vertical-align: baseline;
-}
-sub {
-  bottom: -5px;
-}
-sup {
-  top: -5px;
-}
-audio,
-video {
-  display: inline-block;
-}
-audio:not([controls]) {
-  display: none;
-  height: 0;
-}
-img {
-  border-style: none;
-}
-svg:not(:root) {
-  overflow: hidden;
-}
-button,
-input,
-optgroup,
-select,
-textarea {
-  font-family: sans-serif;
-  font-size: 100%;
-  line-height: 1.15;
-  margin: 0;
-}
-button,
-input {
-  overflow: visible;
-}
-button,
-select {
-  text-transform: none;
-}
-button,
-html [type="button"],
-[type="reset"],
-[type="submit"] {
-  -webkit-appearance: button;
-}
-button::-moz-focus-inner,
-[type="button"]::-moz-focus-inner,
-[type="reset"]::-moz-focus-inner,
-[type="submit"]::-moz-focus-inner {
-  border-style: none;
-  padding: 0;
-}
-button:-moz-focusring,
-[type="button"]:-moz-focusring,
-[type="reset"]:-moz-focusring,
-[type="submit"]:-moz-focusring {
-  outline: 1px dotted ButtonText;
-}
-fieldset {
-  padding: 5px 12px 7px;
-}
-legend {
-  box-sizing: border-box;
-  color: inherit;
-  display: table;
-  max-width: 100%;
-  padding: 0;
-  white-space: normal;
-}
-progress {
-  display: inline-block;
-  vertical-align: baseline;
-}
-textarea {
-  overflow: auto;
-}
-[type="checkbox"],
-[type="radio"] {
-  box-sizing: border-box;
-  padding: 0;
-}
-[type="number"]::-webkit-inner-spin-button,
-[type="number"]::-webkit-outer-spin-button {
-  height: auto;
-}
-[type="search"] {
-  -webkit-appearance: textfield;
-  outline-offset: -2px;
-}
-[type="search"]::-webkit-search-cancel-button,
-[type="search"]::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
-::-webkit-file-upload-button {
-  -webkit-appearance: button;
-  font: inherit;
-}
-details,
-menu {
-  display: block;
-}
-summary {
-  display: list-item;
-}
-canvas {
-  display: inline-block;
-}
-template,
-[hidden] {
-  display: none;
-}
+// export const cssTemplate3 = `
+// html {
+//   -ms-text-size-adjust: 100%;
+//   -webkit-text-size-adjust: 100%;
+// }
+// body {
+//   margin: 0;
+// }
+// template,
+// [hidden] {
+//   display: none;
+// }
+// :root {
+//   --color-background: #b1b1b1;
+//   --color-marginBox: transparent;
+//   --color-pageBox: grey;
+//   --color-paper: white;
+//   --color-baseline: red;
+//   --font-texte: "Crimson Text";
+//   --font-titre: "Crimson Text";
+//   --weight-titre: 300;
+//   --color-body: #222222;
+//   --color-une: rgb(139, 139, 139);
+//   --color-deux: #0f0e0f;
+//   --font-size: 13pt;
+//   --font-lineHeight: 17pt;
+//   --indent-block: calc(var(--page-margin-left) * 0.3);
+//   --list-padding: 3mm;
+//   --page-margin-top: 12mm;
+//   --page-margin-bottom: 15mm;
+//   --page-margin-left: 15mm;
+//   --page-margin-right: 15mm;
+//   --pagedjs-width: 216mm;
+//   --pagedjs-height: 279mm;
+//   --pagedjs-width-right: 216mm;
+//   --pagedjs-height-right: 279mm;
+//   --pagedjs-width-left: 216mm;
+//   --pagedjs-height-left: 279mm;
+//   --color-background: #b1b1b1;
+//   --color-marginBox: transparent;
+//   --color-pageBox: grey;
+//   --color-paper: white;
+//   --color-baseline: red;
+//   --font-texte: "Crimson Text";
+//   --font-titre: "Crimson Text";
+//   --weight-titre: 300;
+//   --color-body: #222;
+//   --color-une: #8b8b8b;
+//   --color-deux: #0f0e0f;
+//   --font-size: 13pt;
+//   --font-lineHeight: 17pt;
+//   --indent-block: calc(var(--page-margin-left) * .3);
+//   --list-padding: 3mm;
+//   --page-margin-top: 28mm;
+//   --page-margin-bottom: 30mm;
+//   --page-margin-left: 30mm;
+//   --page-margin-right: 30mm;
+//   --color-interface-pageSheet: #cfcfcf;
+//   --color-interface-pageBox: violet;
+//   --color-interface-paper: white;
+//   --color-interface-marginBox: transparent;
+//   --pagedjs-interface-crop-color: black;
+//   --pagedjs-interface-crop-shadow: white;
+//   --pagedjs-interface-crop-stroke: 1px;
+//   --color-interface-background: #DCDCDC;
+//   --zoom-interface-factor: 1;
+//   --pagedjs-width: 8.5in;
+//   --pagedjs-height: 11in;
+//   --pagedjs-width-right: 8.5in;
+//   --pagedjs-height-right: 11in;
+//   --pagedjs-width-left: 8.5in;
+//   --pagedjs-height-left: 11in;
+//   --pagedjs-pagebox-width: 8.5in;
+//   --pagedjs-pagebox-height: 11in;
+//   --pagedjs-footnotes-height: 0mm;
+//   --pagedjs-margin-top: 1in;
+//   --pagedjs-margin-right: 1in;
+//   --pagedjs-margin-bottom: 1in;
+//   --pagedjs-margin-left: 1in;
+//   --pagedjs-padding-top: 0mm;
+//   --pagedjs-padding-right: 0mm;
+//   --pagedjs-padding-bottom: 0mm;
+//   --pagedjs-padding-left: 0mm;
+//   --pagedjs-border-top: 0mm;
+//   --pagedjs-border-right: 0mm;
+//   --pagedjs-border-bottom: 0mm;
+//   --pagedjs-border-left: 0mm;
+//   --pagedjs-bleed-top: 0mm;
+//   --pagedjs-bleed-right: 0mm;
+//   --pagedjs-bleed-bottom: 0mm;
+//   --pagedjs-bleed-left: 0mm;
+//   --pagedjs-bleed-right-top: 0mm;
+//   --pagedjs-bleed-right-right: 0mm;
+//   --pagedjs-bleed-right-bottom: 0mm;
+//   --pagedjs-bleed-right-left: 0mm;
+//   --pagedjs-bleed-left-top: 0mm;
+//   --pagedjs-bleed-left-right: 0mm;
+//   --pagedjs-bleed-left-bottom: 0mm;
+//   --pagedjs-bleed-left-left: 0mm;
+//   --pagedjs-crop-color: black;
+//   --pagedjs-crop-shadow: white;
+//   --pagedjs-crop-offset: 2mm;
+//   --pagedjs-crop-stroke: 1px;
+//   --pagedjs-cross-size: 5mm;
+//   --pagedjs-mark-cross-display: none;
+//   --pagedjs-mark-crop-display: none;
+//   --pagedjs-page-count: 0;
+//   --pagedjs-page-counter-increment: 1;
+//   --pagedjs-footnotes-count: 0;
+//   --pagedjs-column-gap-offset: 1000px;
+// }
+
+// html {
+//     font-weight: normal;
+//     font-size: var(--font-size);
+//     color: var(--color-body);
+//     font-kerning: normal;
+//     font-variant-ligatures: none;
+// }
+// html {
+//     -webkit-text-size-adjust: 100%;
+//     -ms-text-size-adjust: 100%;
+
+// @media screen {
+//   body {
+//     background-color: var(--color-background);
+//   }
+//   .pagedjs_pages {
+//     display: flex;
+//     width: calc(var(--pagedjs-width) * 2);
+//     flex: 0;
+//     flex-wrap: wrap;
+//     margin: 0 auto;
+//     margin-bottom: 3em;
+//   }
+//   .pagedjs_page {
+//     background-color: var(--color-paper);
+//     box-shadow: 0 0 0 2px var(--color-pageBox);
+//     margin: 0;
+//     flex-shrink: 0;
+//     flex-grow: 0;
+//     margin-top: 10mm;
+//   }
+//   .pagedjs_first_page {
+//     margin-left: var(--pagedjs-width);
+//   }
+// }
+
+// .running-left {
+//   string-set: title content(text);
+// }
+// @page :blank {
+//   @top-left-corner {
+//     content: none;
+//   }
+//   @top-left {
+//     content: none;
+//   }
+//   @top-center {
+//     content: none;
+//   }
+//   @top-right {
+//     content: none;
+//   }
+//   @top-right-corner {
+//     content: none;
+//   }
+//   @right-top {
+//     content: none;
+//   }
+//   @right-middle {
+//     content: none;
+//   }
+//   @right-bottom {
+//     content: none;
+//   }
+//   @bottom-right-corner {
+//     content: none;
+//   }
+//   @bottom-right {
+//     content: none;
+//   }
+//   @bottom-center {
+//     content: none;
+//   }
+//   @bottom-left {
+//     content: none;
+//   }
+//   @bottom-left-corner {
+//     content: none;
+//   }
+//   @left-bottom {
+//     content: none;
+//   }
+//   @left-middle {
+//     content: none;
+//   }
+//   @left-top {
+//     content: none;
+//   }
+
+// @page copyrights {
+//   @bottom-center {
+//     content: none;
+//   }
+//   @bottom-right-corner {
+//     content: none;
+//   }
+//   @bottom-left-corner {
+//     content: none;
+//   }
+// }
+// .toc {
+//   page: toc;
+// }
+// @page toc {
+//   @bottom-center {
+//     content: none;
+//   }
+//   @bottom-right-corner {
+//     content: none;
+//   }
+//   @bottom-left-corner {
+//     content: none;
+//   }
+// }
+// .chapter header {
+//   page: chapitre-ouverture;
+//   break-before: right;
+//   break-after: page;
+// }
+// @page chapitre-ouverture {
+//   @bottom-center {
+//     content: none;
+//   }
+//   @bottom-right-corner {
+//     content: none;
+//   }
+//   @bottom-left-corner {
+//     content: none;
+//   }
+// }
+// .chapter {
+//   page: chapitre;
+// }
+// @page chapitre:first {
+//   @bottom-center {
+//     content: none;
+//   }
+// }
+// `
+
+export const initialPagedJSCSS = /* css */ `
 :root {
-  --color-background: #b1b1b1;
-  --color-marginBox: transparent;
-  --color-pageBox: grey;
-  --color-paper: white;
-  --color-baseline: red;
-  --font-texte: "Crimson Text";
-  --font-titre: "Crimson Text";
-  --weight-titre: 300;
-  --color-body: #222222;
-  --color-une: rgb(139, 139, 139);
-  --color-deux: #0f0e0f;
-  --font-size: 13pt;
-  --font-lineHeight: 17pt;
-  --indent-block: calc(var(--page-margin-left) * 0.3);
-  --list-padding: 3mm;
-  --page-margin-top: 12mm;
-  --page-margin-bottom: 15mm;
-  --page-margin-left: 15mm;
-  --page-margin-right: 15mm;
-  --pagedjs-width: 216mm;
-  --pagedjs-height: 279mm;
-  --pagedjs-width-right: 216mm;
-  --pagedjs-height-right: 279mm;
-  --pagedjs-width-left: 216mm;
-  --pagedjs-height-left: 279mm;
-  --color-background: #b1b1b1;
-  --color-marginBox: transparent;
-  --color-pageBox: grey;
-  --color-paper: white;
-  --color-baseline: red;
-  --font-texte: "Crimson Text";
-  --font-titre: "Crimson Text";
-  --weight-titre: 300;
-  --color-body: #222;
-  --color-une: #8b8b8b;
-  --color-deux: #0f0e0f;
-  --font-size: 13pt;
-  --font-lineHeight: 17pt;
-  --indent-block: calc(var(--page-margin-left) * .3);
-  --list-padding: 3mm;
-  --page-margin-top: 28mm;
-  --page-margin-bottom: 30mm;
-  --page-margin-left: 30mm;
-  --page-margin-right: 30mm;
-  --color-interface-pageSheet: #cfcfcf;
-  --color-interface-pageBox: violet;
-  --color-interface-paper: white;
-  --color-interface-marginBox: transparent;
-  --pagedjs-interface-crop-color: black;
-  --pagedjs-interface-crop-shadow: white;
-  --pagedjs-interface-crop-stroke: 1px;
-  --color-interface-background: #DCDCDC;
-  --zoom-interface-factor: 1;
-  --pagedjs-width: 8.5in;
-  --pagedjs-height: 11in;
-  --pagedjs-width-right: 8.5in;
-  --pagedjs-height-right: 11in;
-  --pagedjs-width-left: 8.5in;
-  --pagedjs-height-left: 11in;
-  --pagedjs-pagebox-width: 8.5in;
-  --pagedjs-pagebox-height: 11in;
-  --pagedjs-footnotes-height: 0mm;
-  --pagedjs-margin-top: 1in;
-  --pagedjs-margin-right: 1in;
-  --pagedjs-margin-bottom: 1in;
-  --pagedjs-margin-left: 1in;
-  --pagedjs-padding-top: 0mm;
-  --pagedjs-padding-right: 0mm;
-  --pagedjs-padding-bottom: 0mm;
-  --pagedjs-padding-left: 0mm;
-  --pagedjs-border-top: 0mm;
-  --pagedjs-border-right: 0mm;
-  --pagedjs-border-bottom: 0mm;
-  --pagedjs-border-left: 0mm;
-  --pagedjs-bleed-top: 0mm;
-  --pagedjs-bleed-right: 0mm;
-  --pagedjs-bleed-bottom: 0mm;
-  --pagedjs-bleed-left: 0mm;
-  --pagedjs-bleed-right-top: 0mm;
-  --pagedjs-bleed-right-right: 0mm;
-  --pagedjs-bleed-right-bottom: 0mm;
-  --pagedjs-bleed-right-left: 0mm;
-  --pagedjs-bleed-left-top: 0mm;
-  --pagedjs-bleed-left-right: 0mm;
-  --pagedjs-bleed-left-bottom: 0mm;
-  --pagedjs-bleed-left-left: 0mm;
-  --pagedjs-crop-color: black;
-  --pagedjs-crop-shadow: white;
-  --pagedjs-crop-offset: 2mm;
-  --pagedjs-crop-stroke: 1px;
-  --pagedjs-cross-size: 5mm;
-  --pagedjs-mark-cross-display: none;
-  --pagedjs-mark-crop-display: none;
-  --pagedjs-page-count: 0;
-  --pagedjs-page-counter-increment: 1;
-  --pagedjs-footnotes-count: 0;
-  --pagedjs-column-gap-offset: 1000px;
+    --color-background: #fff;
+    --color-marginBox: transparent;
+    --pagedjs-crop-color: black;
+    --pagedjs-crop-shadow: white;
+    --pagedjs-crop-stroke: 1px;
 }
 
-html {
-    font-family: var(--font-texte);
-    font-weight: normal;
-    font-size: var(--font-size);
-    color: var(--color-body);
-    font-kerning: normal;
-    font-variant-ligatures: none;
-}
-html {
-    -webkit-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
-}
-.copyrights-page :is(.copyright-before, p, .copyright-after) {
-  font-size: calc(var(--font-size) * 0.8);
-  line-height: calc(var(--font-lineHeight) * 0.8);
-  text-align: center;
-}
-.copyrights-page header h1 {
-  display: none;
-}
-.copyright-before {
-  margin-top: var(--page-margin-top);
-}
-.isbn,
-.book-title {
-  font-weight: 500;
-}
-.book-copyrights {
-  margin: var(--font-lineHeight) 0;
-}
-.toc header {
-  margin-bottom: 50px;
-  text-align: center;
-}
-nav {
-  margin-left: var(--page-margin-left);
-}
-nav a {
-  color: var(--color-body);
-  background: none;
-  font-size: var(--font-size);
-  font-style: normal;
-  word-break: break-word;
-}
-nav li::marker {
-  font-size: var(--font-size);
-  color: var(--color-body);
-  content: attr(data-item-num) ". ";
-}
-
-nav li {
-  margin-bottom: 8px;
-}
-#toc-ol ol {
-  margin-top: 6px;
-  margin-bottom: 15px;
-}
-#toc-ol li ol li::marker {
-  color: var(--color-body);
-}
-.toc-body a::after {
-  content: "" target-counter(attr(href), page);
-  font-style: normal;
-  display: inline-block;
-  float: right;
-  margin-right: -0.5mm;
-}
-html {
-  font-family: var(--font-texte);
-  font-weight: normal;
-  font-size: var(--font-size);
-  color: var(--color-body);
-  font-kerning: normal;
-  font-variant-ligatures: none;
-}
-p,
-li {
-  font-size: var(--font-size);
-  line-height: var(--font-lineHeight);
-  text-align: justify;
-  margin: 0;
-  text-indent: var(--indent-block);
-  padding: 0;
-  hyphens: auto;
-}
-blockquote {
-  border-left: 4px solid lightgray;
-  padding-left: 8px;
-  margin-left: var(--indent-block);
-  margin-right: 0;
-}
-blockquote p {
-  text-indent: 0;
-}
-a {
-  font-family: var(--font-titre);
-  color: var(--color-body);
-  text-decoration: none;
-  word-break: break-all;
-  font-style: italic;
-  background: linear-gradient(var(--color-une), var(--color-une)) no-repeat;
-  background-size: 100% 1pt;
-  background-position: 0 16px;
-}
-strong {
-  font-weight: 600;
-}
-u {
-  border-bottom: 1px solid var(--color-une);
-  text-decoration: none;
-}
-.running-right,
-.running-left {
-  display: none;
-}
-.book-subtitle {
-  font-size: calc(var(--font-size) * 2.5);
-}
-.book-authors {
-  font-size: var(--font-size);
-}
-h1,
-h2,
-h3 {
-  font-family: var(--font-titre);
-}
-.chapter header,
-.title-page header {
-  text-align: center;
-  margin: calc(var(--font-lineHeight) * 7) 0 0;
-}
-.chapter-number {
-  font-size: calc(var(--font-size) * 3);
-  font-weight: 500;
-}
-.chapter header h1,
-.title-page header h1,
-h1 strong {
-  font-size: calc(var(--font-size) * 3.5);
-  font-weight: 500;
-}
-h2,
-h2 strong {
-  font-size: calc(var(--font-size) * 3);
-  font-weight: 350;
-  margin-bottom: var(--font-lineHeight);
-}
-h3,
-h3 strong {
-  font-size: calc(var(--font-size) * 2);
-  font-weight: 400;
-  margin-top: calc(var(--font-lineHeight) * 1.5);
-  margin-bottom: 0px;
-}
-h2 + h3 {
-  margin-top: 0px;
-}
-ul,
-ol {
-  margin-bottom: calc(var(--font-size) * 2);
-  margin-top: var(--font-lineHeight);
-  padding-left: calc(var(--indent-block) - var(--list-padding));
-}
-li {
-  padding-left: var(--list-padding);
-  break-inside: avoid;
-}
-li,
-li p {
-  text-indent: 0;
-}
-li p {
-  margin-top: 4pt;
-  margin-bottom: 0;
-  text-align-last: left;
-}
-ol:not(#toc-ol) li::marker {
-  color: var(--color-une);
-}
-ul ul {
-  margin-top: calc(var(--font-lineHeight) * 0.5);
-  margin-bottom: calc(var(--font-lineHeight) * 0.5);
-}
-figure {
-  width: 100%;
-  text-indent: 0;
-  margin-top: calc(var(--font-lineHeight) * 2);
-  margin-bottom: calc(var(--font-lineHeight) * 2);
-  break-inside: avoid;
-  margin-left: 0;
-  margin-right: 0;
-}
-img {
-  display: block;
-  margin: 0 auto;
-  width: 100%;
-  height: auto;
-}
-figcaption {
-  max-width: 40ch;
-  text-align: center;
-  font-family: var(--font-titre);
-  font-size: cal(var(--font-size) * 0.8);
-  line-height: 1.2;
-  color: var(--color-une);
-  margin: var(--font-lineHeight) auto 0;
-}
-p,
-li,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  widows: 2;
-  orphans: 2;
-}
-.chaptertitle,
-img,
-h1,
-h2,
-h3 {
-  break-inside: avoid;
-}
-h1, 
-h2, 
-h3, 
-h4, 
-h5, 
-h6,
-li ul,
-li ol {
-break-after: avoid;
-page-break-after: avoid;
-}
-
-h1 + p,
-h2 + p,
-h3 + p,
-h4 + p,
-h5 + p,
-h6 + p,
-figure + p,
-header + p {
-	text-indent: 0;
-}
-[data-split-to] figure:first-child,
-[data-split-from] figure:first-child,
-[data-split-to] p:first-child,
-[data-split-to] h2:first-child,
-[data-split-to] h3:first-child {
-  margin-top: 0px;
-}
-@media screen {
-  body {
-    background-color: var(--color-background);
-  }
-  .pagedjs_pages {
-    display: flex;
-    width: calc(var(--pagedjs-width) * 2);
-    flex: 0;
-    flex-wrap: wrap;
-    margin: 0 auto;
-    margin-bottom: 3em;
-  }
-  .pagedjs_page {
-    background-color: var(--color-paper);
-    box-shadow: 0 0 0 2px var(--color-pageBox);
-    margin: 0;
-    flex-shrink: 0;
-    flex-grow: 0;
-    margin-top: 10mm;
-  }
-  .pagedjs_first_page {
-    margin-left: var(--pagedjs-width);
-  }
-}
-
-.running-left {
-  string-set: title content(text);
-}
-
-@page {
-  margin-top: 12mm;
-  margin-bottom: 15mm;
-  margin-left: 15mm;
-  margin-right: 15mm;
-  size: 140mm 216mm;
-  @bottom-center {
-    font-size: calc(var(--font-size) * 0.8);
-    font-family: var(--font-titre);
-    text-transform: uppercase;
-		content: string(chapterTitle);
-		color: #808080;
-		font-size: 11pt;
-  }
-}
-@page :blank {
-  @top-left-corner {
-    content: none;
-  }
-  @top-left {
-    content: none;
-  }
-  @top-center {
-    content: none;
-  }
-  @top-right {
-    content: none;
-  }
-  @top-right-corner {
-    content: none;
-  }
-  @right-top {
-    content: none;
-  }
-  @right-middle {
-    content: none;
-  }
-  @right-bottom {
-    content: none;
-  }
-  @bottom-right-corner {
-    content: none;
-  }
-  @bottom-right {
-    content: none;
-  }
-  @bottom-center {
-    content: none;
-  }
-  @bottom-left {
-    content: none;
-  }
-  @bottom-left-corner {
-    content: none;
-  }
-  @left-bottom {
-    content: none;
-  }
-  @left-middle {
-    content: none;
-  }
-  @left-top {
-    content: none;
-  }
-}
-.title-page {
-  page: page-titre;
-  text-align: center;
-}
-.copyrights-page {
-  page: copyrights;
-}
-@page copyrights {
-  @bottom-center {
-    content: none;
-  }
-  @bottom-right-corner {
-    content: none;
-  }
-  @bottom-left-corner {
-    content: none;
-  }
-}
-.toc {
-  page: toc;
-}
-@page toc {
-  @bottom-center {
-    content: none;
-  }
-  @bottom-right-corner {
-    content: none;
-  }
-  @bottom-left-corner {
-    content: none;
-  }
-}
-.chapter header {
-  page: chapitre-ouverture;
-  break-before: right;
-  break-after: page;
-}
-@page chapitre-ouverture {
-  @bottom-center {
-    content: none;
-  }
-  @bottom-right-corner {
-    content: none;
-  }
-  @bottom-left-corner {
-    content: none;
-  }
-}
-.chapter {
-  page: chapitre;
-}
-@page chapitre:first {
-  @bottom-center {
-    content: none;
-  }
-}
-`
-
-export const initialPagedJSCSS = /* css */ ` 
   @page {
+      background: var(--color-background);
       size: A4;
       margin:  20mm;
       @bottom-center {
@@ -959,9 +531,6 @@ export const initialPagedJSCSS = /* css */ `
     @page :left {
       @bottom-left-corner {
         content: counter(page);
-        font-size: var(--font-size);
-        font-family: var(--font-titre);
-        color: var(--color-une);
         text-align: center;
       }
     }
@@ -969,9 +538,6 @@ export const initialPagedJSCSS = /* css */ `
     @page :right {
       @bottom-right-corner {
         content: counter(page);
-        font-size: var(--font-size);
-        font-family: var(--font-titre);
-        color: var(--color-une);
         text-align: center;
       }
     }
@@ -995,7 +561,6 @@ export const initialPagedJSCSS = /* css */ `
     }
     div#assistant-ctx section > h1{
 	    string-set: title content(text);
-      margin-bottom: 10mm;
     }
 `
 
@@ -1033,9 +598,9 @@ export const finishReasons = {
 
 const TASK_AND_ROLE_DEFINITIONS = `You are a CSS, JS and HTML expert with a vast knowledge on pagedjs library ('https://pagedjs.org').
 
-Your task is to assist 'user' with the design of a book.
+Your task is to assist 'user' with the design of a article.
 
-'user' will tell you in natural language the changes he wants to make on the book's design
+'user' will tell you in natural language the changes he wants to make on the article's design.
 
 You must interpret and translate the 'user' request, into css properties/values and html tags or selectors.
 
@@ -1046,7 +611,7 @@ IMPORTANT:
 
 - You must never say to user what to code, and never give him instructions.
 
-- The book is designed with pagedjs, so you will need to apply pagedjs css in some cases.
+- The article is designed with pagedjs, so you will need to apply pagedjs css in some cases.
 
 - Your response must be ALWAYS the valid JSON (described below), NEVER text.
 `
@@ -1074,10 +639,7 @@ const CONTEXT = (sheet, snippets, providedText, isSingleElement) => `${
     : ''
 }${
   isSingleElement && snippets
-    ? `\nThis are the classes that affect the styles of the element(and childs) in context: ${snippetsToCssText(
-        snippets,
-        '.',
-      )}`
+    ? `\nThis are the classes that affect the styles of the element(and childs) in context: ${snippets}`
     : ''
 }${
   isSingleElement && providedText
@@ -1090,24 +652,38 @@ const CONTEXT = (sheet, snippets, providedText, isSingleElement) => `${
   //   : ''
 }
 `
-// Removed for now: You must retain also in context the properties 'user' pointed on previous prompts, to add, remove, or modify it/them accordingly.
 
+// Removed for now: You must retain also in context the properties 'user' pointed on previous prompts, to add, remove, or modify it/them accordingly.
 const SELECTOR_SHAPE = ({
   selectors,
-}) => `[validSelector] is a placeholder variable (see below), and its value can only be a pagedjs special selector or any of the following valid selectors: [${selectors}].
-
- This variable represents the HTML element whose CSS properties needs to be changed.
-
- A classic single tagname is not a valid selector, you must never use them.
- 
- The only element types that exists in this context are the ones mentioned above. 
- 
- But can be more than one element with the same selector, so, if you have for example: div#some-id > div > h2 as valid selector for the h2, and user request to change the first h2, you must do div#some-id > div:nth-of-type(1) > h2, It means you must target the container, not the h2 itself, this applies to all elements/selectors
- 
- If the prompt refers to an HTML element and it's tagname matches one of these valid selectors use it, otherwise use "${'@page'}" as default value. 
-
-["validSelector"] also can be followed by nth-of-type(n) or nth-child(n) or any other pseudo-selectors, but ONLY if 'user' specifies a number for the element,
+}) => `${`- This are all elements in the context of the artcle, you must change them as needed: ${[
+  ...new Set(selectors),
+].join(', ')}.`}
+- All selectors except for pagedjs special selectors must be prefixed with the main container selector, like this: 
+  div#assistant-ctx [tagname] {
+    ...rules
+  }
+  div#assistant-ctx [another Tagname] {
+    ..rules
+  }
+  ... and so on as needed
 `
+// const SELECTOR_SHAPE = ({
+//   selectors,
+// }) => `[validSelector] is a placeholder variable (see below), and its value can only be a pagedjs special selector or any of the following valid selectors: [${selectors}].
+
+//  This variable represents the HTML element whose CSS properties needs to be changed.
+
+//  A classic single tagname is not a valid selector, you must never use them.
+
+//  The only element types that exists in this context are the ones mentioned above.
+
+//  But can be more than one element with the same selector, so, if you have for example: div#some-id > div > h2 as valid selector for the h2, and user request to change the first h2, you must do div#some-id > div:nth-of-type(1) > h2, It means you must target the container, not the h2 itself, this applies to all elements/selectors
+
+//  If the prompt refers to an HTML element and it's tagname matches one of these valid selectors use it, otherwise use "${'@page'}" as default value.
+
+// ["validSelector"] also can be followed by nth-of-type(n) or nth-child(n) or any other pseudo-selectors, but ONLY if 'user' specifies a number for the element,
+// `
 
 // const RULES_SHAPE = `If user wants to apply inline styles to the element: {"validCSSProperty": "validCSSValue", ...moreValidCssPropertiesAndValues}, otherwise: {}`
 
@@ -1129,22 +705,29 @@ Otherwise omit this property
 const SNIPPET_SHAPE = (
   ctx,
   markedSnippet,
+  snippets,
 ) => `For the styles you must return a object (described below)
   - This Object is a snippet to create a css class with nested declarations.
-  The [className] variable is the name of the class, it must be short, in kebab case and inspired on 'user' request and element.${
-    markedSnippet
-      ? `- In case that 'user' not specify to create a new snippet: - You must udpate the following snippet returning the same properties, updating only the "description"(if needed) and "classBody", based on user's request. Here is the snippet to update: ${markedSnippet}: ${JSON.stringify(
-          ctx.snippets[markedSnippet],
-        )}. Otherwise you must create a new snippet from the ground, without mixing the styles requested on previous prompts`
-      : `- You must create a new snippet from the ground, without mixing the styles requested on previous prompts`
-  }
+  The [className] variable is ${
+    markedSnippet ||
+    `the name of the class, it must be short, in kebab case and it must describe the changes on the element in context, in this case ${
+      htmlTagNames[ctx.node.localName] || ctx.node.localName
+    }`
+  }.${
+  markedSnippet
+    ? `- Based on user's request, you must udpate the following snippet returning the same properties, keeping the same className and updating only the following properties: "description"(if needed) and "classBody", dont remove the properties if user does not specify it. This is the snippet to update: ${markedSnippet}: ${JSON.stringify(
+        snippets[markedSnippet],
+      )}`
+    : `- You must create a new snippet from the ground, without mixing the styles requested on previous prompts. this means that the new snippet only must address changes requested on the last prompt only`
+}
   Here is the expected object description:
   [className]: {
     elementType: - The tag name of element in context, in this case: '${
       ctx.node.localName
     }'
-    description: - the description of the styles applied
-    classBody: - valid css text containing the class body:  
+    description: - The description of the styles applied, it most be acurate. (use the word snippet instead of class)
+    classBody: 
+      - A valid and well-formed and formatted(with newlines) css text containing the class body: 
       - It must have nested declarations for childs styling.
       - don't add the either className or the initial and end curly brackets(only add them on the child's nested declarations)
       - if the element in context has childs you must style them within the nested declarations
@@ -1159,10 +742,8 @@ const INSERT_HTML_SHAPE = `if user request to create or add a new element here y
 }" 
 Otherwise, omit this property`
 
-const FEEDBACK_SHAPE = (
-  providedText,
-  isSingleElement,
-) => `you must provide here a string with the feedback: 
+const FEEDBACK_SHAPE =
+  providedText => `you must provide here a string with the feedback: 
 this string can contain:
 
 - In case the user request can be fullfiled: The last changes that where applied, if there is a list, then provide a list.
@@ -1170,12 +751,12 @@ this string can contain:
 - If 'user' ask for the value of a property on the css sheet context, respond in natural(non-technical) language, for example: The [property] of the [requested element by user] is [value].
 
 - If user request information about valid css or pagedjs properties or values is expected a list of avaiable values or properties as output.${
-  providedText
-    ? '\n - If user request it, return the text from the element in context (extract it from the html, and return only the text)'
-    : ''
-}
+    providedText
+      ? '\n - If user request it, return the text from the element in context (extract it from the html, and return only the text)'
+      : ''
+  }
 
-- If none of the above you must ask user to improve his prompt in order to help you to style or modify his book.
+- If none of the above you must ask user to improve his prompt in order to help you to style or modify his article.
 
 - Ensure the text is well formatted including line breaks, and indentation`
 
@@ -1192,12 +773,19 @@ const JSON_FORMAT = (
   hasNoTextContent,
   ctx,
   markedSnippet,
+  snippets,
 ) => `The output must be always in the following JSON format: {
   ${
     isSingleElement
-      ? `"snippet": ${SNIPPET_SHAPE(ctx, markedSnippet)},
+      ? `"snippet": ${SNIPPET_SHAPE(ctx, markedSnippet, snippets)},
  "insertHtml": ${INSERT_HTML_SHAPE},`
       : `"css": "${CSS_SHAPE}",`
+  }
+  ${
+    (isSingleElement && ctx.node.classList.contains('tibetan')) ||
+    (!isSingleElement &&
+      `addTibetan: - if 'user' asks to add a phonetic english translation addition must be true, otherwise omit this property,
+`)
   }
 ${providedText || hasNoTextContent ? `\n"content": ${CONTENT_SHAPE},` : ''}
 "feedback": ${FEEDBACK_SHAPE(providedText, isSingleElement)},
@@ -1211,12 +799,12 @@ IMPORTANT:
 
 - Ensure that each key is a string enclosed in double quotes and that each value is a valid CSS value, also enclosed in double quotes.
 
-- If 'user' requests to change the styles to make the book look "like" or "similar" to a given reference:
+- If 'user' requests to change the styles to make the article look "like" or "similar" to a given reference:
 ${
   !isSingleElement
-    ? `\t\t- Your scope must be pagedjs, starting from the @page rule. 
-     - You must modify all necessary styles, including pagedjs rules.
-     - It needs to be as detailed as possible, use all needed validSelectors, change colors, fonts, margins, padding, footers and any other pagedjs and css styles to achieve the most similar appearence.
+    ? `\t\t- Your scope must be pagedjs, starting from the @page rule.
+     - You must modify all necessary styles and affect all selectors in the context of the article, including pagedjs rules.
+     - It needs to be as detailed as possible, style all selectors in context, change colors, fonts, margins, padding, footers and any other pagedjs and css styles to achieve the most similar appearence (add as much details as possible).
 `
     : `\t\t- You must create a new snippet including necessary styles for the element and its childs
     - You must add as much details as possible to achieve the most similar appearence`
@@ -1230,6 +818,7 @@ export const systemGuidelinesV2 = ({
   selectors,
   providedText,
   markedSnippet,
+  snippets,
 }) => {
   const isSingleElement = ctx.node.id !== 'assistant-ctx'
   return `${
@@ -1238,7 +827,12 @@ export const systemGuidelinesV2 = ({
       : TASK_AND_ROLE_DEFINITIONS_SINGLE_ELEMENT(ctx.tagName)
   }
 
-${CONTEXT(sheet, getSnippetsBy(ctx.snippets), providedText, isSingleElement)}
+${CONTEXT(
+  sheet,
+  getSnippetsBy(ctx.node, snippets),
+  providedText,
+  isSingleElement,
+)}
 
 ${
   !isSingleElement
@@ -1251,6 +845,7 @@ ${JSON_FORMAT(
   ctx.node.textContent === '',
   ctx,
   markedSnippet,
+  snippets,
 )}
 
 ${IMPORTANT_NOTES(isSingleElement)}

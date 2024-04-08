@@ -4,63 +4,79 @@ import React, { createContext, useMemo, useRef, useState } from 'react'
 import { keys, merge, takeRight } from 'lodash'
 import {
   callOn,
-  htmlTagNames,
   safeCall,
   safeId,
   setInlineStyle,
-  Icons,
-  onEntries,
-  updateSnippet,
-  getSnippetsBy,
-  onKeys,
+  SendIcon,
+  SettingsIcon,
+  DeleteIcon,
+  UndoIcon,
+  RedoIcon,
+  RefreshIcon,
   newSnippet,
+  saveToLs,
 } from '../utils'
 
 const defaultSettings = {
-  editor: {
+  gui: {
+    showChatBubble: false,
     advancedTools: true,
-    contentEditable: false,
+  },
+  editor: {
+    contentEditable: true,
     enablePaste: true,
+    selectionColor: {
+      bg: 'var(--color-blue-alpha-2)',
+      border: 'var(--color-blue-alpha-1)',
+    },
+  },
+  snippetsManager: {
     enableSnippets: true,
+    showCssByDefault: true,
     createNewSnippetVersions: false,
-    selectionColor: { bg: '#0001', border: '#0008' },
+    markNewSnippet: true,
     snippets: {
-      exceltable: {
-        borderCollapse: 'collapse',
-        width: '100%',
-        classBody: `\t\tborder: 1px solid #d4d4d4;
-    tbody > tr > td {
-      border: 1px solid #d4d4d4;
-      padding: 8px;
-      textAlign: left;
-    }
-    tbody > tr:nth-of-type(odd) {
-      backgroundColor: '#f2f2f2';
-    }`,
+      'excel-table': {
+        elementType: 'table',
+        description:
+          'Styles the table to resemble an Excel spreadsheet with professional styling.',
+        classBody:
+          "border-collapse: collapse; width: 100%;\n  th, td {\n    border: 1px solid #dddddd;\n    text-align: left;\n    padding: 8px;\n  }\n  th {\n    background-color: #f2f2f2;\n    color: #333;\n  }\n  tr:nth-child(even) {\n    background-color: #f9f9f9;\n  }\n  tr:hover {\n    background-color: #f1f1f1;\n  }\n  td {\n    font-family: Arial, sans-serif;\n  }\n  th {\n    font-family: 'Calibri', sans-serif;\n    font-weight: bold;\n  }\n",
       },
-      rotate: {
-        description: 'rotates the element by 90 degrees',
-        classBody: `
-    transform: rotate(15deg);
-    p {
-      color: #f00;
-    }
-    p:nth-of-type(2) {
-      color: #0f0; 
-    }`,
+      'text-flow-around-image': {
+        elementType: 'any',
+        description: 'Makes the text flow around the images',
+        classBody: `img, figure, picture, svg {\n\tfloat: left;\n\tmargin-right: 2ch;\n}\np {\n\ttext-align: justify;\n}`,
       },
       scale: {
-        description: 'scale the element',
-        classBody: 'transform: scale(1.5);',
+        elementType: 'any',
+        description: 'scales the element',
+        classBody: 'transform: scale(1.1);',
       },
       grayscale: {
+        elementType: 'any',
         description: 'grayscale the element',
         classBody: 'filter: grayscale(100%);',
       },
+      'tibetan-to-phonetics': {
+        description:
+          'this is the snippet applied to all tibetan to phonetics translations',
+        classBody: 'color: red;\nfont-style: italic;',
+        elementType: 'any',
+      },
     },
   },
-  historyMax: 6,
-  Icons,
+  Icons: {
+    SendIcon,
+    SettingsIcon,
+    DeleteIcon,
+    UndoIcon,
+    RedoIcon,
+    RefreshIcon,
+  },
+  chat: {
+    historyMax: 6,
+  },
 }
 
 export const CssAssistantContext = createContext()
@@ -69,7 +85,6 @@ export const CssAssistantContext = createContext()
 export const CssAssistantProvider = ({ children }) => {
   // #region HOOKS ----------------------------------------------------------------
   const context = useRef([])
-  const validSelectors = useRef(null)
   const styleSheetRef = useRef(null)
 
   const history = useRef({
@@ -85,7 +100,6 @@ export const CssAssistantProvider = ({ children }) => {
   const [htmlSrc, setHtmlSrc] = useState(null)
   const [css, setCss] = useState(null)
   const [passedContent, setPassedContent] = useState('')
-  const [copiedSnippet, setCopiedSnippet] = useState(null)
   const [markedSnippet, setMarkedSnippet] = useState('')
 
   const [feedback, setFeedback] = useState('')
@@ -114,37 +128,6 @@ export const CssAssistantProvider = ({ children }) => {
     return { selector, tagName, classNames }
   }
 
-  const makeSelectors = (node, parentSelector) => {
-    const selectors = []
-    const allChilds = node?.children ? [...node.children] : []
-
-    const { selector } = makeSelector(node, parentSelector)
-
-    selectors.push(selector)
-
-    if (allChilds.length > 0) {
-      allChilds.forEach(
-        child =>
-          (child.title = `${
-            htmlTagNames[child.tagName.toLowerCase()]
-          } : <${child.tagName.toLowerCase()}>`),
-      )
-
-      const allChildsSelectors = allChilds.flatMap(
-        child => child && makeSelectors(child, selector),
-      )
-
-      allChildsSelectors && selectors.push(...allChildsSelectors)
-    }
-
-    return [...new Set(selectors)]
-  }
-
-  const getValidSelectors = (node, parentSelector = '') => {
-    const selectors = makeSelectors(node, parentSelector)
-    validSelectors.current = selectors
-  }
-
   const newCtx = (node, parent, snippets = {}, addSelector = true) => {
     const { selector, tagName } = makeSelector(node, parent)
 
@@ -159,7 +142,6 @@ export const CssAssistantProvider = ({ children }) => {
       node,
       dataRef,
       tagName,
-      // rules,
       snippets,
       history: [],
     }
@@ -181,7 +163,7 @@ export const CssAssistantProvider = ({ children }) => {
       tagName: tag => context.current[method](ctx => ctx.tagName === tag),
       dataRef: data => context.current[method](ctx => ctx.dataRef === data),
       snippet: snippet => context.current[method](ctx => ctx.snippets[snippet]),
-      default: node => context.current[method](ctx => ctx),
+      default: () => context.current[method](ctx => ctx),
     }
 
     return callOn(by, ctxProps, [prop])
@@ -245,6 +227,17 @@ export const CssAssistantProvider = ({ children }) => {
     } else selectionBoxRef.current.style.opacity = 0
   }
 
+  const saveSession = () => {
+    saveToLs(
+      {
+        settings,
+        css,
+        content: htmlSrc.innerHtml,
+      },
+      'storedsession',
+    )
+  }
+
   // TODO: add snippets to history registry
   const onHistory = {
     addRegistry: (
@@ -285,67 +278,72 @@ export const CssAssistantProvider = ({ children }) => {
 
   // #region SNIPPETS -------------------------------------------------------------------
   const addSnippet = (node, snippet) => {
-    const snippetToAdd = !settings.editor.createNewSnippetVersions
+    const snippetToAdd = !settings.snippetsManager.createNewSnippetVersions
       ? { ...snippet }
-      : newSnippet(snippet, keys(snippet)[0], keys(settings.editor.snippets))
+      : newSnippet(
+          snippet,
+          keys(snippet)[0],
+          keys(settings.snippetsManager.snippets),
+        )
 
-    onKeys(snippetToAdd, k => (snippetToAdd[k].active = true))
-    settings.editor.createNewSnippetVersions &&
-      !getMarkedSnippetName() &&
-      onKeys(snippetToAdd, k => (snippetToAdd[k].marked = true))
-    const snippets = updateSnippet(snippetToAdd, settings.editor.snippets)
+    node.classList.add(`aid-snip-${keys(snippetToAdd)[0]}`)
+    const snippets = merge({}, settings.snippetsManager.snippets, snippetToAdd)
     setSettings(prev => {
-      return merge({}, { ...prev }, { editor: { snippets } })
+      return merge({}, { ...prev }, { snippetsManager: { snippets } })
     })
-    getCtxBy('node', node).snippets = merge(
-      {},
-      getCtxBy('node', node).snippets,
-      snippetToAdd,
-    )
-    addSnippetsClass()
-    setMarkedSnippet(getMarkedSnippetName())
+    settings.snippetsManager.markNewSnippet &&
+      !markedSnippet &&
+      setMarkedSnippet(keys(snippetToAdd)[0])
   }
 
   const removeSnippet = (snippetName, node) => {
     if (!node) {
-      const updatedSnippets = settings.editor.snippets
-      delete updatedSnippets[snippetName]
+      const updatedSnippets = settings.snippetsManager.snippets
+      typeof snippetName === 'string'
+        ? delete updatedSnippets[snippetName]
+        : snippetName.forEach(sn => delete updatedSnippets[sn])
       setSettings(prev => {
         return merge({}, { ...prev }, { editor: { ...updatedSnippets } })
       })
-      getCtxBy('snippet', snippetName, true).forEach(ctx => {
-        delete ctx.snippets[snippetName]
-        ctx.node.classList.remove(`aid-snip-${snippetName}`)
+      document.querySelectorAll(`aid-snip-${snippetName}`).forEach(n => {
+        n.classList.remove(`aid-snip-${snippetName}`)
       })
     } else {
-      delete selectedCtx.snippets[snippetName]
       selectedNode.classList.remove(`aid-snip-${snippetName}`)
     }
   }
 
-  const getMarkedSnippetName = () =>
-    selectedCtx?.snippets
-      ? keys(getSnippetsBy(selectedCtx.snippets, 'marked'))[0] ?? ''
-      : ''
+  // const getMarkedSnippetName = () =>
+  //   selectedCtx?.snippets
+  //     ? keys(getSnippetsBy(selectedCtx.snippets, 'marked'))[0] ?? ''
+  //     : ''
 
-  const addSnippetsClass = () => {
-    onEntries(selectedCtx.snippets, (snippetName, snippetValues) => {
-      const className = `aid-snip-${snippetName}`
+  // const addSnippetsClass = (snipName) => {
+  //   if (snipName) {
+  //     selectedCtx.node.classList.toggle(`aid-snip-${snipName}`)
+  //   } else {
+  //     onEntries(selectedCtx.snippets, (snippetName, snippetValues) => {
+  //       const className = `aid-snip-${snippetName}`
+  //       snippetValues.active
+  //         ? selectedCtx.node.classList.add(className)
+  //         : selectedCtx.node.classList.remove(className)
+  //     })
+  //   }
+  // }
 
-      snippetValues.active
-        ? selectedCtx.node.classList.add(className)
-        : selectedCtx.node.classList.remove(className)
+  const updateSnippetDescription = (snippetName, description) => {
+    const { snippets } = settings.snippetsManager
+    snippets[snippetName].description = description
+    setSettings(prev => {
+      return merge({}, { ...prev }, { snippetsManager: { snippets } })
     })
   }
 
-  const updateSnippetDescription = (snippetName, description) => {
-    const { snippets } = settings.editor
-    snippets[snippetName].description = description
+  const updateSnippetBody = (snippetName, body) => {
+    const { snippets } = settings.snippetsManager
+    snippets[snippetName].classBody = body
     setSettings(prev => {
-      return merge({}, { ...prev }, { editor: { snippets } })
-    })
-    getCtxBy('snippet', snippetName, true).forEach(ctx => {
-      ctx.snippets[snippetName].description = description
+      return merge({}, { ...prev }, { snippetsManager: { snippets } })
     })
   }
 
@@ -363,13 +361,12 @@ export const CssAssistantProvider = ({ children }) => {
     return {
       context,
       history,
-      validSelectors,
       selectedNode,
       selectedCtx,
       setSelectedCtx,
       setSelectedNode,
     }
-  }, [context, history, selectedCtx, selectedNode, validSelectors])
+  }, [context, history, selectedCtx, selectedNode])
 
   const chatGpt = useMemo(() => {
     return {
@@ -384,22 +381,12 @@ export const CssAssistantProvider = ({ children }) => {
     }
   }, [css, htmlSrc, feedback, userPrompt])
 
-  const nodeOptions = useMemo(() => {
-    return {
-      copiedSnippet,
-      setCopiedSnippet,
-    }
-  }, [copiedSnippet])
-
   return (
     <CssAssistantContext.Provider
       value={{
         ...dom,
         ...ctx,
         ...chatGpt,
-        ...nodeOptions,
-        getValidSelectors,
-        makeSelector,
         addToCtx,
         getCtxBy,
         newCtx,
@@ -414,34 +401,17 @@ export const CssAssistantProvider = ({ children }) => {
         settings,
         setSettings,
         // TODO: memoize in a new object
-        addSnippetsClass,
         addSnippet,
         removeSnippet,
-        getMarkedSnippetName,
+        // getMarkedSnippetName,
         markedSnippet,
         setMarkedSnippet,
         updateSnippetDescription,
+        updateSnippetBody,
+        saveSession,
       }}
     >
       {children}
     </CssAssistantContext.Provider>
-  )
-}
-
-export const ModalContext = createContext()
-
-// eslint-disable-next-line react/prop-types
-export const ModalProvider = ({ children }) => {
-  const [openModal, setOpenModal] = useState(false)
-  const modalContent = useRef(null)
-
-  const values = {
-    openModal,
-    modalContent,
-    setOpenModal,
-  }
-
-  return (
-    <ModalContext.Provider value={values}>{children}</ModalContext.Provider>
   )
 }

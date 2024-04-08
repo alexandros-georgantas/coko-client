@@ -2,8 +2,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { merge } from 'lodash'
-import Checkbox from './Checkbox'
 import { CssAssistantContext } from '../hooks/CssAssistantContext'
+import Toggle from './Toggle'
 
 const Container = styled.div`
   --padding: 10px;
@@ -15,16 +15,16 @@ const Container = styled.div`
   flex-direction: column;
   font-size: 12px;
   gap: 5px;
-  height: fit-content;
-  max-height: ${p => (p.$show ? '300px' : '0')};
+  height: 100%;
+  max-width: ${p => (p.$show ? '80%' : '0')};
   overflow: hidden;
-  padding: ${p => (p.$show ? '10px 10px' : '0 10px')};
+  padding: ${p => (p.$show ? '10px 10px' : '10px 0')};
   position: absolute;
-  right: -3px;
-  top: ${p => (p.$show ? '71px' : '70px')};
+  right: ${p => (p.$show ? 0 : '-3px')};
+  top: -1px;
   transition: all 0.2s linear;
-  width: 300px;
-  z-index: 9;
+  width: 500px;
+  z-index: 9999999999;
 
   > * {
     opacity: ${p => (p.$show ? '1' : '0')};
@@ -47,6 +47,13 @@ const Container = styled.div`
     margin: 0;
   }
 
+  h3 {
+    color: var(--color-blue-dark);
+    font-size: 15px;
+    margin: 0;
+    margin-bottom: 10px;
+  }
+
   hr {
     color: #0002;
     margin: 5px;
@@ -61,6 +68,8 @@ const Container = styled.div`
 const Group = styled.div`
   display: flex;
   justify-content: space-between;
+  padding: 0 10px;
+  width: 100%;
 
   p {
     margin: 0;
@@ -72,9 +81,21 @@ const Group = styled.div`
   }
 `
 
-export const SettingsMenu = ({ showSettings }) => {
-  const { setSettings, settings } = useContext(CssAssistantContext)
-  const [historyMax, setHistoryMax] = useState(settings.historyMax)
+const SettingsMenu = ({
+  showSettings,
+  showEditor,
+  showChat,
+  livePreview,
+  showPreview,
+  setShowEditor,
+  setLivePreview,
+  setShowPreview,
+  setShowChat,
+  ...rest
+}) => {
+  // eslint-disable-next-line no-unused-vars
+  const { setSettings, settings, saveSession } = useContext(CssAssistantContext)
+  const [historyMax, setHistoryMax] = useState(settings.chat.historyMax)
 
   const setMessageMax = e => {
     // eslint-disable-next-line no-nested-ternary
@@ -84,7 +105,8 @@ export const SettingsMenu = ({ showSettings }) => {
   }
 
   useEffect(() => {
-    historyMax && setSettings(prev => ({ ...prev, historyMax: historyMax - 1 }))
+    historyMax &&
+      setSettings(prev => ({ ...prev, chat: { historyMax: historyMax - 1 } }))
   }, [historyMax])
 
   const setSelectionColor = ({ target }) => {
@@ -101,111 +123,239 @@ export const SettingsMenu = ({ showSettings }) => {
     }))
   }
 
-  const backgrounds = ['#0001', '#fff1', '#f0f1', '#0ff1']
-  const borders = ['#0008', '#fffa', '#f0fa', '#0ffa']
+  const backgrounds = [
+    'var(--color-blue-alpha-2)',
+    'var(--color-green-alpha-2)',
+    'var(--color-yellow-alpha-2)',
+    'var(--color-orange-alpha-2)',
+    '#0000',
+  ]
+
+  const borders = [
+    'var(--color-blue-alpha-1)',
+    'var(--color-green-alpha-1)',
+    'var(--color-yellow-alpha-1)',
+    'var(--color-orange-alpha-1)',
+    '#0000',
+  ]
 
   return (
-    <Container $show={showSettings}>
-      <h4>Settings</h4>
-      <Checkbox
-        checked={settings.editor.advancedTools}
-        handleChange={() =>
-          setSettings(prev =>
-            merge({}, prev, {
-              editor: {
-                advancedTools: !prev.editor.advancedTools,
+    <Container $show={showSettings} {...rest}>
+      <img
+        alt="AI Design Studio Settings"
+        src="/assets/AI Design Studio-Logo-horizontal.svg"
+        style={{ padding: '1.5rem', width: '300px' }}
+      />
+      <Group style={{ justifyContent: 'flex-start' }}>
+        <Group
+          style={{ flexDirection: 'column', justifyContent: 'flex-start' }}
+        >
+          <h3>Snippets Manager</h3>
+          <Toggle
+            checked={settings.snippetsManager.showCssByDefault}
+            handleChange={() =>
+              setSettings(prev =>
+                merge({}, prev, {
+                  snippetsManager: {
+                    showCssByDefault: !prev.snippetsManager.showCssByDefault,
+                  },
+                }),
+              )
+            }
+            id="show-css-by-default"
+            label="Show Css by Default"
+            style={{ margin: 0 }}
+          />
+          <Toggle
+            checked={settings.snippetsManager.createNewSnippetVersions}
+            handleChange={() =>
+              setSettings(prev =>
+                merge({}, prev, {
+                  snippetsManager: {
+                    createNewSnippetVersions:
+                      !prev.snippetsManager.createNewSnippetVersions,
+                  },
+                }),
+              )
+            }
+            id="create-new-snippet-versions"
+            label="Always create new snippet"
+            style={{ margin: 0 }}
+          />
+          <Toggle
+            checked={settings.snippetsManager.markNewSnippet}
+            handleChange={() =>
+              setSettings(prev =>
+                merge({}, prev, {
+                  snippetsManager: {
+                    markNewSnippet: !prev.snippetsManager.markNewSnippet,
+                  },
+                }),
+              )
+            }
+            id="mark-new-snippet"
+            label="Edit new snippets"
+            style={{ margin: 0 }}
+          />
+        </Group>
+
+        <Group
+          style={{ flexDirection: 'column', justifyContent: 'flex-start' }}
+        >
+          <h3>Layout</h3>
+          <Toggle
+            checked={showEditor || (!showPreview && !showEditor)}
+            handleChange={() => setShowEditor(!showEditor)}
+            id="showContent"
+            label="Content"
+            style={{ margin: 0 }}
+          />
+          <Toggle
+            checked={showPreview}
+            handleChange={() => setShowPreview(!showPreview)}
+            id="showPreview"
+            label="Article Preview"
+            style={{ margin: 0 }}
+          />
+          <Toggle
+            checked={showChat}
+            handleChange={() => setShowChat(!showChat)}
+            id="showChatHistory"
+            label="Chat History"
+            style={{ margin: 0 }}
+          />
+          <Toggle
+            checked={livePreview}
+            handleChange={() => setLivePreview(!livePreview)}
+            id="livePreview"
+            label="Live preview"
+            style={{ margin: 0 }}
+          />
+        </Group>
+      </Group>
+      <Group style={{ flexDirection: 'column', justifyContent: 'flex-start' }}>
+        <h3>GUI</h3>
+        <Group>
+          <Group
+            style={{
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              padding: '0',
+            }}
+          >
+            <Toggle
+              checked={settings.gui.advancedTools}
+              handleChange={() =>
+                setSettings(prev =>
+                  merge({}, prev, {
+                    gui: {
+                      advancedTools: !prev.gui.advancedTools,
+                    },
+                  }),
+                )
+              }
+              id="advanced-tools"
+              label="Advanced Tools"
+              style={{ margin: 0 }}
+            />
+            <Toggle
+              checked={settings.editor.contentEditable}
+              handleChange={() =>
+                setSettings(prev => ({
+                  ...prev,
+                  editor: {
+                    ...prev.editor,
+                    contentEditable: !prev.editor.contentEditable,
+                  },
+                }))
+              }
+              id="enabled-edition"
+              label="Enable editing (Ctrl + E)"
+              style={{ margin: 0 }}
+            />
+          </Group>
+          <Group
+            style={{
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              gap: '5px',
+            }}
+          >
+            <p>Selection border:</p>
+            <span>
+              {borders.map(b => (
+                <button
+                  data-border={b}
+                  key={b}
+                  label="Select border"
+                  onClick={setSelectionColor}
+                  style={{ background: b }}
+                  type="button"
+                />
+              ))}
+            </span>
+            <p>Selection color:</p>
+            <span>
+              {backgrounds.map(b => (
+                <button
+                  data-bg={b}
+                  key={b}
+                  label="Select border"
+                  onClick={setSelectionColor}
+                  style={{ background: b }}
+                  type="button"
+                />
+              ))}
+            </span>
+          </Group>
+        </Group>
+      </Group>
+
+      <Group style={{ flexDirection: 'column', justifyContent: 'flex-start' }}>
+        <h3>Chat</h3>
+        <Group>
+          History record:
+          <input
+            max={20}
+            min={2}
+            onInput={setMessageMax}
+            step={2}
+            type="number"
+            value={historyMax}
+          />
+        </Group>
+        <Toggle
+          checked={settings.chat.showChatBubble}
+          handleChange={() =>
+            setSettings(prev => ({
+              ...prev,
+              chat: {
+                ...prev.chat,
+                showChatBubble: !prev.chat.showChatBubble,
               },
-            }),
-          )
-        }
-        id="advanced-tools"
-        label="Advanced Tools"
-        style={{ margin: 0 }}
-      />
-      <Checkbox
-        checked={settings.editor.contentEditable}
-        handleChange={() =>
-          setSettings(prev => ({
-            ...prev,
-            editor: {
-              ...prev.editor,
-              contentEditable: !prev.editor.contentEditable,
-            },
-          }))
-        }
-        id="enabled-edition"
-        label="Enable editing"
-        style={{ margin: 0 }}
-      />{' '}
-      <Checkbox
-        checked={settings.editor.createNewSnippetVersions}
-        handleChange={() =>
-          setSettings(prev => ({
-            ...prev,
-            editor: {
-              ...prev.editor,
-              createNewSnippetVersions: !prev.editor.createNewSnippetVersions,
-            },
-          }))
-        }
-        id="mark-snippet-by-default"
-        label="Create new version from 'marked' snippet"
-        style={{ margin: 0 }}
-      />
-      <Checkbox
-        checked={settings.editor.enableSnippets}
-        handleChange={() =>
-          setSettings(prev => ({
-            ...prev,
-            editor: {
-              ...prev.editor,
-              enableSnippets: !prev.editor.enableSnippets,
-            },
-          }))
-        }
-        id="enabled-snippets"
-        label="Enable snippets"
-        style={{ margin: 0 }}
-      />
-      <hr />
-      <Group>
-        History record:
-        <input
-          max={20}
-          min={2}
-          onInput={setMessageMax}
-          step={2}
-          type="number"
-          value={historyMax}
+            }))
+          }
+          id="show-chat-bubble"
+          label="Show chat bubble"
+          style={{ margin: 0 }}
         />
       </Group>
       <Group>
-        <p>Selection border:</p>
-        <span>
-          {borders.map(b => (
-            <button
-              data-border={b}
-              label="Select border"
-              onClick={setSelectionColor}
-              style={{ background: b }}
-              type="button"
-            />
-          ))}
-        </span>
-      </Group>
-      <Group>
-        <p>Selection color:</p>
-        <span>
-          {backgrounds.map(b => (
-            <button
-              data-bg={b}
-              label="Select border"
-              onClick={setSelectionColor}
-              style={{ background: b }}
-              type="button"
-            />
-          ))}
-        </span>
+        <button
+          onClick={saveSession}
+          style={{
+            width: 'fit-content',
+            height: 'fit-content',
+            borderColor: 'var(--color-green)',
+            color: '#fff',
+            background: 'var(--color-green-dark)',
+            borderRadius: '10px',
+            padding: '5px 10px',
+          }}
+          type="button"
+        >
+          Save Session
+        </button>
       </Group>
     </Container>
   )

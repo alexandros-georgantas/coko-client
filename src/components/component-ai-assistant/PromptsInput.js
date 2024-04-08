@@ -21,6 +21,7 @@ const StyledForm = styled.form`
   gap: 8px;
   height: fit-content;
   justify-content: center;
+  margin: 0;
   overflow: auto;
   padding: 0.4rem 0.8rem;
   position: relative;
@@ -128,7 +129,11 @@ const PromptsInput = ({ enabled, className, loading, onSend, ...rest }) => {
         value={userPrompt}
         {...rest}
       />
-      {loading ? <StyledSpinner /> : <SendIcon onClick={onSend} />}
+      {loading ? (
+        <StyledSpinner />
+      ) : (
+        <SendIcon onClick={onSend} style={{ transform: 'scale(1.6)' }} />
+      )}
     </StyledForm>
   )
 }

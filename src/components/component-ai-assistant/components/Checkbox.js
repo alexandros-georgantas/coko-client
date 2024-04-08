@@ -10,7 +10,7 @@ const CheckboxContainer = styled.div`
   margin-bottom: 4px;
 
   input[type='checkbox'] {
-    accent-color: #00495c;
+    accent-color: var(--color-blue);
     background: #eee;
     border: 1px solid #eee;
     border-radius: 5px;
@@ -19,11 +19,12 @@ const CheckboxContainer = styled.div`
 
     &:active,
     &:focus-visible {
+      color: white;
       outline: none;
     }
 
     &:hover {
-      accent-color: #00495c;
+      accent-color: var(--color-blue);
       border: none;
     }
   }
@@ -38,10 +39,11 @@ const Checkbox = props => {
     style = {},
     handleChange,
     labelBefore,
+    className,
   } = props
 
   return (
-    <CheckboxContainer style={style}>
+    <CheckboxContainer className={className} style={style}>
       {labelBefore && <label htmlFor={id}>{label}</label>}
       <input
         checked={checked}

@@ -2,7 +2,6 @@
 
 import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { CloseOutlined } from '@ant-design/icons'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
 
@@ -39,7 +38,7 @@ const MessageWrapper = styled.span`
   filter: drop-shadow(0 0 2px #0005);
   flex-direction: column;
   font-size: 14px;
-  left: -10px;
+  left: 0;
   line-height: 1.1;
   position: ${p => p.position};
   top: 40px;
@@ -51,7 +50,7 @@ const MessageWrapper = styled.span`
 `
 
 const Triangle = styled.span`
-  --x: ${p => (!p.$onRight ? '20px' : 'calc(100% - 20px)')};
+  --x: ${p => (!p.$onRight ? '10px' : 'calc(100% - 10px)')};
   --y: ${p => (!p.$onBottom ? '1px' : 'calc(100% - 1px)')};
 
   border-bottom: ${p => (!p.$onBottom ? '16px solid #fff' : '')};
@@ -155,7 +154,7 @@ const OptionsTemplate = ({ content }) => {
 }
 
 const ChatBubble = ({ forceHide }) => {
-  const { feedback } = useContext(CssAssistantContext)
+  const { feedback, settings } = useContext(CssAssistantContext)
   const [hideMessage, setHideMessage] = useState(false)
 
   useEffect(() => {
@@ -164,24 +163,30 @@ const ChatBubble = ({ forceHide }) => {
 
   return (
     <Wrapper>
-      {/* this is provisory until we have a logo */}
       <UnStyledButton
         onClick={() => setHideMessage(!hideMessage)}
         style={{
           fontSize: '18px',
           textDecoration: 'none',
-          width: '35px',
-          height: '35px',
-          borderRadius: '50%',
-          backgroundColor: '#00495c',
-          border: `2px solid #007d9c`,
-          textAlign: 'center',
-          color: '#fff',
+          width: '25px',
+          height: '25px',
+          objectFit: 'cover',
+          color: '#fff0',
         }}
       >
-        AI
+        <img
+          alt="AiDesignStudioLogo"
+          src="/assets/AI Design Studio-Icon.svg"
+          style={{ width: 'inherit', height: 'inherit', marginTop: '-4px' }}
+        />
       </UnStyledButton>
-      <ChatBox hide={forceHide || (!forceHide && hideMessage)}>
+      <ChatBox
+        hide={
+          !settings.chat.showChatBubble ||
+          forceHide ||
+          (!forceHide && hideMessage)
+        }
+      >
         <span
           style={{
             display: 'flex',
@@ -189,7 +194,7 @@ const ChatBubble = ({ forceHide }) => {
             justifyContent: 'space-between',
           }}
         >
-          <SmallText>Coko AI Book Designer:</SmallText>
+          <SmallText>Coko AI Design Studio:</SmallText>
           <UnStyledButton
             onClick={() => setHideMessage(!hideMessage)}
             style={{ objectFit: 'contain', width: '18px', height: '18px' }}
@@ -201,9 +206,9 @@ const ChatBubble = ({ forceHide }) => {
           {feedback || (
             <>
               <span>Hello there!</span>
-              <span>{`I'm here to help with your book's design`}</span>
+              <span>{`I'm here to help with your article's design`}</span>
               <span>You can also ask for the current property values</span>
-              <span>for example: What is the page size of the book?</span>
+              <span>for example: What is the page size of the article?</span>
               <span style={{ marginBottom: '8px' }}>
                 Here are some suggestions to get started:
               </span>

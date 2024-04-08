@@ -1,6 +1,8 @@
+/* stylelint-disable no-descending-specificity */
 import React, { useContext, useEffect, useRef } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { fadeIn } from '@pubsweet/ui-toolkit'
+import { debounce } from 'lodash'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
 import { htmlTagNames } from './utils'
 
@@ -23,7 +25,7 @@ const ChatHistoryContainer = styled.div`
   background: #f5f5f5;
   display: flex;
   flex-direction: column;
-  height: 90%;
+  height: 98%;
   overflow: auto;
   padding: 25px;
   position: relative;
@@ -92,8 +94,12 @@ const MessageHeader = styled.div`
     width: var(--profile-picture-size);
   }
 
-  span > span > strong {
+  span {
     line-height: 1;
+
+    img {
+      margin-top: -5px;
+    }
   }
 
   span > span {
@@ -118,13 +124,17 @@ const ChatHistory = () => {
 
   const threadRef = useRef(null)
 
+  const debouncedScroll = debounce(() => {
+    threadRef.current.scrollTop = threadRef.current.scrollHeight
+  }, 1000)
+
   useEffect(() => {
     const observer = new MutationObserver(mutations => {
       mutations.forEach(
         mutation =>
           mutation.type === 'childList' &&
           threadRef?.current &&
-          (threadRef.current.scrollTop = threadRef.current.scrollHeight),
+          debouncedScroll(),
       )
     })
 
@@ -143,7 +153,7 @@ const ChatHistory = () => {
         selectedCtx.history.map(({ role, content }, i) => {
           const forgotten =
             // eslint-disable-next-line react/prop-types
-            i < selectedCtx.history.length - settings.historyMax - 1
+            i < selectedCtx.history.length - settings.chat.historyMax - 1
 
           return (
             // eslint-disable-next-line react/no-array-index-key
@@ -162,29 +172,17 @@ const ChatHistory = () => {
                 <MessageHeader>
                   {role === 'user' ? (
                     <span>
-                      <span
-                        style={{
-                          color: '#fff',
-                          background: '#006282',
-                          textAlign: 'center',
-                        }}
-                      >
-                        Y
-                      </span>
-                      <strong>@You</strong>
+                      <img alt="user-profile" src="/assets/Adam.jpg" />
+                      <strong>@Adam</strong>
                     </span>
                   ) : (
                     <span>
-                      <span
-                        style={{
-                          color: '#fff',
-                          background: '#008238',
-                          textAlign: 'center',
-                        }}
-                      >
-                        AI
-                      </span>
-                      <strong>Coko AI Book designer:</strong>
+                      <img
+                        alt=""
+                        src="/assets/AI Design Studio-Icon.svg"
+                        style={{ borderRadius: 0, marginTop: '-10px' }}
+                      />
+                      <strong>AI Design Studio</strong>
                     </span>
                   )}
                   {i === selectedCtx.history.length - 1 && (
@@ -218,7 +216,7 @@ const ChatHistory = () => {
         >
           {`Make your first prompt related to ${
             selectedCtx?.node === htmlSrc
-              ? 'the Book'
+              ? 'the Article'
               : `this ${
                   selectedCtx?.tagName
                     ? htmlTagNames[selectedCtx?.tagName]

@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { DeleteOutlined, PrinterOutlined } from '@ant-design/icons'
@@ -10,27 +11,38 @@ import {
   initialPagedJSCSS,
   htmlTagNames,
   cssTemplate1,
-  cssTemplate3,
   setScrollFromPercent,
   getScrollPercent,
   addElement,
   finishReasons,
   systemGuidelinesV2,
   snippetsToCssText,
-  removeStyleAttribute,
+  callOn,
+  SnippetIcon,
 } from './utils'
 import SelectionBox from './SelectionBox'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
 import ChatBubble from './ChatBubble'
 import ChatHistory from './ChatHistory'
-import Checkbox from './components/Checkbox'
 import useChatGpt from './hooks/useChatGpt'
-import { SettingsMenu } from './components/SettingsMenu'
+import SettingsMenu from './components/SettingsMenu'
+import { SnippetsManager } from './components/SnippetsManager'
+// import { convertTibetanToENphonethics } from './utils/phonetics'
 
 // #region styleds
 const Assistant = styled(PromptsInput)`
+  border-bottom: none;
+  border-radius: 0;
+  border-top: none;
   margin: 10px 0;
+  overflow: hidden;
+  padding: 0 10px;
   width: 480px;
+
+  svg {
+    height: 15px;
+    width: 15px;
+  }
 `
 
 const editorLoadingAnim = keyframes`
@@ -55,49 +67,104 @@ const CssAssistantUi = styled.div`
   padding: 0 5px;
 
   > :last-child {
+    align-items: baseline;
     color: #00495c;
     display: flex;
     gap: 0;
+
+    svg {
+      color: var(--color-blue);
+      height: 15px;
+      width: 15px;
+    }
+
+    > :last-child {
+      cursor: pointer;
+      margin-left: 0.3rem;
+    }
   }
 `
 
 const StyledHeading = styled.div`
+  --snippet-icon: var(--color-blue);
+  --snippet-icon-st: #fff;
+
   align-items: center;
   background-color: #fff;
   border-bottom: 1px solid #0004;
   display: flex;
   flex-direction: row;
-  height: 80px;
   justify-content: space-between;
   padding: 0 0 0 10px;
   position: relative;
   scrollbar-color: #00495c;
   scrollbar-width: thin;
   width: 100%;
-  z-index: 999999;
+  z-index: 999999999;
+
+  button > svg {
+    color: var(--color-blue);
+    height: 20px;
+    width: 20px;
+  }
 `
 
 const Root = styled.div`
+  --color-yellow: #fbcd55;
+  --color-yellow-dark: #a27400;
+  --color-orange: #fe7b4d;
+  --color-orange-dark: #9c4b2e;
+  --color-green: #6fab6a;
+  --color-green-dark: #558151;
+  --color-blue: #21799e;
+  --color-blue-dark: #154a61;
   --color-fill: #50737c;
   --color-fill-1: #6a919b;
   --color-fill-2: #fff;
+  --color-disabled: #ccc;
+  --color-enabled: #21799e;
+  --color-yellow-alpha-1: #fbcd55aa;
+  --color-orange-alpha-1: #fe7b4daa;
+  --color-green-alpha-1: #6fab6aaa;
+  --color-blue-alpha-1: #21799eaa;
+  --color-yellow-alpha-2: #fbcd5511;
+  --color-orange-alpha-2: #fe7b4d11;
+  --color-green-alpha-2: #6fab6a11;
+  --color-blue-alpha-2: #21799e11;
 
   border: 1px solid #0002;
   border-radius: 0 8px 8px;
   display: flex;
   flex-direction: column;
   height: 100%;
-  margin-top: -1px;
   overflow: hidden;
   position: relative;
   width: 100%;
+
+  * {
+    ::-webkit-scrollbar {
+      height: 5px;
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #004a5c48;
+      border-radius: 5px;
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #fff0;
+      padding: 5px;
+    }
+  }
 `
 
 const EditorContainer = styled.div`
-  background: #eee;
+  background: whitesmoke;
   display: flex;
   filter: ${p => (p.$loading ? 'blur(2px)' : '')};
-  height: calc(100vh - 130px);
+  height: calc(100vh - 80px);
   overflow: auto;
   padding: 40px;
   position: relative;
@@ -124,7 +191,7 @@ const EditorContainer = styled.div`
 const PreviewIframe = styled.iframe`
   border: none;
   display: flex;
-  height: calc(100vh - 130px);
+  height: calc(100vh - 10px);
 
   width: 100%;
 `
@@ -136,8 +203,8 @@ const CheckBoxes = styled.div`
   display: flex;
   font-size: 14px;
   line-height: 1.3;
-  min-width: 150px;
-  padding: 0;
+  padding: 0 0.7rem 0 0;
+  position: relative;
 
   > span {
     height: fit-content;
@@ -146,14 +213,17 @@ const CheckBoxes = styled.div`
 `
 
 const WindowsContainer = styled.div`
+  background: #eee;
   display: flex;
-  height: 100%;
+  height: calc(100%);
+  position: relative;
   width: 100%;
 `
 
 const StyledWindow = styled.div`
   display: flex;
   flex-direction: column;
+  height: calc(100vh - 58px);
   overflow: hidden;
   position: relative;
   transition: width 0.5s ease;
@@ -187,40 +257,12 @@ const WindowHeading = styled.div`
 
 const WindowDivision = styled.div`
   background-color: #fff;
-  height: 100%;
-  outline: 1px solid #0004;
-  width: 5px;
-  z-index: 999;
-`
-
-const StyledRefreshButton = styled.span`
-  align-items: center;
-  display: flex;
-  gap: 5px;
-
-  button {
-    align-items: center;
-    background: #fff0;
-    border: none;
-    border-right: 1px solid #0002;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    margin: 0;
-    padding: 0;
-    padding-right: 4px;
-    width: 20px;
-  }
-
-  svg {
-    height: 15px;
-    stroke: #777;
-    width: 15px;
-
-    &:hover {
-      stroke: #00495c;
-    }
-  }
+  border: 1px solid #0004;
+  border-top-color: #fff;
+  height: calc(100% + 1px);
+  margin-top: -1px;
+  width: 8px;
+  z-index: 999999;
 `
 
 const LoadingOverlay = styled.div`
@@ -246,8 +288,6 @@ const OverlayAnimated = styled(LoadingOverlay)`
   }
 `
 
-const StyledCheckbox = styled(Checkbox)``
-
 // #endregion styleds
 
 // eslint-disable-next-line react/prop-types
@@ -267,16 +307,15 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
     setUserPrompt,
     addSnippet,
     onHistory,
-    getValidSelectors,
     history,
     clearHistory,
     updateCtxNodes,
     userPrompt,
     getCtxBy,
-    validSelectors,
     settings,
     setSettings,
     markedSnippet,
+    saveSession,
   } = useContext(CssAssistantContext)
 
   const previewScrollTopRef = useRef(0)
@@ -287,6 +326,7 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
   const [showPreview, setShowPreview] = useState(true)
   const [showChat, setShowChat] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
+  const [showSnippetsWindow, setShowSnippetsWindow] = useState(false)
 
   // eslint-disable-next-line no-unused-vars
   // To be replaced by the lazyQuery
@@ -302,9 +342,10 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
             feedback,
             content = '',
             insertHtml,
+            addTibetan,
           } = response
 
-          if (resCss || insertHtml || snippet || content) {
+          if (resCss || insertHtml || snippet || content || addTibetan) {
             onHistory.addRegistry('undo')
             history.current.source.redo = []
           }
@@ -319,12 +360,33 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
           }
 
           insertHtml && addElement(selectedNode, insertHtml)
+          /* #tibetan */
+          // addTibetan &&
+          //   (ctxIsHtmlSrc
+          //     ? htmlSrc.querySelectorAll('.tibetan').forEach(
+          //         el =>
+          //           ![...htmlSrc.querySelectorAll('*')]
+          //             .map(e => e.textContent)
+          //             .includes(convertTibetanToENphonethics(el.textContent)) &&
+          //           addElement(el, {
+          //             html: `<p class="aid-snip-tibetan-to-phonetics">${convertTibetanToENphonethics(
+          //               el.textContent,
+          //             )}</p>`,
+          //           }),
+          //       )
+          //     : addElement(selectedNode, {
+          //         html: `<p class="aid-snip-tibetan-to-phonetics">${convertTibetanToENphonethics(
+          //           selectedNode.textContent,
+          //         )}</p>`,
+          //       }))
+          /* #tibetan */
+
           content && (selectedCtx.node.innerHTML = content)
           feedback && setFeedback(feedback)
           feedback &&
             selectedCtx.history.push({ role: 'assistant', content: feedback })
 
-          updatePreview()
+          updatePreview(true)
         } catch (err) {
           if (finishReasons[finishReason]) {
             setFeedback(finishReasons[finishReason])
@@ -344,9 +406,45 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
     },
   })
 
+  const keyShortcuts = e => {
+    const { key, ctrlKey } = e
+    callOn(key, {
+      m: () => {
+        if (!ctrlKey) return
+        setShowSnippetsWindow(prev => !prev)
+      },
+      e: () => {
+        if (!ctrlKey) return
+        e.preventDefault()
+        setSettings(prev => ({
+          ...prev,
+          editor: {
+            ...prev.editor,
+            contentEditable: !prev.editor.contentEditable,
+          },
+        }))
+      },
+      s: () => {
+        if (!ctrlKey) return
+        e.preventDefault()
+        saveSession()
+      },
+      Escape: ev => {
+        if (!showSnippetsWindow) return
+        ev.preventDefault()
+        setShowSnippetsWindow(false)
+      },
+    })
+  }
+
   useEffect(() => {
     passedSettings && setSettings(merge({}, settings, passedSettings))
-  }, [])
+    window.addEventListener('keydown', keyShortcuts)
+
+    return () => {
+      window.removeEventListener('keydown', keyShortcuts)
+    }
+  }, [passedSettings])
   useEffect(() => {
     showPreview && livePreview && updatePreview()
   }, [htmlSrc, css, passedContent])
@@ -367,7 +465,7 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
   }, [showEditor])
 
   useEffect(() => {
-    error && setFeedback(JSON.stringify(error))
+    error && setFeedback(error.message)
   }, [error])
 
   const handleScroll = e => {
@@ -391,14 +489,17 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
               content: systemGuidelinesV2({
                 ctx: selectedCtx || getCtxBy('node', htmlSrc),
                 sheet: styleSheetRef?.current?.textContent,
-                selectors: validSelectors?.current?.join(', '),
+                selectors: [...htmlSrc.querySelectorAll('*')]?.map(
+                  el => el.localName,
+                ),
                 providedText:
                   selectedNode !== htmlSrc && selectedCtx.node.innerHTML,
                 markedSnippet,
+                snippets: settings.snippetsManager.snippets,
               }),
             },
             // eslint-disable-next-line react/prop-types
-            ...(takeRight(selectedCtx.history, settings.historyMax) || []),
+            ...(takeRight(selectedCtx.history, settings.chat.historyMax) || []),
           ],
           // },
         })
@@ -420,23 +521,19 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
         srcdoc(
           htmlSrc,
           css,
-          cssTemplate1 +
-            cssTemplate3 +
-            snippetsToCssText(settings.editor.snippets),
+          cssTemplate1 + snippetsToCssText(settings.snippetsManager.snippets),
           previewScrollTopRef.current,
         ),
       )
     updateCtxNodes()
     updateSelectionBoxPosition()
-    htmlSrc && removeStyleAttribute(htmlSrc)
-    htmlSrc && getValidSelectors(htmlSrc)
   }
 
   return (
     <Root>
-      {settings.editor.enableSnippets && (
+      {settings.snippetsManager.snippets && (
         <style id="aid-snippets">
-          {snippetsToCssText(settings.editor.snippets)}
+          {snippetsToCssText(settings.snippetsManager.snippets)}
         </style>
       )}
       <StyledHeading>
@@ -446,7 +543,7 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
             enabled
             loading={loading}
             onSend={handleSend}
-            placeholder="Type here how your book should look..."
+            placeholder="Type here how your article should look..."
           />
           <span>
             <settings.Icons.UndoIcon
@@ -457,45 +554,58 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
               onClick={() => onHistory.apply('redo')}
               title="Redo (Ctrl + y)"
             />
+            <settings.Icons.RefreshIcon
+              onClick={updatePreview}
+              title="Update preview"
+              type="button"
+            />
+            <PrinterOutlined
+              as="button"
+              onClick={() => previewRef?.current?.contentWindow?.print()}
+              title="Print"
+              type="button"
+            />
           </span>
         </CssAssistantUi>
         <CheckBoxes>
-          <span>
-            <StyledCheckbox
-              checked={showEditor || (!showPreview && !showEditor)}
-              handleChange={() => setShowEditor(!showEditor)}
-              id="showContent"
-              label="Content"
-              style={{ margin: 0 }}
-            />
-            <StyledCheckbox
-              checked={showPreview}
-              handleChange={() => setShowPreview(!showPreview)}
-              id="showPreview"
-              label="Book Preview"
-              style={{ margin: 0 }}
-            />
-            <StyledCheckbox
-              checked={showChat}
-              handleChange={() => setShowChat(!showChat)}
-              id="showChatHistory"
-              label="Chat History"
-              style={{ margin: 0 }}
-            />
-          </span>
-          <span>
-            <settings.Icons.SettingsIcon
-              onClick={() => setShowSettings(!showSettings)}
-              style={{
-                cursor: 'pointer',
-              }}
-            />
-          </span>
+          <SnippetIcon
+            onClick={() => setShowSnippetsWindow(!showSnippetsWindow)}
+            title={`${
+              !showSnippetsWindow ? 'Open' : 'Close'
+            } Snippet Manager (Ctrl + M)`}
+          />
+          <settings.Icons.SettingsIcon
+            onMouseEnter={() => setShowSettings(!showSettings)}
+            style={{
+              cursor: 'pointer',
+            }}
+          />
         </CheckBoxes>
-        <SettingsMenu showSettings={showSettings} />
       </StyledHeading>
+      <SettingsMenu
+        livePreview={livePreview}
+        onMouseLeave={() => setShowSettings(false)}
+        setLivePreview={setLivePreview}
+        setShowChat={setShowChat}
+        setShowEditor={setShowEditor}
+        setShowPreview={setShowPreview}
+        showChat={showChat}
+        showEditor={showEditor}
+        showPreview={showPreview}
+        showSettings={showSettings}
+        updatePreview={updatePreview}
+      />
       <WindowsContainer>
-        <StyledWindow $show={showChat} style={{ maxWidth: '30%' }}>
+        {showSnippetsWindow && (
+          <SnippetsManager
+            setShow={setShowSnippetsWindow}
+            updatePreview={updatePreview}
+          />
+        )}
+        <StyledWindow
+          $show={showChat}
+          style={{ maxWidth: '30%', background: '#f5f5f5' }}
+        >
           <WindowHeading>
             <span>CHAT HISTORY</span>
             <DeleteOutlined
@@ -517,7 +627,7 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
               Selection:{' '}
               {selectedCtx?.node && selectedCtx.node !== htmlSrc
                 ? htmlTagNames[selectedCtx.tagName]
-                : 'Book'}
+                : 'Article'}
             </span>
           </WindowHeading>
           {loading && <LoadingOverlay />}
@@ -537,36 +647,15 @@ const AiPDFDesigner = ({ bookTitle, passedSettings }) => {
 
         <StyledWindow $show={showPreview}>
           <WindowHeading>
-            <span>BOOK PREVIEW{bookTitle ? ` for: "${bookTitle}"` : ':'}</span>
-            <StyledRefreshButton>
-              <button
-                onClick={updatePreview}
-                title="Update preview"
-                type="button"
-              >
-                <settings.Icons.RefreshIcon />
-              </button>
-              <button
-                onClick={() => previewRef?.current?.contentWindow?.print()}
-                title="Print"
-                type="button"
-              >
-                <PrinterOutlined />
-              </button>
-              <StyledCheckbox
-                checked={livePreview}
-                handleChange={() => setLivePreview(!livePreview)}
-                id="livePreview"
-                label="Live preview"
-                style={{ margin: 0 }}
-              />
-            </StyledRefreshButton>
+            <span>
+              ARTICLE PREVIEW{bookTitle ? ` for: "${bookTitle}"` : ':'}
+            </span>
           </WindowHeading>
           <PreviewIframe
             onLoad={updatePreview}
             ref={previewRef}
             srcDoc={previewSource}
-            title="Book preview"
+            title="Article preview"
           />
         </StyledWindow>
       </WindowsContainer>

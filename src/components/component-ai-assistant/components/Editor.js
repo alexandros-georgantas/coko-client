@@ -2,11 +2,11 @@
 import React, { useContext, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { CssAssistantContext } from '../hooks/CssAssistantContext'
-import { removeStyleAttribute, setImagesDefaultStyles } from '../utils'
+import { parseContent, setImagesDefaultStyles } from '../utils'
 import useIncrementalTarget from '../hooks/useIncrementalTarget'
 
 const EditorWrapper = styled.div`
-  background-color: #fff;
+  background: var(--color-background);
   box-shadow: 0 0 5px #0002;
   height: fit-content;
   min-height: 100%;
@@ -15,7 +15,6 @@ const EditorWrapper = styled.div`
 `
 
 const StyledEditor = styled.div`
-  background: #fff;
   border: none;
   margin-bottom: 20px;
   min-height: 100%;
@@ -34,7 +33,6 @@ const Editor = ({ stylesFromSource, updatePreview }) => {
   const {
     setHtmlSrc,
     htmlSrc,
-    getValidSelectors,
     passedContent,
     setPassedContent,
     setSelectedCtx,
@@ -42,6 +40,7 @@ const Editor = ({ stylesFromSource, updatePreview }) => {
     newCtx,
     styleSheetRef,
     getCtxBy,
+    setMarkedSnippet,
     setSelectedNode,
     setCss,
     promptRef,
@@ -55,14 +54,14 @@ const Editor = ({ stylesFromSource, updatePreview }) => {
   const selectionHandler = useIncrementalTarget(500)
   const editorRef = useRef(null)
 
-  const handlePaste = e => {
+  const handlePaste = async e => {
     e.preventDefault()
 
     const clipboardData = e.clipboardData || window.clipboardData
     const dataToPaste = clipboardData.getData('text/html')
     if (!dataToPaste) return
     onHistory.addRegistry('undo')
-    setPassedContent(`<section>${removeStyleAttribute(dataToPaste)}</section>`)
+    setPassedContent(`<section>${parseContent(dataToPaste)}</section>`)
   }
 
   useEffect(() => {
@@ -82,7 +81,6 @@ const Editor = ({ stylesFromSource, updatePreview }) => {
         child.removeAttribute('style')
         child.addEventListener('click', handleSelection)
       })
-      getValidSelectors(htmlSrc)
 
       htmlSrc.parentNode.parentNode.addEventListener('click', handleSelection)
     }
@@ -105,16 +103,17 @@ const Editor = ({ stylesFromSource, updatePreview }) => {
   useEffect(() => {
     !passedContent &&
       setPassedContent(
-        removeStyleAttribute(
-          '<section><p style="color:red;">Paste the article here</p></section>',
-        ),
+        parseContent(/* html */ `<section><img
+        alt="AI Design Studio"
+        src="/assets/AI Design Studio-Logo-horizontal.svg"
+      /><p><span>You can paste the content here</span></p></section>`),
       )
   }, [])
 
   useEffect(() => {
     editorRef?.current && setHtmlSrc(editorRef.current)
-    editorRef?.current && getValidSelectors(editorRef.current)
     setImagesDefaultStyles(editorRef.current)
+    htmlSrc && htmlSrc.click()
   }, [passedContent])
 
   const handleSelection = e => {
@@ -139,6 +138,8 @@ const Editor = ({ stylesFromSource, updatePreview }) => {
         setSelectedCtx(getCtxBy('node', htmlSrc))
         setSelectedNode(htmlSrc)
       }
+
+      setMarkedSnippet('')
     })
   }
 
