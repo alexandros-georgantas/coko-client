@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.61](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.60...v0.0.61) (2024-04-29)
+
+
+### Features
+
+* **webpack:** add parameter decorator plugin to babel ([c64d682](https://gitlab.coko.foundation/cokoapps/client/commit/c64d682f663413a104dadc95d3f259e725939347))
+* **webpack:** add throw expressions and function sent to babel ([4ebb72d](https://gitlab.coko.foundation/cokoapps/client/commit/4ebb72d8bbc701a40f5c0c23699f8b421ed9d9ef))
+
 ### [0.0.60](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.59...v0.0.60) (2024-01-26)
 
 ### [0.0.59](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.58...v0.0.59) (2024-01-09)
