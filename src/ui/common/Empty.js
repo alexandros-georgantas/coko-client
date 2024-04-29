@@ -1,6 +1,7 @@
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
 import { Empty as AntEmpty } from 'antd'
+
+import { th } from '../../toolkit'
 
 const Empty = styled(AntEmpty)`
   color: ${th('colorText')};

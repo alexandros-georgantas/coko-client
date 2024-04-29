@@ -6,9 +6,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 import { debounce as lodashDebounceFunc } from 'lodash'
-
 import { Select as AntSelect } from 'antd'
-import { th } from '@pubsweet/ui-toolkit'
+
+import { th } from '../../toolkit'
 import Empty from './Empty'
 
 const SelectWrapper = styled.span``

@@ -2,8 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-import { grid } from '@pubsweet/ui-toolkit'
-
+import { grid } from '../../toolkit'
 import ChatMessage from './ChatMessage'
 import { List } from '../common'
 

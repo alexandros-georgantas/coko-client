@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { grid, th } from '@pubsweet/ui-toolkit'
+import { grid, th } from '../../toolkit'
 
 const Wrapper = styled.div`
   background: ${th('colorSecondary')};

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Route } from 'react-router-dom'
 import styled, { createGlobalStyle, css } from 'styled-components'
 
-import { fadeIn, grid, th } from '@pubsweet/ui-toolkit'
+import { fadeIn, grid, th } from '../toolkit'
 
 // TO DO -- Remove div > div when you clean up client from pubsweet
 const GlobalStyle = createGlobalStyle`

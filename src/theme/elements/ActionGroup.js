@@ -1,5 +1,5 @@
 import { css } from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '../../toolkit'
 
 export default {
   Root: css`

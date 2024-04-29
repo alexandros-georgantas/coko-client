@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 
-import { grid, th } from '@pubsweet/ui-toolkit'
+import { grid, th } from '../../toolkit'
 
 import { DateParser } from '../common'
 

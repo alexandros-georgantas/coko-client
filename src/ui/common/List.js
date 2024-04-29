@@ -6,7 +6,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import { List as AntList } from 'antd'
 
-import { grid, th } from '@pubsweet/ui-toolkit'
+import { grid, th } from '../../toolkit'
 
 import UICheckBox from './Checkbox'
 import Empty from './Empty'

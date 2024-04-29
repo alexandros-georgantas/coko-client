@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useImperativeHandle } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Pagination as AntPagination } from 'antd'
-import { grid, th } from '@pubsweet/ui-toolkit'
+import { grid, th } from '../../toolkit'
 
 const PaginationNav = styled.nav`
   .ant-pagination li {

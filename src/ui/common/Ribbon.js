@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 
-import { grid, override } from '@pubsweet/ui-toolkit'
+import { grid, override } from '../../toolkit'
 
 const Wrapper = styled.div`
   background: ${props => {

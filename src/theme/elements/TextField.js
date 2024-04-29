@@ -1,5 +1,7 @@
+/* stylelint-disable shorthand-property-no-redundant-values */
+
 import { css } from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '../../toolkit'
 
 export default {
   // TODO

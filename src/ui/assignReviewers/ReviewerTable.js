@@ -6,7 +6,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import { MenuOutlined } from '@ant-design/icons'
 
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '../../toolkit'
 
 import InviteRowProp from './InviteRowProp'
 

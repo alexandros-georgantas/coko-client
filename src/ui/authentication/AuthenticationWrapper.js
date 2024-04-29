@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { grid } from '@pubsweet/ui-toolkit'
+import { grid } from '../../toolkit'
 
 const AuthenticationWrapper = styled.div`
   background: white;

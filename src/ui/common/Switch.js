@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 import { Switch as AntSwitch } from 'antd'
 
-import { grid } from '@pubsweet/ui-toolkit'
+import { grid } from '../../toolkit'
 
 const Wrapper = styled.span``
 

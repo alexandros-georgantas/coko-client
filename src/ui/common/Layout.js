@@ -3,7 +3,7 @@
 import styled from 'styled-components'
 
 import { Layout as AntLayout } from 'antd'
-import { grid, th } from '@pubsweet/ui-toolkit'
+import { grid, th } from '../../toolkit'
 
 // const Wrapper = styled.div``
 

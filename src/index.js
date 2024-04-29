@@ -7,6 +7,6 @@ export { useCurrentUser } from './helpers/currentUserContext'
 export { ProviderConnectionPage } from './pages'
 
 export * from './components'
-export * from '@pubsweet/ui-toolkit'
+export * from './toolkit'
 
 export { default as theme } from './theme'

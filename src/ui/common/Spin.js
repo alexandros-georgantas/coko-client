@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import styled, { css, keyframes } from 'styled-components'
 import { Spin as AntSpin } from 'antd'
 
-import { grid } from '@pubsweet/ui-toolkit'
+import { grid } from '../../toolkit'
 
 const StyledSpin = styled(({ isNested, renderBackground, ...rest }) => (
   <AntSpin {...rest} />

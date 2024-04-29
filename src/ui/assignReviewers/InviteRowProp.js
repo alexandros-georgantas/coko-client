@@ -2,8 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { CloseOutlined } from '@ant-design/icons'
-import { grid } from '@pubsweet/ui-toolkit'
 
+import { grid } from '../../toolkit'
 import { Button, InviteStatus } from '../common'
 
 const StyledInviteStatus = styled(InviteStatus)`

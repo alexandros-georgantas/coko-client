@@ -1,5 +1,7 @@
+/* stylelint-disable string-quotes */
+
 import { css } from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '../../toolkit'
 
 // const checking = keyframes`
 //   0% {
@@ -29,7 +31,7 @@ export default {
     letter-spacing: 1px;
     transition: color 0.5s;
 
-    &:before {
+    &::before {
       background: ${props => (props.checked ? 'currentColor' : 'transparent')};
       border: ${localBorderSize} solid white;
       box-shadow: 0 0 0 ${localBorderTwoSize} currentColor;
@@ -47,7 +49,7 @@ export default {
     position: absolute;
     z-index: -1;
 
-    &:focus + span:before {
+    &:focus + span::before {
       box-shadow: 0 0 ${th('borderWidth')} calc(${th('borderWidth')} * 2)
         ${th('colorPrimary')};
     }
@@ -58,7 +60,7 @@ export default {
     &:hover span {
       color: ${th('colorPrimary')};
 
-      &:before {
+      &::before {
         box-shadow: 0 0 0 ${localBorderTwoSize} ${th('colorPrimary')};
       }
     }

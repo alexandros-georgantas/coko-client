@@ -1,5 +1,5 @@
 import { css } from 'styled-components'
-import { darken, th } from '@pubsweet/ui-toolkit'
+import { darken, th } from '../../toolkit'
 
 const borderColor = props => (props.color ? props.color : props.colorPrimary)
 
