@@ -248,10 +248,12 @@ const webpackConfig = {
           options: {
             presets: ['@babel/preset-env', '@babel/preset-react'],
             plugins: [
-              ['@babel/plugin-proposal-decorators', { version: '2023-11' }],
+              // ['@babel/plugin-proposal-decorators', { version: '2023-11' }],
+              ['@babel/plugin-proposal-decorators', { legacy: true }],
               '@babel/plugin-proposal-function-sent',
               '@babel/plugin-proposal-throw-expressions',
               '@babel/plugin-transform-runtime',
+              'babel-plugin-parameter-decorator',
               'babel-plugin-styled-components',
             ].filter(Boolean),
 
