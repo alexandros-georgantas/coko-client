@@ -246,25 +246,13 @@ const webpackConfig = {
         use: {
           loader: 'babel-loader',
           options: {
-            // include: [
-            //   // include app folder
-            //   path.join(__dirname),
-            //   // path.join(__dirname, '..', 'app'),
-            //   // path.join(__dirname, '..', 'ui'),
-            //   // include pubsweet packages which are published untranspiled
-            //   /pubsweet-[^/\\]+\/(?!node_modules)/,
-            //   /@pubsweet\/[^/\\]+\/(?!node_modules)/,
-            // ],
-            presets: [
-              '@babel/preset-env',
-              // ['@babel/preset-env', { modules: false }],
-              '@babel/preset-react',
-            ],
+            presets: ['@babel/preset-env', '@babel/preset-react'],
             plugins: [
-              'babel-plugin-styled-components',
-              '@babel/plugin-proposal-class-properties',
+              ['@babel/plugin-proposal-decorators', { version: '2023-11' }],
+              '@babel/plugin-proposal-function-sent',
+              '@babel/plugin-proposal-throw-expressions',
               '@babel/plugin-transform-runtime',
-              // 'transform-decorators-legacy',
+              'babel-plugin-styled-components',
             ].filter(Boolean),
 
             env: {
