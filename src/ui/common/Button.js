@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { Button as AntButton } from 'antd'
 import { omit } from 'lodash'
 
-import { darken, th, grid } from '@pubsweet/ui-toolkit'
+import { darken, th, grid } from '../../toolkit'
 
 const colors = {
   danger: 'colorError',

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { grid } from '@pubsweet/ui-toolkit'
 
+import { grid } from '../../toolkit'
 import SearchBox from './SearchBox'
 import SuggestedReviewer from './SuggestedReviewer'
 import { InputNumber, Ribbon, Switch } from '../common'

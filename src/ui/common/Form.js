@@ -6,8 +6,8 @@ import styled from 'styled-components'
 import { debounce } from 'lodash'
 
 import { Form as AntForm } from 'antd'
-import { grid, th } from '@pubsweet/ui-toolkit'
 
+import { grid, th } from '../../toolkit'
 import UIRibbon from './Ribbon'
 
 const FormWrapper = styled.div`

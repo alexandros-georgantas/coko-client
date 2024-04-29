@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 
-import { grid } from '@pubsweet/ui-toolkit'
+import { grid } from '../../toolkit'
 
 const Wrapper = styled.div`
   display: ${props => (props.inline ? 'inline-block' : 'flex')};

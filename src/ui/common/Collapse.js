@@ -1,6 +1,6 @@
 import { Collapse as AntCollapse } from 'antd'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '../../toolkit'
 
 const StyledCollapse = styled(AntCollapse)`
   .ant-collapse-item > .ant-collapse-header {

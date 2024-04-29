@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Table as AntTable } from 'antd'
 
-import { grid } from '@pubsweet/ui-toolkit'
+import { grid } from '../../toolkit'
 
 import Search from './Search'
 import Spin from './Spin'

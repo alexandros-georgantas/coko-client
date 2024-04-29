@@ -1,8 +1,9 @@
 /* stylelint-disable string-quotes */
 import React from 'react'
 import styled from 'styled-components'
-import { grid, th } from '@pubsweet/ui-toolkit'
 import { Tabs as AntTabs } from 'antd'
+
+import { grid, th } from '../../toolkit'
 
 // const TabsWrapper = styled.div`
 //   height: 100%;

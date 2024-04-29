@@ -65,7 +65,6 @@ temp/
 data/
 minio/
 
-# Pubsweet
 uploads/
 
 # IDE

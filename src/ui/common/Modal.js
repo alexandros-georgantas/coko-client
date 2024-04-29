@@ -1,6 +1,7 @@
 import styled from 'styled-components'
-import { grid } from '@pubsweet/ui-toolkit'
 import { Modal } from 'antd'
+
+import { grid } from '../../toolkit'
 
 const ModalFooter = styled.div`
   margin-top: ${grid(3)};

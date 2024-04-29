@@ -1,5 +1,5 @@
 import { css } from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '../../toolkit'
 
 /*
   To disable underline from Logo
@@ -11,7 +11,7 @@ export default {
     margin-bottom: 1px;
   `,
   LogoLink: css`
-    &:hover:before {
+    &:hover::before {
       visibility: hidden;
     }
   `,

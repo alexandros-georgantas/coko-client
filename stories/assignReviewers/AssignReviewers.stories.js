@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { range, uniq } from 'lodash'
 import { faker } from '@faker-js/faker'
-import { grid } from '@pubsweet/ui-toolkit'
 
+import { grid } from '../../src/toolkit'
 import AssignReviewers from '../../src/ui/assignReviewers/AssignReviewers'
 import { DateParser, Note } from '../../src/ui'
 

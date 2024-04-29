@@ -1,7 +1,8 @@
 import React, { cloneElement, useRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { grid } from '@pubsweet/ui-toolkit'
 import PropTypes from 'prop-types'
+
+import { grid } from '../../toolkit'
 import { uuid } from '../../index'
 import cokoTheme from '../../theme'
 

@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
 import { Input as AntInput } from 'antd'
 import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleFilled'
 import EyeOutlined from '@ant-design/icons/EyeOutlined'
 
+import { th } from '../../toolkit'
 import { inputShadow } from './_reusableStyles'
 
 const Wrapper = styled.div``

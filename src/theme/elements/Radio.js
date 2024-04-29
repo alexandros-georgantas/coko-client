@@ -1,5 +1,7 @@
+/* stylelint-disable string-quotes */
+
 import { css, keyframes } from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '../../toolkit'
 
 const checking = keyframes`
   0% {
@@ -28,7 +30,7 @@ export default {
         color: ${props =>
           props.checked ? 'inherit' : props.theme.colorPrimary};
 
-        &:before {
+        &::before {
           animation-duration: ${th('transitionDuration')};
           animation-name: ${props => (props.checked ? 'none' : checking)};
           box-shadow: 0 0 0 ${th('borderWidth')}
@@ -41,7 +43,7 @@ export default {
   Label: css`
     font-style: italic;
 
-    &:before {
+    &::before {
       /* This is not a real border (box-shadow provides that), so not themed as such */
       background: ${props => (props.checked ? 'currentColor' : 'transparent')};
       border: calc(${th('gridUnit')} / 4) solid white;
@@ -64,7 +66,7 @@ export default {
     position: absolute;
     z-index: -1;
 
-    &:focus + span:before {
+    &:focus + span::before {
       box-shadow: 0 0 ${th('borderWidth')} calc(${th('borderWidth')} * 2)
         ${th('colorPrimary')};
     }
