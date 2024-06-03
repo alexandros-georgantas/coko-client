@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.62](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.61...v0.0.62) (2024-06-03)
+
+
+### Bug Fixes
+
+* **webpack:** support custom wax code in the apps ([f19c4a6](https://gitlab.coko.foundation/cokoapps/client/commit/f19c4a646c56b98a25208df5de205bdc8f7c1064))
+
 ### [0.0.61](https://gitlab.coko.foundation/cokoapps/client/compare/v0.0.60...v0.0.61) (2024-04-29)
 
 
